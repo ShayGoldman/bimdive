@@ -1,0 +1,25 @@
+{
+  "name": "speed-run",
+  "version": "0.0.0",
+  "repository": "https://github.com/ShayGoldman/speed-run.git",
+  "author": "shay.goldmanz@gmail.com",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.3.0",
+    "prettier": "^2.1.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,css,md}": "prettier --write"
+  }
+}
