@@ -4,11 +4,7 @@ export type Environment = {
   token: string;
   logger_prettyPrint: boolean;
   logger_level: string;
-  db_host: string;
-  db_port: number;
-  db_userName: string;
-  db_password: string;
-  db_database: string;
+  db_connection_string: string;
 };
 
 export function $Environment(): Environment {
@@ -34,10 +30,6 @@ export function $Environment(): Environment {
     logger_prettyPrint,
     logger_level,
     token: getFromEnv("BIM_API_ACCESS_TOKEN", false) || "",
-    db_host: getFromEnv("DB_HOST") || "",
-    db_port: parseInt(getFromEnv("DB_PORT") || "5432", 10),
-    db_password: getFromEnv("DB_PASSWORD") || "",
-    db_userName: getFromEnv("DB_USERNAME") || "",
-    db_database: getFromEnv("DB_DATABASE") || "",
+    db_connection_string: getFromEnv("DB_CONNECTION_STRING") || "",
   };
 }

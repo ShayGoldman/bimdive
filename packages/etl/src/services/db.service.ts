@@ -4,23 +4,14 @@ import { Logger } from "./logger.service";
 
 export type DB = Knex;
 
-type Deps = Pick<
-  Environment,
-  "db_database" | "db_host" | "db_password" | "db_port" | "db_userName"
-> & {
+type Deps = Pick<Environment, "db_connection_string"> & {
   logger: Logger;
 };
 
 export function $DB({ logger, ...env }: Deps): DB {
   const client = Knex({
     client: "pg",
-    connection: {
-      host: env.db_host,
-      port: env.db_port,
-      database: env.db_database,
-      user: env.db_userName,
-      password: env.db_password,
-    },
+    connection: env.db_connection_string,
   });
 
   client.on("query", function ({ sql, bindings }) {

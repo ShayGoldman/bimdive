@@ -43,13 +43,7 @@ async function generateAuthToken(code: string): Promise<any> {
 
 const client = Knex({
   client: "pg",
-  connection: {
-    host: process.env.db_host,
-    port: parseInt(process.env.db_port, 10),
-    database: process.env.db_database,
-    user: process.env.db_user,
-    password: process.env.db_password,
-  },
+  connection: process.env.DB_CONNECTION_STRING,
 });
 
 client.on("query", function ({ sql, bindings }) {
