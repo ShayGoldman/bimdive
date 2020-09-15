@@ -47,7 +47,7 @@ const client = Knex({
     host: process.env.db_host,
     port: parseInt(process.env.db_port, 10),
     database: process.env.db_database,
-    user: process.env.db_userName,
+    user: process.env.db_user,
     password: process.env.db_password,
   },
 });
