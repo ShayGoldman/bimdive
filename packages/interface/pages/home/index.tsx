@@ -1,18 +1,13 @@
 import { useSearchParam } from "react-use";
 
 export default function HomePage() {
-  const token = useSearchParam("token");
+  const email = useSearchParam("token");
   const error = useSearchParam("error");
 
   return (
     <div>
       <h1>Home Page</h1>
-      {token && (
-        <section>
-          <h2>Token</h2>
-          <pre>{token}</pre>
-        </section>
-      )}
+      {email && <h2>Henlo {email}</h2>}
       {error && (
         <section>
           <h2>Error</h2>

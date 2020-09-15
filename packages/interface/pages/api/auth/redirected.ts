@@ -97,5 +97,5 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } catch (e) {
     console.error(e);
   }
-  res.redirect(`/home?token=${accessToken}`);
+  res.redirect(`/home?emailz=${userData.emailId}`);
 }
