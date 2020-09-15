@@ -1,2 +1,14 @@
 node_modules/
 .vscode/
+
+# common
+packages/*/dist
+playground.ts
+yarn-error.log
+
+# etl
+packages/etl/.env*
+
+# interface
+packages/interface/.next
+packages/interface/next.config.js

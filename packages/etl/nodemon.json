@@ -1,0 +1,5 @@
+{
+  "ignore": [],
+  "watch": [".env", "src"],
+  "ext": "ts"
+}
