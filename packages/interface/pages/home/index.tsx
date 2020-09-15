@@ -1,7 +1,7 @@
 import { useSearchParam } from "react-use";
 
 export default function HomePage() {
-  const email = useSearchParam("token");
+  const email = useSearchParam("emailz");
   const error = useSearchParam("error");
 
   return (
