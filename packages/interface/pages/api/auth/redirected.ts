@@ -5,7 +5,6 @@ import querystring from "querystring";
 import moment from "moment";
 
 const clientId = "WGwl4crnohsIPbs6CkTHP17VAM0k2oE9";
-const clientSecret = "bZlhmL4PMG3Bwym1";
 const redirectUrl = `http://localhost:3000/api/auth/redirected`;
 
 async function getUserData(token: string): Promise<any> {
@@ -97,5 +96,5 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } catch (e) {
     console.error(e);
   }
-  res.redirect(`/home?token=${accessToken}`);
+  res.redirect(`/home?emailz=${userData.emailId}`);
 }
