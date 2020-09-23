@@ -1,4 +1,4 @@
-import { $DB } from "./db.service";
+import { $DB } from "../integrations/db.service";
 import { $Logger } from "./logger.service";
 import { $DBValidation } from "./db-validation.service";
 import { $ETLExtract } from "./etl/etl-extract.service";
@@ -13,7 +13,9 @@ export type ETL = {
 export function $ETL(): ETL {
   const environment = $Environment();
   const logger = $Logger(environment);
+
   const db = $DB({ logger, ...environment });
+
   const bimApi = $BIMApi({ logger, token: environment.token });
   const dbValidator = $DBValidation({ db, logger });
   const extract = $ETLExtract({ logger, bimApi });
@@ -27,12 +29,12 @@ export function $ETL(): ETL {
         const issues = await extract();
         logger.info("ETL extract complete");
 
-        for (const issue of issues) {
+        for (const { issue, type, subType } of issues) {
           logger.debug(issue);
           await db("etl.issues").insert({
             provider_id: issue.id,
-            type: issue.attributes.issue_type,
-            sub_type: issue.attributes.issue_sub_type,
+            type: type?.title || "",
+            sub_type: subType?.title || "",
             ...pick(
               issue.attributes,
               "status",

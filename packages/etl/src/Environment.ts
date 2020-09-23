@@ -8,7 +8,9 @@ export type Environment = {
 };
 
 export function $Environment(): Environment {
-  const logger_prettyPrint = Boolean(process.env.LOGGER_PRETTY_PRINT);
+  const logger_prettyPrint = Boolean(
+    parseInt(process.env.LOGGER_PRETTY_PRINT || "0", 10)
+  );
   const logger_level = process.env.LOGGER_LEVEL || "info";
 
   const logger = $Logger({

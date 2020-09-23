@@ -1,6 +1,6 @@
 import Knex from "knex";
 import { Environment } from "../Environment";
-import { Logger } from "./logger.service";
+import { Logger } from "../services/logger.service";
 
 export type DB = Knex;
 

@@ -50,7 +50,10 @@ client.on("query", function ({ sql, bindings }) {
   console.debug({ msg: "DB query", sql, bindings });
 });
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+export default async function authCallback(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const error = req.query.error as string;
   const code = req.query.code as string;
 
@@ -58,19 +61,19 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     res.redirect("/error");
   }
 
-  const issuedAt = new Date().toUTCString();
-  const token = await generateAuthToken(code);
-  const accessToken = token.access_token;
-
-  if (!token) {
-    res.redirect("/error");
-  }
-
-  const userData = await getUserData(accessToken);
-
-  const providerUserId = userData.userId;
-
   try {
+    const issuedAt = new Date().toUTCString();
+    const token = await generateAuthToken(code);
+    const accessToken = token.access_token;
+
+    if (!token) {
+      res.redirect("/error");
+    }
+
+    const userData = await getUserData(accessToken);
+
+    const providerUserId = userData.userId;
+
     await client("etl.users").insert({
       provider_id: providerUserId,
       email: userData.emailId,
@@ -88,8 +91,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         .toDate()
         .toUTCString(),
     });
+    res.redirect(`/home?emailz=${userData.emailId}`);
   } catch (e) {
     console.error(e);
+    res.redirect("/error");
   }
-  res.redirect(`/home?emailz=${userData.emailId}`);
 }
