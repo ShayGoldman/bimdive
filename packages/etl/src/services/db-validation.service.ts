@@ -1,5 +1,5 @@
 import { Logger } from "./logger.service";
-import { DB } from "./db.service";
+import { DB } from "../integrations/db.service";
 
 export type DBValidation = () => Promise<void>;
 
@@ -11,7 +11,9 @@ type Deps = {
 export function $DBValidation({ logger, db }: Deps): DBValidation {
   return async () => {
     try {
-      await db.raw(`DROP SCHEMA etl CASCADE`);
+      if (Boolean(parseInt(process.env.DB_RESET || "0", 10))) {
+        await db.raw(`DROP SCHEMA etl CASCADE`);
+      }
 
       await db.schema
         .createSchemaIfNotExists("etl")
