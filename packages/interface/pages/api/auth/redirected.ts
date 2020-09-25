@@ -72,17 +72,17 @@ export default async function authCallback(
 
     const userData = await getUserData(accessToken);
 
-    const providerUserId = userData.userId;
+    const userProviderId = userData.userId;
 
     await client("etl.users").insert({
-      provider_id: providerUserId,
+      provider_id: userProviderId,
       email: userData.emailId,
       first_name: userData.firstName,
       last_name: userData.lastName,
       profile_img_url: userData.profileImages.sizeX240,
     });
     await client("etl.access_tokens").insert({
-      provider_user_id: providerUserId,
+      user_provider_id: userProviderId,
       access_token: accessToken,
       refresh_token: token.refresh_token,
       issued_at: issuedAt,

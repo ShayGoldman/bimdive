@@ -10,6 +10,8 @@ function App() {
       <section>
         <h2>Authenticate</h2>
         <a href={authLink}>Here</a>
+        <h2>Logout</h2>
+        <a href="https://accounts.autodesk.com/Authentication/LogOut">Here</a>
       </section>
     </div>
   );

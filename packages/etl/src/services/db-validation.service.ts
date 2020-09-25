@@ -37,7 +37,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
           users.text("profile_img_url");
         })
         .createTableIfNotExists("access_tokens", (tokens) => {
-          tokens.text("provider_user_id");
+          tokens.text("user_provider_id");
           tokens.text("access_token");
           tokens.text("refresh_token");
           tokens.timestamp("issued_at");
@@ -45,7 +45,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
         })
         .createTableIfNotExists("scans", (scans) => {
           scans.increments("id").primary().unsigned();
-          scans.text("context");
+          scans.text("initiating_user_id");
         })
         .withSchema("etl");
       logger.info("DB validation passed");
