@@ -1,0 +1,40 @@
+{
+  "name": "@bimdive/events",
+  "version": "1.0.0",
+  "description": "Serverless webpack example using Typescript",
+  "scripts": {
+    "commander": "npx ts-node ./scripts/commander.ts",
+    "deploy": "npx sls deploy -s prod",
+    "function:dev": "yarn run commander dev -f"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "knex": "^0.21.5",
+    "lodash": "^4.17.20",
+    "pg": "^8.3.3",
+    "pino": "^6.6.1",
+    "pino-pretty": "^4.2.1",
+    "source-map-support": "^0.5.10"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.17",
+    "@types/inquirer": "^7.3.1",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "^10.12.18",
+    "@types/pino": "^6.3.1",
+    "@types/serverless": "^1.72.5",
+    "chalk": "^4.1.0",
+    "commander": "^6.1.0",
+    "dotenv-cli": "^4.0.0",
+    "fork-ts-checker-webpack-plugin": "^5.2.0",
+    "inquirer": "^7.3.3",
+    "serverless": "^2.3.0",
+    "serverless-webpack": "^5.3.5",
+    "ts-loader": "^8.0.4",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.2.4",
+    "webpack": "^4.44.2",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "license": "MIT"
+}

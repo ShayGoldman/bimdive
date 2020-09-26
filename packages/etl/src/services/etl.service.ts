@@ -31,19 +31,19 @@ export function $ETL(): ETL {
 
         for (const { issue, type, subType } of issues) {
           logger.debug(issue);
-          await db("etl.issues").insert({
-            provider_id: issue.id,
-            type: type?.title || "",
-            sub_type: subType?.title || "",
-            ...pick(
-              issue.attributes,
-              "status",
-              "title",
-              "due_date",
-              "assigned_to",
-              "assigned_to_type"
-            ),
-          });
+          // await db("etl.issues").insert({
+          //   provider_id: issue.id,
+          //   type: type?.title || "",
+          //   sub_type: subType?.title || "",
+          //   ...pick(
+          //     issue.attributes,
+          //     "status",
+          //     "title",
+          //     "due_date",
+          //     "assigned_to",
+          //     "assigned_to_type"
+          //   ),
+          // });
           logger.debug({ msg: "Loaded issue", providerId: issue.id });
         }
         logger.info(`Loaded ${issues.length} issues`);

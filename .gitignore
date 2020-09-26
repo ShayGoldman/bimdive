@@ -1,5 +1,6 @@
 node_modules/
 .vscode/
+.DS_Store
 
 # common
 packages/*/dist
@@ -12,3 +13,10 @@ packages/etl/.env*
 # interface
 packages/interface/.next
 packages/interface/next.config.js
+
+# events
+packages/events/.env*
+packages/events/.events
+packages/events/.build
+packages/events/.serverless
+packages/events/.webpack

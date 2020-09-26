@@ -1,0 +1,96 @@
+configValidationMode: error
+service:
+  name: events
+
+app: bimdive
+org: shaygoldmanz
+frameworkVersion: "2"
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'prod'}
+  region: eu-west-2
+  iamRoleStatements: # permissions for all of your functions can be set here
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource:
+        Fn::GetAtt:
+          - IssueDiscoveredQueue
+          - Arn
+
+functions:
+  ScanCreated:
+    handler: src/functions/ScanCreated.handle
+    maximumRetryAttempts: 0
+    memorySize: 128
+    batchSize: 1
+    reservedConcurrency: 1
+    disableLogs: true
+    environment:
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      AWS_SQS_REGION: eu-west-2
+      QUEUE_ISSUE_DISCOVERED:
+        Ref: IssueDiscoveredQueue
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - ScanCreatedQueue
+              - Arn
+  IssueDiscovered:
+    handler: src/functions/IssueDiscovered.handle
+    maximumRetryAttempts: 0
+    memorySize: 128
+    batchSize: 1
+    reservedConcurrency: 1
+    disableLogs: true
+    environment:
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      AWS_SQS_REGION: eu-west-2
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - IssueDiscoveredQueue
+              - Arn
+
+resources:
+  Resources:
+    ScanCreatedQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${self:provider.stage}-ScanCreated
+        RedrivePolicy:
+          maxReceiveCount: 1
+          deadLetterTargetArn:
+            Fn::GetAtt:
+              - DeadLetterQueue
+              - Arn
+    IssueDiscoveredQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${self:provider.stage}-IssueDiscovered
+        RedrivePolicy:
+          maxReceiveCount: 1
+          deadLetterTargetArn:
+            Fn::GetAtt:
+              - DeadLetterQueue
+              - Arn
+    DeadLetterQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${self:provider.stage}-DeadLetterQueue
