@@ -4,7 +4,11 @@ import { spawn } from "child_process";
 import compact from "lodash/compact";
 import fs from "fs";
 import path from "path";
+import { promisify } from "util";
 import chalk from "chalk";
+import _figlet from "figlet";
+
+const figlet: any = promisify(_figlet);
 
 async function execute(cmd: string) {
   console.log(chalk.yellow(cmd));
@@ -46,14 +50,29 @@ const promptForRemote = () =>
     message: "Which environment should execute?",
     choices: ["local", "remote"],
   });
+const promptForDataFile = async () => {
+  const dataFile = await promptForValue({
+    message: "Which data file should be used?",
+    choices: fs.readdirSync(path.resolve(__dirname, "..", ".data-files")),
+  });
+
+  return path.resolve(__dirname, "../.data-files", dataFile);
+};
+
+const getEnvFileValue = (options: { envFile: string }) => {
+  return path.resolve(__dirname, "..", options.envFile);
+};
 
 program
   .command("deploy")
-  .requiredOption("-e, --env-file <file-path>")
+  .requiredOption(
+    "-e, --env-file <file-path>",
+    "A dotenv environment file which will be loaded before the function is invoked"
+  )
   .option("-s, --stage <stage>")
   .description("Deploy all functions")
   .action(async function (options) {
-    const envFile = path.resolve(__dirname, "..", options.envFile);
+    const envFile = getEnvFileValue(options);
     const stage = options.stage || (await promptForStage());
 
     const cmd = compact([
@@ -68,10 +87,23 @@ program
 program
   .command("dev")
   .option("-f, --function-name <function-name>")
-  .option("-s, --stage <stage>")
-  .option("-e, --env-file <file-path>")
-  .option("-r, --remote")
-  .option("-l, --local")
+  .option("-s, --stage <stage>", "The stage used for deployment")
+  .option(
+    "-e, --env-file <file-path>",
+    "A dotenv environment file which will be loaded before the function is invoked"
+  )
+  .option(
+    "-d, --data-file <file-path>",
+    "JSON file used to inkove the function with"
+  )
+  .option(
+    "-r, --remote",
+    "Adding this flag causes the remote labmda function to be invoked. Note: Cannot be use with the --local flag"
+  )
+  .option(
+    "-l, --local",
+    "Adding this flag causes the local labmda function to be invoked"
+  )
   .description("Build & execute the function")
   .action(async function (options) {
     const functionName = options.functionName || (await promptForFunction());
@@ -81,18 +113,14 @@ program
       : options.remote || (await promptForRemote()) === "remote";
 
     const useEnvFile = Boolean(options.envFile);
-    const envFile = useEnvFile
-      ? path.resolve(__dirname, "..", options.envFile)
-      : "";
-
-    const eventFile = path.resolve(
-      __dirname,
-      `../.events/${functionName}.json`
-    );
-    const hasEventFile = fs.existsSync(eventFile);
+    const envFile = useEnvFile ? getEnvFileValue(options) : "";
     const hasEnvFile = useEnvFile && fs.existsSync(envFile);
 
-    if (hasEventFile) {
+    const useDataFile = Boolean(options.dataFile);
+    const dataFile = useDataFile ? options.dataFile : await promptForDataFile();
+    const hasDataFile = fs.existsSync(dataFile);
+
+    if (hasDataFile) {
       console.log(`Event file ${functionName}.json found`);
     }
 
@@ -102,11 +130,22 @@ program
       !isRemote && "local",
       `-s ${stage}`,
       `-f ${functionName}`,
-      hasEventFile && `-p ${eventFile}`,
+      hasDataFile && `-p ${dataFile}`,
     ]).join(" ");
 
     execute(cmd);
   });
 
-program.version("x.x.x");
-program.parse(process.argv);
+(async function main() {
+  const banner = await figlet("Commander", "Slant");
+
+  const help = (s: string) =>
+    `${banner}
+  ${s}
+  `;
+
+  program.usage("commander [options] [command]");
+  program.help(help);
+  program.version("x.x.x");
+  program.parse(process.argv);
+})();
