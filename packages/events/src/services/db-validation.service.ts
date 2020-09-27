@@ -16,13 +16,15 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
         await db.raw(`DROP SCHEMA IF EXISTS events CASCADE`);
       }
 
+      await db.raw(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`);
       await db.schema.createSchemaIfNotExists("events");
 
       const eventsSchema = () => db.schema.withSchema("events");
+      const uuid = () => db.raw("uuid_generate_v4()");
 
       if (!(await eventsSchema().hasTable("issues"))) {
         await eventsSchema().createTable("issues", (issues) => {
-          issues.uuid("id").primary().notNullable().unique();
+          issues.uuid("id").primary().notNullable().unique().defaultTo(uuid());
           issues.string("provider_id", 64).notNullable().unique();
           issues.string("title", 255).notNullable();
           issues.string("status", 127);
@@ -40,7 +42,12 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
 
       if (!(await eventsSchema().hasTable("users"))) {
         await eventsSchema().createTable("users", (users) => {
-          users.uuid("id").primary().notNullable().unique();
+          users
+            .uuid("id")
+            .primary()
+            .notNullable()
+            .unique()
+            .defaultTo(db.raw("uuid_generate_v4()"));
           users.string("provider_id", 64).notNullable().unique();
           users.text("email");
           users.text("first_name");

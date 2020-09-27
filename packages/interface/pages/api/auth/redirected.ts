@@ -58,8 +58,10 @@ export default async function authCallback(
   const code = req.query.code as string;
 
   if (error || !code) {
+    console.log(`found error ${code}`);
     res.redirect("/error");
   }
+  console.log(`found code ${code}`);
 
   try {
     const issuedAt = new Date().toUTCString();
