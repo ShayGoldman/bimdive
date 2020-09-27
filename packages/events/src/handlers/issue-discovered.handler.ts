@@ -1,23 +1,31 @@
-import { SQSEvent, SQSHandler } from "aws-lambda";
+import { SQSRecord } from "aws-lambda";
 import "source-map-support/register";
-import { $Context } from "../services/context.service";
+import { Context } from "../services/context.service";
 
 type BIM360API_GetIssue = any;
 
-export const handle: SQSHandler = async (event: SQSEvent) => {
-  const { getTokenFromScanId, bimApiFactory, logger } = await $Context();
+export type IssueDiscoveredHandler = (params: {
+  message: SQSRecord;
+}) => Promise<void>;
 
-  const recordCount = event.Records.length;
-  logger.debug(`Recieved ${recordCount} record/s`);
+export const $IssueDiscoveredHandler = ({
+  context,
+}: {
+  context: Context;
+}): IssueDiscoveredHandler => {
+  return async function issueDiscoveredHandler({
+    message,
+  }: {
+    message: SQSRecord;
+  }) {
+    const { logger, bimApiFactory, getTokenFromScanId } = context;
+    const { stringValue: scanId = "" } = message.messageAttributes.scanId;
 
-  for (const record of event.Records) {
-    const { stringValue: scanId = "" } = record.messageAttributes.scanId;
-
-    const { stringValue: issueId = "" } = record.messageAttributes.issueId;
+    const { stringValue: issueId = "" } = message.messageAttributes.issueId;
 
     const {
       stringValue: issueContainerId = "",
-    } = record.messageAttributes.issueContainerId;
+    } = message.messageAttributes.issueContainerId;
 
     logger.info({
       msg: "IssueDiscovered",
@@ -67,9 +75,5 @@ export const handle: SQSHandler = async (event: SQSEvent) => {
       msg: "Issue fetched",
       issueId: issue.id,
     });
-
-    if (process.env.NODE_ENV === "development") {
-      process.exit(0);
-    }
-  }
+  };
 };

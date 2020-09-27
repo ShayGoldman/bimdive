@@ -30,7 +30,7 @@ provider:
 
 functions:
   ScanCreated:
-    handler: src/functions/ScanCreated.handle
+    handler: src/lambdas/scan-created.lambda.handle
     maximumRetryAttempts: 0
     memorySize: 128
     batchSize: 1
@@ -50,7 +50,7 @@ functions:
               - ScanCreatedQueue
               - Arn
   IssueDiscovered:
-    handler: src/functions/IssueDiscovered.handle
+    handler: src/lambdas/issue-discovered.lambda.handle
     maximumRetryAttempts: 0
     memorySize: 128
     batchSize: 1

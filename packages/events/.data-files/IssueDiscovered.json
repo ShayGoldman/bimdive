@@ -1,0 +1,90 @@
+{
+  "Records": [
+    {
+      "messageAttributes": {
+        "scanId": { "dataType": "String", "stringValue": "1" },
+        "issueId": {
+          "dataType": "String",
+          "stringValue": "0a8ad7a3-265e-46ad-b90e-8aafa600436b"
+        },
+        "issueContainerId": {
+          "dataType": "String",
+          "stringValue": "f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "projectId": {
+          "dataType": "String",
+          "stringValue": "b.f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "hubId": {
+          "dataType": "String",
+          "stringValue": "b.7674d0cd-6fa0-44f4-8bfd-b4219ac8e767"
+        }
+      }
+    }
+  ],
+  "Others": [
+    {
+      "messageAttributes": {
+        "scanId": { "dataType": "String", "stringValue": "1" },
+        "issueId": {
+          "dataType": "String",
+          "stringValue": "ee5c9256-9c6e-41cf-927b-da246004424d"
+        },
+        "issueContainerId": {
+          "dataType": "String",
+          "stringValue": "f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "projectId": {
+          "dataType": "String",
+          "stringValue": "b.f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "hubId": {
+          "dataType": "String",
+          "stringValue": "b.7674d0cd-6fa0-44f4-8bfd-b4219ac8e767"
+        }
+      }
+    },
+    {
+      "messageAttributes": {
+        "scanId": { "dataType": "String", "stringValue": "1" },
+        "issueId": {
+          "dataType": "String",
+          "stringValue": "d849e853-4b56-4faf-8230-9ac0505e199f"
+        },
+        "issueContainerId": {
+          "dataType": "String",
+          "stringValue": "f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "projectId": {
+          "dataType": "String",
+          "stringValue": "b.f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "hubId": {
+          "dataType": "String",
+          "stringValue": "b.7674d0cd-6fa0-44f4-8bfd-b4219ac8e767"
+        }
+      }
+    },
+    {
+      "messageAttributes": {
+        "scanId": { "dataType": "String", "stringValue": "1" },
+        "issueId": {
+          "dataType": "String",
+          "stringValue": "663bc756-7828-4bc5-97cb-249b93d8986b"
+        },
+        "issueContainerId": {
+          "dataType": "String",
+          "stringValue": "f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "projectId": {
+          "dataType": "String",
+          "stringValue": "b.f321a42c-beb0-4160-a66d-fb555efa4b2f"
+        },
+        "hubId": {
+          "dataType": "String",
+          "stringValue": "b.7674d0cd-6fa0-44f4-8bfd-b4219ac8e767"
+        }
+      }
+    }
+  ]
+}
