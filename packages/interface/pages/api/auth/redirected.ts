@@ -75,14 +75,17 @@ export default async function authCallback(
     const userData = await getUserData(accessToken);
 
     const userProviderId = userData.userId;
-
-    await client("events.users").insert({
-      provider_id: userProviderId,
-      email: userData.emailId,
-      first_name: userData.firstName,
-      last_name: userData.lastName,
-      profile_img_url: userData.profileImages.sizeX240,
-    });
+    try {
+      await client("events.users").insert({
+        provider_id: userProviderId,
+        email: userData.emailId,
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        profile_img_url: userData.profileImages.sizeX240,
+      });
+    } catch (e) {
+      console.log(e);
+    }
     await client("events.access_tokens").insert({
       user_provider_id: userProviderId,
       access_token: accessToken,

@@ -39,7 +39,6 @@ export const $IssueDiscoveredHandler = ({
       msg: "token found",
       token,
       scanId,
-      issueId,
     });
 
     const api = await bimApiFactory({ token });
@@ -54,11 +53,10 @@ export const $IssueDiscoveredHandler = ({
       issue.data.attributes.custom_attributes
     );
 
-    // todo /issues/v2/containers/:containerId/issue-attribute-definitions
-
     // await db("events.issues").insert({
     //   provider_id: issue.id,
     //   type: type?.title || "",
+    //   issue_container_id: issueContainerId,
     //   sub_type: subType?.title || "",
     //   ...pick(
     //     issue.attributes,

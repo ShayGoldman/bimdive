@@ -26,6 +26,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
         await eventsSchema().createTable("issues", (issues) => {
           issues.uuid("id").primary().notNullable().unique().defaultTo(uuid());
           issues.string("provider_id", 64).notNullable().unique();
+          issues.uuid("issue_container_id").notNullable();
           issues.string("title", 255).notNullable();
           issues.string("status", 127);
           issues.string("type", 255);
@@ -67,7 +68,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
 
       if (!(await eventsSchema().hasTable("access_tokens"))) {
         await eventsSchema().createTable("access_tokens", (tokens) => {
-          tokens.string("provider_id", 64).notNullable().unique();
+          tokens.string("user_provider_id", 64).notNullable().unique();
           tokens.text("access_token");
           tokens.text("refresh_token");
           tokens
