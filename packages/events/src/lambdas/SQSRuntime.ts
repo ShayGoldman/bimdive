@@ -16,7 +16,7 @@ export const $SQSRuntime = ({ context }: { context: Context }): SQSRuntime => {
     const messages = event.Records.map((m) => m.messageId);
 
     logger.info({
-      msg: "Event recieved",
+      msg: "event recieved",
       messages,
     });
 
@@ -24,17 +24,17 @@ export const $SQSRuntime = ({ context }: { context: Context }): SQSRuntime => {
       for (const message of event.Records) {
         await handler({ message });
         logger.info({
-          msg: "Message handled",
+          msg: "message handled",
           messageId: message.messageId,
         });
       }
+      logger.info({
+        msg: "event handled",
+        messages,
+      });
     } catch (e) {
       logger.error(e);
     } finally {
-      logger.info({
-        msg: "Event handled",
-        messages,
-      });
       // nasty serverless bug that causes to hang
       if (process.env.NODE_ENV === "development") {
         process.exit(0);

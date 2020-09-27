@@ -22,7 +22,7 @@ export async function $DB({ logger, db_connection_string }: Deps): Promise<DB> {
   await validationService();
 
   client.on("query", function ({ sql, bindings }) {
-    logger.debug({ msg: "DB query", sql, bindings });
+    logger.debug({ msg: "db query", sql, bindings });
   });
 
   return client;

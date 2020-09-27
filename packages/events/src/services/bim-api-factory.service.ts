@@ -25,11 +25,11 @@ export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
     instance.interceptors.request.use(
       (request) => {
         const { baseURL, url, method, params } = request;
-        logger.debug({ msg: "BIMApi request", baseURL, url, method, params });
+        logger.debug({ msg: "bim-api request", baseURL, url, method, params });
         return request;
       },
       (error) => {
-        logger.error("BIMAPI request error", error);
+        logger.error("bim-api request error", error);
       }
     );
 
@@ -43,7 +43,7 @@ export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
         } = response;
 
         logger.debug({
-          msg: "BIMApi response",
+          msg: "bim-api response",
           baseURL,
           url,
           status,
@@ -61,14 +61,14 @@ export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
               method,
               params,
               ...warning,
-              msg: "BIMApi response warning",
+              msg: "bim-api response warning",
             });
           }
         }
         return response.data;
       },
       (error) => {
-        logger.error({ msg: "BIMAPI request error", error });
+        logger.error({ msg: "bim-api request error", error });
       }
     );
 

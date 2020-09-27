@@ -1,7 +1,8 @@
 import AWS from "aws-sdk";
+import { getFromEnv } from "../utils/getFromEnv";
 import { Logger } from "./logger.service";
 
-AWS.config.update({ region: process.env.AWS_SQS_REGION || "eu-west-2" });
+AWS.config.update({ region: getFromEnv("AWS_SQS_REGION") || "eu-west-2" });
 
 type Deps = {
   logger: Logger;
@@ -30,8 +31,10 @@ export const $SQS = ({ logger }: Deps): SQS => {
         return { ...out, [key]: { DataType: "Number", StringValue: value } };
       } else {
         logger.warn({
-          msg: `Encountered unknown message attribute [${key}] of type [${typeof value}], reverting to string`,
-          type,
+          msg: `encountered unknown message attribute, reverting to string`,
+          key,
+          type: typeof value,
+          messageType: type,
         });
         return { ...out, [key]: { DataType: "String", StringValue: value } };
       }
@@ -49,7 +52,7 @@ export const $SQS = ({ logger }: Deps): SQS => {
 
     const { MessageId } = await sqs.sendMessage(params).promise();
     logger.debug({
-      msg: "Message sent to queue",
+      msg: "message sent to queue",
       messageId: MessageId,
       queue,
     });

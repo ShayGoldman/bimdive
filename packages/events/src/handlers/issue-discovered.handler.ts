@@ -1,6 +1,7 @@
 import { SQSRecord } from "aws-lambda";
 import "source-map-support/register";
 import { Context } from "../services/context.service";
+import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
 type BIM360API_GetIssue = any;
 
@@ -19,16 +20,15 @@ export const $IssueDiscoveredHandler = ({
     message: SQSRecord;
   }) {
     const { logger, bimApiFactory, getTokenFromScanId } = context;
-    const { stringValue: scanId = "" } = message.messageAttributes.scanId;
-
-    const { stringValue: issueId = "" } = message.messageAttributes.issueId;
-
-    const {
-      stringValue: issueContainerId = "",
-    } = message.messageAttributes.issueContainerId;
+    const scanId = getAttributeFromMessage(message, "scanId");
+    const issueId = getAttributeFromMessage(message, "issueId");
+    const issueContainerId = getAttributeFromMessage(
+      message,
+      "issueContainerId"
+    );
 
     logger.info({
-      msg: "IssueDiscovered",
+      msg: "issue discovered",
       scanId,
       issueId,
     });
@@ -36,7 +36,7 @@ export const $IssueDiscoveredHandler = ({
     const token = await getTokenFromScanId(scanId);
 
     logger.debug({
-      msg: "Token found",
+      msg: "token found",
       token,
       scanId,
       issueId,
@@ -48,7 +48,6 @@ export const $IssueDiscoveredHandler = ({
       `/issues/v1/containers/${issueContainerId}/quality-issues/${issueId}`
     );
 
-    console.log(/* LOG */ "---", "issue", issue.data);
     console.log(
       /* LOG */ "---",
       "issue",
@@ -57,7 +56,7 @@ export const $IssueDiscoveredHandler = ({
 
     // todo /issues/v2/containers/:containerId/issue-attribute-definitions
 
-    // await db("etl.issues").insert({
+    // await db("events.issues").insert({
     //   provider_id: issue.id,
     //   type: type?.title || "",
     //   sub_type: subType?.title || "",
@@ -70,10 +69,5 @@ export const $IssueDiscoveredHandler = ({
     //     "assigned_to_type"
     //   ),
     // });
-
-    logger.debug({
-      msg: "Issue fetched",
-      issueId: issue.id,
-    });
   };
 };

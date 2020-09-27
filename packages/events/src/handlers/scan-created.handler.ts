@@ -58,13 +58,13 @@ export const $ScanCreatedHandler = ({
 
         if (issueCount > issueLimit) {
           logger.warn(
-            `Found ${issueCount} issues, but only fetch the first ${issueLimit}`
+            `found ${issueCount} issues, but only fetch the first ${issueLimit}`
           );
         }
 
         for (const issue of issues.data) {
           logger.info({
-            msg: "Issue discovered",
+            msg: "issue discovered",
             issueId: issue.id,
           });
 
@@ -84,9 +84,7 @@ export const $ScanCreatedHandler = ({
         }
       }
 
-      logger.info({
-        msg: "Scan complete",
-      });
+      logger.info("scan complete");
     }
   };
 };

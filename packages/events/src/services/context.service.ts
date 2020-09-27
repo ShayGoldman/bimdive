@@ -1,3 +1,4 @@
+import { getFromEnv } from "../utils/getFromEnv";
 import { $BIMApiFactory, BIMApiFactory } from "./bim-api-factory.service";
 import { $DB, DB } from "./db.service";
 import { $Logger, Logger } from "./logger.service";
@@ -13,8 +14,8 @@ export type Context = {
 
 function $GetTokenFromScanId({ db }: { db: DB }) {
   return async function getTokenFromScanId(scanId: string): Promise<string> {
-    const [scan] = await db("etl.scans").select().where({ id: scanId });
-    const [{ access_token }] = await db("etl.access_tokens")
+    const [scan] = await db("events.scans").select().where({ id: scanId });
+    const [{ access_token }] = await db("events.access_tokens")
       .select()
       .where({ user_provider_id: scan.initiating_user_id })
       .orderBy("issued_at", "desc")
@@ -26,11 +27,11 @@ function $GetTokenFromScanId({ db }: { db: DB }) {
 
 export const $Context = async (): Promise<Context> => {
   const logger = $Logger({
-    logger_level: process.env.LOGGER_LEVEL || "info",
-    logger_prettyPrint: process.env.LOGGER_PRETTY_PRINT === "true" || false,
+    logger_level: getFromEnv("LOGGER_LEVEL") || "info",
+    logger_prettyPrint: getFromEnv("LOGGER_PRETTY_PRINT") === "true" || false,
   });
   const db = await $DB({
-    db_connection_string: process.env.DB_CONNECTION_URI || "",
+    db_connection_string: getFromEnv("DB_CONNECTION_URI") || "",
     logger,
   });
   const sqs = $SQS({ logger });
