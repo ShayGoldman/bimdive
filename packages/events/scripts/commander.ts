@@ -4,11 +4,7 @@ import { spawn } from "child_process";
 import compact from "lodash/compact";
 import fs from "fs";
 import path from "path";
-import { promisify } from "util";
 import chalk from "chalk";
-import _figlet from "figlet";
-
-const figlet: any = promisify(_figlet);
 
 async function execute(cmd: string) {
   console.log(chalk.yellow(cmd));
@@ -136,16 +132,8 @@ program
     execute(cmd);
   });
 
-(async function main() {
-  const banner = await figlet("Commander", "Slant");
-
-  const help = (s: string) =>
-    `${banner}
-  ${s}
-  `;
-
-  program.usage("commander [options] [command]");
-  program.help(help);
-  program.version("x.x.x");
-  program.parse(process.argv);
-})();
+program
+  .name("commander")
+  .version("x.x.x")
+  .usage("[options] [command]")
+  .parse(process.argv);
