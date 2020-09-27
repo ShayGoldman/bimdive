@@ -6,9 +6,8 @@ node_modules/
 packages/*/dist
 playground.ts
 yarn-error.log
+.env*
 
-# etl
-packages/etl/.env*
 
 # interface
 packages/interface/.next
