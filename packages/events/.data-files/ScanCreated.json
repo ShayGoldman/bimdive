@@ -1,9 +1,0 @@
-{
-  "Records": [
-    {
-      "messageAttributes": {
-        "scanId": { "dataType": "String", "stringValue": "1" }
-      }
-    }
-  ]
-}
