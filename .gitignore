@@ -14,6 +14,7 @@ packages/interface/.next
 packages/interface/next.config.js
 
 # events
+packages/events/.data-files
 packages/events/.env*
 packages/events/.events
 packages/events/.build

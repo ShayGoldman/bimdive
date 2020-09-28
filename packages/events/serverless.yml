@@ -12,7 +12,7 @@ custom:
     includeModules: true
 
 plugins:
-  - serverless-webpack
+  - serverless-plugin-typescript
 
 provider:
   name: aws
@@ -43,6 +43,8 @@ functions:
       AWS_SQS_REGION: eu-west-2
       QUEUE_ISSUE_DISCOVERED:
         Ref: IssueDiscoveredQueue
+      QUEUE_ISSUE_CONTAINER_DISCOVERED:
+        Ref: IssueContainerDiscoveredQueue
     events:
       - sqs:
           arn:
@@ -74,6 +76,16 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-ScanCreated
+        RedrivePolicy:
+          maxReceiveCount: 1
+          deadLetterTargetArn:
+            Fn::GetAtt:
+              - DeadLetterQueue
+              - Arn
+    IssueContainerDiscoveredQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${self:provider.stage}-IssueContainerDiscovered
         RedrivePolicy:
           maxReceiveCount: 1
           deadLetterTargetArn:

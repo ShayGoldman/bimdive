@@ -17,7 +17,7 @@ function $GetTokenFromScanId({ db }: { db: DB }) {
     const [scan] = await db("events.scans").select().where({ id: scanId });
     const [{ access_token }] = await db("events.access_tokens")
       .select()
-      .where({ user_provider_id: scan.initiating_user_id })
+      .where({ user_provider_id: scan.initiating_user_provider_id })
       .orderBy("issued_at", "desc")
       .limit(1);
 

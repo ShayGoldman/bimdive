@@ -84,7 +84,10 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
       if (!(await eventsSchema().hasTable("scans"))) {
         await eventsSchema().createTable("scans", (scans) => {
           scans.increments("id").primary().unique().unsigned();
-          scans.string("provider_id", 64).notNullable().unique();
+          scans
+            .string("initiating_user_provider_id", 64)
+            .notNullable()
+            .unique();
           scans
             .timestamp("created_at", { precision: 3, useTz: false })
             .notNullable()

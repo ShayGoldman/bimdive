@@ -1,5 +1,4 @@
 import { SQSRecord } from "aws-lambda";
-import "source-map-support/register";
 import { Context } from "../services/context.service";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 

@@ -1,5 +1,4 @@
 import { SQSRecord } from "aws-lambda";
-import "source-map-support/register";
 import { Context } from "../services/context.service";
 
 type DataManagementAPI_GetHubs = any;
@@ -13,9 +12,11 @@ export type ScanCreatedHandler = (params: {
 export const $ScanCreatedHandler = ({
   context,
   issueDiscoveredQueue,
+  issueContainerDiscoveredQueue,
 }: {
   context: Context;
   issueDiscoveredQueue: string;
+  issueContainerDiscoveredQueue: string;
 }): ScanCreatedHandler => {
   return async function scanCreatedHandler({
     message,
@@ -45,6 +46,25 @@ export const $ScanCreatedHandler = ({
 
       for (const project of projects.data) {
         const issueContainerId = project.relationships.issues.data.id;
+
+        logger.info({
+          msg: "issue container discovered",
+          issueContainerId,
+        });
+
+        if (process.env.NODE_ENV === "prod") {
+          await sqs.sendMessage({
+            queue: issueContainerDiscoveredQueue,
+            message: {
+              type: "IssueContainerDiscovered",
+              scanId,
+              issueContainerId,
+              projectId: project.id,
+              hubId: hub.id,
+            },
+          });
+        }
+
         const issues = await api.get<BIM360API_GetIssues, BIM360API_GetIssues>(
           `/issues/v1/containers/${issueContainerId}/quality-issues`,
           {
@@ -76,8 +96,6 @@ export const $ScanCreatedHandler = ({
                 scanId,
                 issueId: issue.id,
                 issueContainerId,
-                projectId: project.id,
-                hubId: hub.id,
               },
             });
           }
