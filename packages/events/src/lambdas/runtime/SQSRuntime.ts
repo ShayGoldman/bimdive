@@ -1,11 +1,9 @@
 import { SQSEvent, SQSRecord } from "aws-lambda";
-import { Context } from "../services/context.service";
+import { Context } from "../../services/context.service";
 
 type Params = {
   event: SQSEvent;
-  handler: <OtherParams>(
-    params: { message: SQSRecord } & OtherParams
-  ) => Promise<void>;
+  handler: (params: { message: SQSRecord }) => Promise<void>;
 };
 
 export type SQSRuntime = (params: Params) => Promise<void>;
