@@ -4,14 +4,15 @@ import { useSearchParam, useAsync } from "react-use";
 export default function HomePage() {
   const email = useSearchParam("emailz");
   const error = useSearchParam("error");
-  const { loading, value } = useAsync(
-    () =>
-      axios.post(
-        "https://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/metabase/embed",
-        { questionId: 17 }
-      ),
-    []
-  );
+  const { loading, value } = useAsync(async () => {
+    const {
+      data,
+    } = await axios.post(
+      "https://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/metabase/embed",
+      { questionId: 17 }
+    );
+    return data;
+  }, []);
 
   return (
     <div>
