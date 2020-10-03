@@ -36,7 +36,7 @@ export default async function authCallback(
 
   if (error || !code) {
     console.log(`found error ${error}`);
-    res.redirect("/error");
+    res.redirect(`/error?msg=${error}`);
   }
   console.log(`found code ${code}`);
 
