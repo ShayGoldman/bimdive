@@ -1,8 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import Knex from "knex";
 import axios from "axios";
+import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
-import moment from "moment";
 
 const clientId = "WGwl4crnohsIPbs6CkTHP17VAM0k2oE9";
 const clientSecret = "bZlhmL4PMG3Bwym1";
@@ -32,6 +30,7 @@ export default async function authCallback(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log("request received");
   const error = req.query.error as string;
   const code = req.query.code as string;
 
