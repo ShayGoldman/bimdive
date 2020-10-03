@@ -144,6 +144,8 @@ functions:
     reservedConcurrency: 1
     disableLogs: true
     environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
@@ -166,6 +168,8 @@ functions:
     reservedConcurrency: 1
     disableLogs: true
     environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
