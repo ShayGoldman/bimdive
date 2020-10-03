@@ -6,7 +6,7 @@ import moment from "moment";
 
 const clientId = "WGwl4crnohsIPbs6CkTHP17VAM0k2oE9";
 const clientSecret = "bZlhmL4PMG3Bwym1";
-const redirectUrl = `http://app.bimdive.com/api/auth/redirected`;
+const redirectUrl = `http://app.bimdive.com/api/auth/user`;
 
 async function getUserData(token: string): Promise<any> {
   const response = await axios.get(
