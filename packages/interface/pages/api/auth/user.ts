@@ -1,25 +1,10 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import Knex from "knex";
 import axios from "axios";
+import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
-import moment from "moment";
 
 const clientId = "WGwl4crnohsIPbs6CkTHP17VAM0k2oE9";
 const clientSecret = "bZlhmL4PMG3Bwym1";
 const redirectUrl = `http://app.bimdive.com/api/auth/user`;
-
-async function getUserData(token: string): Promise<any> {
-  const response = await axios.get(
-    "https://developer.api.autodesk.com/userprofile/v1/users/@me",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return response.data;
-}
 
 async function generateAuthToken(code: string): Promise<any> {
   const response = await axios.post(
@@ -38,17 +23,8 @@ async function generateAuthToken(code: string): Promise<any> {
     }
   );
 
-  return response.data;
+  return response?.data;
 }
-
-const client = Knex({
-  client: "pg",
-  connection: process.env.DB_CONNECTION_STRING,
-});
-
-client.on("query", function ({ sql, bindings }) {
-  console.debug({ msg: "DB query", sql, bindings });
-});
 
 export default async function authCallback(
   req: NextApiRequest,
@@ -64,39 +40,18 @@ export default async function authCallback(
   console.log(`found code ${code}`);
 
   try {
-    const issuedAt = new Date().toUTCString();
     const token = await generateAuthToken(code);
-    const accessToken = token.access_token;
 
     if (!token) {
       res.redirect("/error");
     }
 
-    const userData = await getUserData(accessToken);
+    await axios.post(
+      "http://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
+      token
+    );
 
-    const userProviderId = userData.userId;
-    try {
-      await client("events.users").insert({
-        provider_id: userProviderId,
-        email: userData.emailId,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        profile_img_url: userData.profileImages.sizeX240,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    await client("events.access_tokens").insert({
-      user_provider_id: userProviderId,
-      access_token: accessToken,
-      refresh_token: token.refresh_token,
-      issued_at: issuedAt,
-      expires_at: moment(issuedAt)
-        .add(token.expires_in, "seconds")
-        .toDate()
-        .toUTCString(),
-    });
-    res.redirect(`/home?emailz=${userData.emailId}`);
+    res.redirect(`/home`);
   } catch (e) {
     console.error(e);
     res.redirect("/error");
