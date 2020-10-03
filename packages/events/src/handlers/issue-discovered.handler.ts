@@ -41,7 +41,7 @@ export const $IssueDiscoveredHandler = ({
       scanId,
     });
 
-    const api = await bimApiFactory({ token });
+    const api = bimApiFactory({ token });
 
     const issue = await api.get<BIM360API_GetIssue, BIM360API_GetIssue>(
       `/issues/v1/containers/${issueContainerId}/quality-issues/${issueId}`

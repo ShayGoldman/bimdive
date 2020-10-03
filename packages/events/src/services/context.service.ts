@@ -33,7 +33,8 @@ export const $Context = async (): Promise<Context> => {
       getFromEnv({ name: "LOGGER_PRETTY_PRINT" }) === "true" || false,
   });
   const db = await $DB({
-    db_connection_string: getFromEnv({ name: "DB_CONNECTION_URI" }) || "",
+    db_connection_string:
+      getFromEnv({ name: "DB_CONNECTION_URI", logValue: false }) || "",
     logger,
   });
   const sqs = $SQS({ logger });

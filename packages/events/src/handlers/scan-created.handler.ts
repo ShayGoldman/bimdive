@@ -25,7 +25,7 @@ export const $ScanCreatedHandler = ({
 
     const token = await getTokenFromScanId(scanId);
 
-    const api = await bimApiFactory({ token });
+    const api = bimApiFactory({ token });
 
     const issueLimit = 100;
 

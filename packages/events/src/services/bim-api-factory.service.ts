@@ -6,20 +6,23 @@ type Deps = {
 };
 
 type Params = {
-  token: string;
+  token?: string;
 };
 
-export type BIMApiFactory = (parms: {
-  token: string;
-}) => Promise<AxiosInstance>;
+export type BIMApiFactory = (parms: Params) => AxiosInstance;
 
 export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
-  return async function $BimApi({ token }: Params): Promise<AxiosInstance> {
+  return function $BimApi({ token }: { token?: string }): AxiosInstance {
     const instance = axios.create({
       baseURL: "https://developer.api.autodesk.com",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: Object.assign(
+        {},
+        token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {}
+      ),
     });
 
     instance.interceptors.request.use(

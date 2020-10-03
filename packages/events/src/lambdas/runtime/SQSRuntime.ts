@@ -47,7 +47,7 @@ export const $SQSRuntimeFactory = (): {
         } catch (e) {
           logger.error(e);
         } finally {
-          // nasty serverless bug that causes to hang
+          // nasty serverless bug that causes local invocations to hang
           if (process.env.NODE_ENV === "test") {
             process.exit(0);
           }

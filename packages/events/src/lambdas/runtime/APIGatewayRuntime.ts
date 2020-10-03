@@ -9,7 +9,7 @@ import { error, success, redirect } from "../../utils/api-gateway-result";
 type HandlerParams = { event: APIGatewayProxyEvent };
 
 type HandlerResult = {
-  data: string | number | object;
+  data?: string | number | object;
   redirect?: string;
 };
 
@@ -38,7 +38,12 @@ export const $APIGatewayRuntimeFactory = (): {
 
       return async function apiGatewayRuntime({ event }: HandlerParams) {
         const requestId = apiContext.awsRequestId;
-        const { path, httpMethod: method } = event;
+        const {
+          path,
+          httpMethod: method,
+          queryStringParameters,
+          multiValueQueryStringParameters,
+        } = event;
 
         logger.info({
           msg: "request recieved",
@@ -46,6 +51,8 @@ export const $APIGatewayRuntimeFactory = (): {
           requestId,
           method,
           environment,
+          queryStringParameters,
+          multiValueQueryStringParameters,
         });
 
         try {

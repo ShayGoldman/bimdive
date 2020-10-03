@@ -35,7 +35,7 @@ export const $IssueContainerDiscoveredHandler = ({
       scanId,
     });
 
-    const api = await bimApiFactory({ token });
+    const api = bimApiFactory({ token });
 
     const customAttributes = await api.get<
       BIM360API_GetIssue,
