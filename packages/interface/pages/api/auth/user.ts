@@ -49,7 +49,7 @@ export default async function authCallback(
 
     await axios.post(
       "http://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
-      token
+      { ...token, code }
     );
 
     res.redirect(`/home`);

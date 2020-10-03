@@ -83,7 +83,7 @@ functions:
     events:
       - http:
           path: auth/user
-          method: get
+          method: post
 
   CreateScan:
     handler: src/lambdas/api/scan.lambda.createScan

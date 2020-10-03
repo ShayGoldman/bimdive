@@ -9,8 +9,9 @@ import { error, success, redirect } from "../../utils/api-gateway-result";
 type HandlerParams = { event: APIGatewayProxyEvent };
 
 type HandlerResult = {
-  data?: string | number | object;
+  data?: string | number | object | null;
   redirect?: string;
+  error?: string;
 };
 
 type Handler = (params: HandlerParams) => Promise<HandlerResult>;
@@ -56,14 +57,24 @@ export const $APIGatewayRuntimeFactory = (): {
         });
 
         try {
-          const { data, redirect: redirectUrl } = await handler({ event });
+          const {
+            data,
+            redirect: redirectUrl,
+            error: errorText,
+          } = await handler({ event });
           logger.info({
             msg: "request handled",
             requestId,
           });
+
+          if (errorText) {
+            return error(errorText || "Unknown error");
+          }
+
           if (redirectUrl) {
             return redirect(redirectUrl);
           }
+
           return success(data);
         } catch (err) {
           logger.error({
