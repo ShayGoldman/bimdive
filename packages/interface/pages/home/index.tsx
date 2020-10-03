@@ -7,7 +7,7 @@ export default function HomePage() {
   const { loading, value } = useAsync(
     () =>
       axios.post(
-        "http://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/metabase/embed",
+        "https://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/metabase/embed",
         { questionId: 17 }
       ),
     []
