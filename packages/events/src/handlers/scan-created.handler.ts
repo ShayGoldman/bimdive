@@ -9,10 +9,12 @@ export const $ScanCreatedHandler = ({
   context,
   issueDiscoveredQueue,
   issueContainerDiscoveredQueue,
+  shouldEmitMessages,
 }: {
   context: Context;
   issueDiscoveredQueue: string;
   issueContainerDiscoveredQueue: string;
+  shouldEmitMessages: boolean;
 }) => {
   return async function scanCreatedHandler({
     message,
@@ -48,7 +50,7 @@ export const $ScanCreatedHandler = ({
           issueContainerId,
         });
 
-        if (process.env.NODE_ENV === "prod") {
+        if (shouldEmitMessages) {
           await sqs.sendMessage({
             queue: issueContainerDiscoveredQueue,
             message: {
@@ -87,7 +89,7 @@ export const $ScanCreatedHandler = ({
             hubId: hub.id,
           });
 
-          if (process.env.NODE_ENV === "prod") {
+          if (shouldEmitMessages) {
             await sqs.sendMessage({
               queue: issueDiscoveredQueue,
               message: {

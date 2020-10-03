@@ -13,6 +13,13 @@ const issueContainerDiscoveredQueue = getFromEnv({
   name: "QUEUE_ISSUE_CONTAINER_DISCOVERED",
   fatal: true,
 });
+const shouldEmitMessages = Boolean(
+  parseInt(
+    getFromEnv({
+      name: "EMIT_MESSAGES",
+    }) || "1"
+  )
+);
 
 export const handle: SQSHandler = async (event: SQSEvent) => {
   const runtime = await runtimeFactory.create({
@@ -21,6 +28,7 @@ export const handle: SQSHandler = async (event: SQSEvent) => {
         context,
         issueDiscoveredQueue,
         issueContainerDiscoveredQueue,
+        shouldEmitMessages,
       }),
   });
 
