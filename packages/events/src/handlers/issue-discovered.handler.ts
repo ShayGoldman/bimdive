@@ -1,4 +1,5 @@
 import { SQSRecord } from "aws-lambda";
+import pick from "lodash/pick";
 import { Context } from "../services/context.service";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
@@ -18,7 +19,7 @@ export const $IssueDiscoveredHandler = ({
   }: {
     message: SQSRecord;
   }) {
-    const { logger, bimApiFactory, getTokenFromScanId } = context;
+    const { logger, bimApiFactory, getTokenFromScanId, db } = context;
     const scanId = getAttributeFromMessage(message, "scanId");
     const issueId = getAttributeFromMessage(message, "issueId");
     const issueContainerId = getAttributeFromMessage(
@@ -46,25 +47,38 @@ export const $IssueDiscoveredHandler = ({
       `/issues/v1/containers/${issueContainerId}/quality-issues/${issueId}`
     );
 
-    console.log(
-      /* LOG */ "---",
-      "issue",
-      issue.data.attributes.custom_attributes
-    );
-
-    // await db("events.issues").insert({
-    //   provider_id: issue.id,
-    //   type: type?.title || "",
-    //   issue_container_id: issueContainerId,
-    //   sub_type: subType?.title || "",
-    //   ...pick(
-    //     issue.attributes,
-    //     "status",
-    //     "title",
-    //     "due_date",
-    //     "assigned_to",
-    //     "assigned_to_type"
-    //   ),
-    // });
+    try {
+      await db("events.issues").insert({
+        provider_id: issue.id,
+        type: "",
+        issue_container_id: issueContainerId,
+        sub_type: "",
+        ...pick(
+          issue.attributes,
+          "status",
+          "title",
+          "due_date",
+          "assigned_to",
+          "assigned_to_type"
+        ),
+      });
+    } catch (e) {
+      await db("events.issues")
+        .update({
+          type: "",
+          issue_container_id: issueContainerId,
+          sub_type: "",
+          ...pick(
+            issue.attributes,
+            "status",
+            "title",
+            "due_date",
+            "assigned_to",
+            "assigned_to_type"
+          ),
+          scanned_at: db.fn.now(),
+        })
+        .where({ provider_id: issue.id });
+    }
   };
 };

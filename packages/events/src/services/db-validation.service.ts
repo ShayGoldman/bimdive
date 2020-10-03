@@ -12,7 +12,11 @@ type Deps = {
 export function $DBValidation({ logger, db }: Deps): DBValidation {
   return async () => {
     try {
-      if (Boolean(parseInt(getFromEnv("DB_RESET", false) || "0", 10))) {
+      if (
+        Boolean(
+          parseInt(getFromEnv({ name: "DB_RESET", logValue: false }) || "0", 10)
+        )
+      ) {
         await db.raw(`DROP SCHEMA IF EXISTS events CASCADE`);
       }
 
@@ -94,9 +98,6 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
             .defaultTo(db.fn.now());
         });
       }
-
-      // actually creates the schema
-      // await events;
 
       logger.info("database validation passed");
     } catch (error) {

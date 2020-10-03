@@ -10,6 +10,7 @@ export type Context = {
   bimApiFactory: BIMApiFactory;
   sqs: SQS;
   getTokenFromScanId: (scanId: string) => Promise<string>;
+  environment: string;
 };
 
 function $GetTokenFromScanId({ db }: { db: DB }) {
@@ -27,11 +28,12 @@ function $GetTokenFromScanId({ db }: { db: DB }) {
 
 export const $Context = async (): Promise<Context> => {
   const logger = $Logger({
-    logger_level: getFromEnv("LOGGER_LEVEL") || "info",
-    logger_prettyPrint: getFromEnv("LOGGER_PRETTY_PRINT") === "true" || false,
+    logger_level: getFromEnv({ name: "LOGGER_LEVEL" }) || "info",
+    logger_prettyPrint:
+      getFromEnv({ name: "LOGGER_PRETTY_PRINT" }) === "true" || false,
   });
   const db = await $DB({
-    db_connection_string: getFromEnv("DB_CONNECTION_URI") || "",
+    db_connection_string: getFromEnv({ name: "DB_CONNECTION_URI" }) || "",
     logger,
   });
   const sqs = $SQS({ logger });
@@ -44,5 +46,6 @@ export const $Context = async (): Promise<Context> => {
     bimApiFactory,
     sqs,
     getTokenFromScanId: $GetTokenFromScanId({ db }),
+    environment: getFromEnv({ name: "NODE_ENV", fatal: true }),
   };
 };

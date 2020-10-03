@@ -2,7 +2,9 @@ import AWS from "aws-sdk";
 import { getFromEnv } from "../utils/getFromEnv";
 import { Logger } from "./logger.service";
 
-AWS.config.update({ region: getFromEnv("AWS_SQS_REGION") || "eu-west-2" });
+AWS.config.update({
+  region: getFromEnv({ name: "AWS_SQS_REGION" }) || "eu-west-2",
+});
 
 type Deps = {
   logger: Logger;

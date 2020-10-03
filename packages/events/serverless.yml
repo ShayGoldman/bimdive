@@ -27,16 +27,90 @@ provider:
         Fn::GetAtt:
           - IssueDiscoveredQueue
           - Arn
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource:
+        Fn::GetAtt:
+          - IssueContainerDiscoveredQueue
+          - Arn
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource:
+        Fn::GetAtt:
+          - ScanCreatedQueue
+          - Arn
 
 functions:
+  GraphQL:
+    handler: src/lambdas/api/graphql.lambda.graphql
+    memorySize: 128
+    disableLogs: true
+    environment:
+      NODE_ENV: ${env:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+    events:
+      - http:
+          path: graphql
+          method: post
+
+  GenerateMetabaseEmbed:
+    handler: src/lambdas/api/metabase.lambda.embed
+    memorySize: 128
+    disableLogs: true
+    environment:
+      NODE_ENV: ${env:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+    events:
+      - http:
+          path: metabase/embed
+          method: post
+
+  AuthenticateUser:
+    handler: src/lambdas/api/auth.lambda.authenticateUser
+    memorySize: 128
+    disableLogs: true
+    environment:
+      NODE_ENV: ${env:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+    events:
+      - http:
+          path: auth/user
+          method: get
+
+  CreateScan:
+    handler: src/lambdas/api/scan.lambda.createScan
+    memorySize: 128
+    disableLogs: true
+    environment:
+      NODE_ENV: ${env:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      AWS_SQS_REGION: eu-west-2
+      QUEUE_SCAN_CREATED:
+        Ref: ScanCreatedQueue
+    events:
+      - http:
+          path: scan
+          method: post
+
   ScanCreated:
-    handler: src/lambdas/scan-created.lambda.handle
+    handler: src/lambdas/events/scan-created.lambda.handle
     maximumRetryAttempts: 0
     memorySize: 128
     batchSize: 1
     reservedConcurrency: 1
     disableLogs: true
     environment:
+      NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
@@ -51,14 +125,16 @@ functions:
             Fn::GetAtt:
               - ScanCreatedQueue
               - Arn
+
   IssueDiscovered:
-    handler: src/lambdas/issue-discovered.lambda.handle
+    handler: src/lambdas/events/issue-discovered.lambda.handle
     maximumRetryAttempts: 0
     memorySize: 128
     batchSize: 1
     reservedConcurrency: 1
     disableLogs: true
     environment:
+      NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}

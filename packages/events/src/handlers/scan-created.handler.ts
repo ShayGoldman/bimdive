@@ -5,10 +5,6 @@ type DataManagementAPI_GetHubs = any;
 type BIM360API_GetProjects = any;
 type BIM360API_GetIssues = any;
 
-export type ScanCreatedHandler = (params: {
-  message: SQSRecord;
-}) => Promise<void>;
-
 export const $ScanCreatedHandler = ({
   context,
   issueDiscoveredQueue,
@@ -17,7 +13,7 @@ export const $ScanCreatedHandler = ({
   context: Context;
   issueDiscoveredQueue: string;
   issueContainerDiscoveredQueue: string;
-}): ScanCreatedHandler => {
+}) => {
   return async function scanCreatedHandler({
     message,
   }: {

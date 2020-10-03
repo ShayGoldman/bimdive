@@ -5,12 +5,37 @@ const logger = $Logger({
   logger_prettyPrint: false,
 });
 
-export function getFromEnv(variable: string, showValue: boolean = true) {
-  const value = process.env[variable];
-  logger.info({
-    msg: "detected environment variable",
-    variable,
-    value: showValue ? value : undefined,
-  });
-  return value;
+type Params = {
+  name: string;
+  logValue?: boolean;
+};
+
+export function getFromEnv(params: Params & { fatal: true }): string;
+export function getFromEnv(params: Params): string | undefined;
+export function getFromEnv({
+  name,
+  logValue = true,
+  fatal,
+}: Params & { fatal: boolean }): string | undefined {
+  const value = process.env[name];
+
+  if (!value && fatal) {
+    logger.fatal({ msg: "empty environment variable", name });
+    throw new Error(`Empty environment variable: [${name}]`);
+  } else if (value && fatal) {
+    logger.info({
+      msg: "detected environment variable",
+      name,
+      value: logValue ? value : undefined,
+    });
+    return value;
+  } else {
+    logger.info({
+      msg: "detected environment variable",
+      name,
+      value: logValue ? value : undefined,
+    });
+
+    return value;
+  }
 }
