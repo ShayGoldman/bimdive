@@ -15,12 +15,16 @@ export type Context = {
 
 function $GetTokenFromScanId({ db }: { db: DB }) {
   return async function getTokenFromScanId(scanId: string): Promise<string> {
-    const [scan] = await db("events.scans").select().where({ id: scanId });
-    const [{ access_token }] = await db("events.access_tokens")
-      .select()
-      .where({ user_provider_id: scan.initiating_user_provider_id })
-      .orderBy("issued_at", "desc")
-      .limit(1);
+    const {
+      rows: [{ access_token }],
+    } = await db.raw(
+      `
+      SELECT * from events.access_tokens
+      JOIN events.users ON events.access_tokens.user_provider_id=events.users.provider_id 
+      JOIN events.scans ON events.scans.initiating_user_id=events.users.id AND events.scans.id=?
+      `,
+      scanId
+    );
 
     return access_token;
   };

@@ -33,9 +33,10 @@ export const $AuthenticateUser = ({ context }: { context: Context }) => {
       return id;
     } catch (e) {
       logger.warn(e);
-      const [id] = await db("events.users")
-        .update(userData, "id")
-        .where({ provider_id: userData.provider_id });
+      const [id] = await db("events.users").update(userData, "id").where({
+        provider_id: userData.provider_id,
+        modified_at: new Date().toUTCString(),
+      });
       return id;
     }
   }

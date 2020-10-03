@@ -87,11 +87,13 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
 
       if (!(await eventsSchema().hasTable("scans"))) {
         await eventsSchema().createTable("scans", (scans) => {
-          scans.increments("id").primary().unique().unsigned();
           scans
-            .string("initiating_user_provider_id", 64)
+            .uuid("id")
+            .primary()
             .notNullable()
-            .unique();
+            .unique()
+            .defaultTo(db.raw("uuid_generate_v4()"));
+          scans.uuid("initiating_user_id").notNullable();
           scans
             .timestamp("created_at", { precision: 3, useTz: false })
             .notNullable()
