@@ -34,6 +34,8 @@ export default async function authCallback(
   const error = req.query.error as string;
   const code = req.query.code as string;
 
+  res.redirect("/test");
+
   if (error || !code) {
     console.log(`found error ${error}`);
     res.redirect("/error");
