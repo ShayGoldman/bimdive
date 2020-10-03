@@ -41,6 +41,13 @@ provider:
         Fn::GetAtt:
           - ScanCreatedQueue
           - Arn
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource:
+        Fn::GetAtt:
+          - UserDiscoveredQueue
+          - Arn
 
 functions:
   GraphQL:
@@ -70,6 +77,7 @@ functions:
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      METABASE_SECRET: ${env:METABASE_SECRET}
     events:
       - http:
           path: metabase/embed
