@@ -82,6 +82,9 @@ export const $ScanCreatedHandler = ({
           logger.info({
             msg: "issue discovered",
             issueId: issue.id,
+            scanId,
+            issueContainerId,
+            hubId: hub.id,
           });
 
           if (process.env.NODE_ENV === "prod") {
@@ -92,6 +95,7 @@ export const $ScanCreatedHandler = ({
                 scanId,
                 issueId: issue.id,
                 issueContainerId,
+                hubId: hub.id,
               },
             });
           }

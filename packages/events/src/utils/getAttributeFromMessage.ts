@@ -5,6 +5,6 @@ export function getAttributeFromMessage(
   message: SQSRecord,
   attribteName: string
 ) {
-  const attribute = get(message.attributes, attribteName);
-  return attribute ? attribute.stringValue : "";
+  const attribute = get(message.messageAttributes, attribteName);
+  return attribute?.stringValue || "";
 }

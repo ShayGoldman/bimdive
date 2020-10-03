@@ -48,6 +48,8 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
@@ -62,6 +64,8 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
@@ -76,6 +80,8 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
@@ -90,6 +96,8 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
@@ -110,6 +118,8 @@ functions:
     reservedConcurrency: 1
     disableLogs: true
     environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
@@ -139,6 +149,28 @@ functions:
       LOGGER_LEVEL: ${env:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
       AWS_SQS_REGION: eu-west-2
+      QUEUE_USER_DISCOVERED:
+        Ref: UserDiscoveredQueue
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - IssueDiscoveredQueue
+              - Arn
+
+  UserDiscovered:
+    handler: src/lambdas/events/user-discovered.lambda.handle
+    maximumRetryAttempts: 0
+    memorySize: 128
+    batchSize: 1
+    reservedConcurrency: 1
+    disableLogs: true
+    environment:
+      NODE_ENV: ${env:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      AWS_SQS_REGION: eu-west-2
     events:
       - sqs:
           arn:
@@ -152,6 +184,16 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-ScanCreated
+        RedrivePolicy:
+          maxReceiveCount: 1
+          deadLetterTargetArn:
+            Fn::GetAtt:
+              - DeadLetterQueue
+              - Arn
+    UserDiscoveredQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${self:provider.stage}-UserDiscoveredQueue
         RedrivePolicy:
           maxReceiveCount: 1
           deadLetterTargetArn:
