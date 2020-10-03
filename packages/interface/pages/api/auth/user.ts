@@ -36,11 +36,11 @@ export default async function authCallback(
 
   if (error || !code) {
     console.log(`found error ${error}`);
-    res.redirect(`/error?msg=${error}`);
+    res.redirect("/error");
   }
-  console.log(`found code ${code}`);
 
   try {
+    console.log(`found code ${code}`);
     const token = await generateAuthToken(code);
 
     if (!token) {
@@ -55,6 +55,6 @@ export default async function authCallback(
     res.redirect(`/home`);
   } catch (e) {
     console.log(e);
-    res.redirect(`/error?msg=${error}`);
+    res.redirect("/error");
   }
 }
