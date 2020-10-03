@@ -54,7 +54,7 @@ export default async function authCallback(
 
     res.redirect(`/home`);
   } catch (e) {
-    console.error(e);
-    res.redirect("/error");
+    console.log(e);
+    res.redirect(`/error?msg=${error}`);
   }
 }
