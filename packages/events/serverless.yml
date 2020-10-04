@@ -55,12 +55,12 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
-      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
-      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
-      NODE_ENV: ${env:NODE_ENV}
-      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
-      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
-      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
     events:
       - http:
           path: graphql
@@ -71,13 +71,13 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
-      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
-      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
-      NODE_ENV: ${env:NODE_ENV}
-      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
-      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
-      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
-      METABASE_SECRET: ${env:METABASE_SECRET}
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      METABASE_SECRET: ${env:METABASE_SECRET, param:METABASE_SECRET}
     events:
       - http:
           path: metabase/embed
@@ -88,12 +88,12 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
-      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
-      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
-      NODE_ENV: ${env:NODE_ENV}
-      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
-      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
-      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
     events:
       - http:
           path: auth/user
@@ -104,12 +104,12 @@ functions:
     memorySize: 128
     disableLogs: true
     environment:
-      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
-      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
-      NODE_ENV: ${env:NODE_ENV}
-      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
-      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
-      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       AWS_SQS_REGION: eu-west-2
       QUEUE_SCAN_CREATED:
         Ref: ScanCreatedQueue
@@ -126,12 +126,12 @@ functions:
     reservedConcurrency: 1
     disableLogs: true
     environment:
-      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
-      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
-      NODE_ENV: ${env:NODE_ENV}
-      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
-      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
-      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       AWS_SQS_REGION: eu-west-2
       QUEUE_ISSUE_DISCOVERED:
         Ref: IssueDiscoveredQueue
@@ -152,12 +152,12 @@ functions:
     reservedConcurrency: 1
     disableLogs: true
     environment:
-      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
-      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
-      NODE_ENV: ${env:NODE_ENV}
-      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
-      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
-      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       AWS_SQS_REGION: eu-west-2
       QUEUE_USER_DISCOVERED:
         Ref: UserDiscoveredQueue
@@ -176,12 +176,12 @@ functions:
     reservedConcurrency: 1
     disableLogs: true
     environment:
-      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID}
-      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET}
-      NODE_ENV: ${env:NODE_ENV}
-      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI}
-      LOGGER_LEVEL: ${env:LOGGER_LEVEL}
-      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT}
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       AWS_SQS_REGION: eu-west-2
     events:
       - sqs:
