@@ -4,7 +4,7 @@ import querystring from "querystring";
 
 const clientId = "WGwl4crnohsIPbs6CkTHP17VAM0k2oE9";
 const clientSecret = "bZlhmL4PMG3Bwym1";
-const redirectUrl = `http://app.bimdive.com/api/auth/user`;
+const redirectUrl = `https://app.bimdive.com/api/auth/user`;
 
 async function generateAuthToken(code: string): Promise<any> {
   const response = await axios.post(

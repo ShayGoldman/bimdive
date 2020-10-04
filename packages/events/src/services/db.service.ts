@@ -16,6 +16,12 @@ export async function $DB({ logger, db_connection_string }: Deps): Promise<DB> {
   const client = Knex({
     client: "pg",
     connection: db_connection_string,
+    pool: {
+      min: 1,
+      max: 1,
+      idleTimeoutMillis: 500,
+      reapIntervalMillis: 200,
+    },
   });
 
   const validationService = $DBValidation({ logger, db: client });

@@ -58,6 +58,7 @@ export const $IssueDiscoveredHandler = ({
       logger.info({
         msg: "user discovered",
         id: issue.attributes.assigned_to,
+        hubId,
       });
 
       await sqs.sendMessage({

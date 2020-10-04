@@ -9,13 +9,16 @@ type BIM360API_GetUser = any;
 export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
   const { db } = context;
   async function updateUserDetails(userData: any) {
+    // autodesk's user id
+    const userId = userData.uid;
+
     const user = await db("events.users")
       .select()
-      .where({ provider_id: userData.id });
+      .where({ provider_id: userId });
 
     if (isEmpty(user)) {
       await db("events.users").insert({
-        provider_id: userData.id,
+        provider_id: userId,
         email: userData.email,
         first_name: userData.first_name,
         last_name: userData.last_name,
@@ -32,7 +35,7 @@ export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
           scanned_at: db.fn.now(),
           modified_at: db.fn.now(),
         })
-        .where({ provider_id: userData.id });
+        .where({ provider_id: userId });
     }
   }
 
@@ -42,6 +45,7 @@ export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
     message: SQSRecord;
   }) {
     const { logger, bimApiFactory, generateTemporaryAPIToken } = context;
+    logger.debug(message);
     const userProviderId = getAttributeFromMessage(message, "userProviderId");
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");
@@ -53,12 +57,13 @@ export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
 
     const accountId = last(hubId.split("b."));
 
-    logger.info("fetching user details");
+    logger.info({ msg: "fetching user details", userProviderId });
 
     const user = await api.get<BIM360API_GetUser, BIM360API_GetUser>(
       `/hq/v1/accounts/${accountId}/users/${userProviderId}`
     );
 
+    logger.debug(user);
     await updateUserDetails(user);
 
     logger.info({

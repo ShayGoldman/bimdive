@@ -187,7 +187,7 @@ functions:
       - sqs:
           arn:
             Fn::GetAtt:
-              - IssueDiscoveredQueue
+              - UserDiscoveredQueue
               - Arn
 
 resources:

@@ -1,7 +1,7 @@
 import React from "react";
 
 const clientId = "WGwl4crnohsIPbs6CkTHP17VAM0k2oE9";
-const redirectUrl = `http://app.bimdive.com/api/auth/user`;
+const redirectUrl = `https://app.bimdive.com/api/auth/user`;
 const authLink = `https://developer.api.autodesk.com/authentication/v1/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUrl}&scope=data:read account:read`;
 
 function App() {
