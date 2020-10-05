@@ -65,6 +65,7 @@ functions:
       - http:
           path: graphql
           method: post
+          cors: true
 
   GenerateMetabaseEmbed:
     handler: src/lambdas/api/metabase.lambda.embed
@@ -82,6 +83,7 @@ functions:
       - http:
           path: metabase/embed
           method: post
+          cors: true
 
   AuthenticateUser:
     handler: src/lambdas/api/auth.lambda.authenticateUser
@@ -117,6 +119,7 @@ functions:
       - http:
           path: scan
           method: post
+          cors: true
 
   ScanCreated:
     handler: src/lambdas/events/scan-created.lambda.handle
