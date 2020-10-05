@@ -26,7 +26,6 @@ export default function HomePage() {
           height="600"
         />
       )}
-      {email && <h2>Henlo {email}</h2>}
       {error && (
         <section>
           <h2>Error</h2>
