@@ -3,6 +3,10 @@ import { APIGatewayProxyResult } from "aws-lambda";
 function success<T>(data: T): APIGatewayProxyResult {
   return {
     statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true,
+    },
     body: JSON.stringify({
       success: true,
       error: null,
