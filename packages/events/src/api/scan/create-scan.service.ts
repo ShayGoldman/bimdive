@@ -10,19 +10,31 @@ export const $CreateScan = ({
 }) => {
   return async function createScan({ event }: { event: APIGatewayProxyEvent }) {
     const { logger, db, sqs } = context;
-    const { userId } = JSON.parse(event.body || "{}");
+    const { email } = JSON.parse(event.body || "{}");
 
     logger.info({
-      msg: "creating scan",
-      userId,
+      msg: "scan requested",
+      email,
     });
+
+    const [initiatingUser] = await db("events.users").select().where({ email });
+
+    if (!initiatingUser) {
+      return { error: "scan not possible" };
+    }
 
     const [scanId] = await db("events.scans").insert(
       {
-        initiating_user_id: userId,
+        initiating_user_id: initiatingUser.id,
       },
       "id"
     );
+
+    logger.info({
+      msg: "scan requested",
+      initiatingUserId: initiatingUser.id,
+      scanId,
+    });
 
     await sqs.sendMessage({
       queue: scanCreatedQueue,
