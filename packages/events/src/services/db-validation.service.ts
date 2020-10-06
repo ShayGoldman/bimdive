@@ -54,7 +54,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
             .unique()
             .defaultTo(db.raw("uuid_generate_v4()"));
           users.string("provider_id", 64).notNullable().unique();
-          users.text("email");
+          users.string("email", 255).unique().notNullable();
           users.text("first_name");
           users.text("last_name");
           users.text("profile_img_url");
