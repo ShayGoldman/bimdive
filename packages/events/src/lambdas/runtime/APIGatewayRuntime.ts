@@ -32,6 +32,7 @@ export const $APIGatewayRuntimeFactory = (): {
 
   return {
     create: async ({ apiContext, factory }: Deps) => {
+      apiContext.callbackWaitsForEmptyEventLoop = false;
       const context = await contextPromise;
 
       const { logger, environment } = context;
