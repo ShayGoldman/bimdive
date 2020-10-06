@@ -60,7 +60,7 @@ export default async function authCallback(
       res.redirect("/error");
     }
 
-    const userData = await getUserData(token);
+    const userData = await getUserData(token.access_token);
     console.log(`authed user ${userData.emailId}`);
 
     await axios.post(
