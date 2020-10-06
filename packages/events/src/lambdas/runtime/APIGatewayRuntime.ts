@@ -56,6 +56,8 @@ export const $APIGatewayRuntimeFactory = (): {
           multiValueQueryStringParameters,
         });
 
+        let response = error("Unknown error");
+
         try {
           const {
             data,
@@ -68,11 +70,11 @@ export const $APIGatewayRuntimeFactory = (): {
           });
 
           if (errorText) {
-            return error(errorText || "Unknown error");
+            response = error(errorText || "Unknown error");
           }
 
           if (redirectUrl) {
-            return redirect(redirectUrl);
+            response = redirect(redirectUrl);
           }
 
           return success(data);
@@ -82,8 +84,12 @@ export const $APIGatewayRuntimeFactory = (): {
             requestId,
             ...err,
           });
-          return error(err.message || "Unknown error");
+          response = error(err.message || "Unknown error");
+        } finally {
+          await context.hooks.onShutdown();
         }
+
+        return response;
       };
     },
   };

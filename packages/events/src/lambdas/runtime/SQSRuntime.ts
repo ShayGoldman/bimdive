@@ -47,6 +47,7 @@ export const $SQSRuntimeFactory = (): {
         } catch (e) {
           logger.error(e);
         } finally {
+          await context.hooks.onShutdown();
           // nasty serverless bug that causes local invocations to hang
           if (process.env.IS_LOCAL) {
             process.exit(0);

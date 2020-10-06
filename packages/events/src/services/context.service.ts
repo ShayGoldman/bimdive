@@ -14,6 +14,9 @@ export type Context = {
   getTokenFromScanId: (scanId: string) => Promise<string>;
   generateTemporaryAPIToken: () => Promise<string>;
   environment: string;
+  hooks: {
+    onShutdown: () => Promise<void>;
+  };
 };
 
 // part of 3-legged-token flow
@@ -82,6 +85,11 @@ export const $Context = async (): Promise<Context> => {
   const bimApiFactory = $BIMApiFactory({ logger });
 
   return {
+    hooks: {
+      onShutdown: async () => {
+        await db.destroy();
+      },
+    },
     logger,
     db,
     bimApiFactory,

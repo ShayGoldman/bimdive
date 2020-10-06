@@ -31,7 +31,7 @@ export const $CreateScan = ({
     );
 
     logger.info({
-      msg: "scan requested",
+      msg: "scan created",
       initiatingUserId: initiatingUser.id,
       scanId,
     });
