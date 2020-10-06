@@ -87,6 +87,7 @@ export const $Context = async (): Promise<Context> => {
   return {
     hooks: {
       onShutdown: async () => {
+        logger.info("destroying db connection");
         await db.destroy();
       },
     },

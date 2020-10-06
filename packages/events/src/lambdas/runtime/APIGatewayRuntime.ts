@@ -77,7 +77,7 @@ export const $APIGatewayRuntimeFactory = (): {
             response = redirect(redirectUrl);
           }
 
-          return success(data);
+          response = success(data);
         } catch (err) {
           logger.error({
             msg: "error encountered",
