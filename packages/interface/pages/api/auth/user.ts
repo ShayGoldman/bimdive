@@ -61,14 +61,14 @@ export default async function authCallback(
     }
 
     const userData = await getUserData(token);
-    console.log(`authed user ${userData.email}`);
+    console.log(`authed user ${userData.emailId}`);
 
     await axios.post(
       "http://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
       { ...token, code }
     );
 
-    res.redirect(`/home?email=${userData.email}`);
+    res.redirect(`/home?email=${userData.emailId}`);
   } catch (e) {
     console.log(e);
     res.redirect("/error");
