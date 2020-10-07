@@ -126,7 +126,7 @@ functions:
     maximumRetryAttempts: 0
     memorySize: 128
     batchSize: 1
-    reservedConcurrency: 1
+    reservedConcurrency: 10
     disableLogs: true
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
@@ -152,7 +152,7 @@ functions:
     maximumRetryAttempts: 0
     memorySize: 128
     batchSize: 1
-    reservedConcurrency: 1
+    reservedConcurrency: 10
     disableLogs: true
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
@@ -176,7 +176,7 @@ functions:
     maximumRetryAttempts: 0
     memorySize: 128
     batchSize: 1
-    reservedConcurrency: 1
+    reservedConcurrency: 10
     disableLogs: true
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
