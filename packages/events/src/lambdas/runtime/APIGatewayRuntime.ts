@@ -4,8 +4,7 @@ import {
   Context as APIGatewayContext,
 } from "aws-lambda";
 import { $Context, Context } from "../../services/context.service";
-import { $ServiceProvider, Services } from "../../services/service-provider";
-import { error, success, redirect } from "../../utils/api-gateway-result";
+import { error, redirect, success } from "../../utils/api-gateway-result";
 
 type HandlerParams = { event: APIGatewayProxyEvent };
 
@@ -17,14 +16,9 @@ type HandlerResult = {
 
 type Handler = (params: HandlerParams) => Promise<HandlerResult>;
 
-type MinimalRuntimeDeps = {
-  apiContext: APIGatewayContext;
-  factory: (params: { context: Context }) => Handler;
-};
-
 type RuntimeDeps = {
   apiContext: APIGatewayContext;
-  factory: (params: { context: Context; services: Services }) => Handler;
+  factory: () => Handler;
 };
 
 export type APIGatewayRuntime = (
@@ -93,26 +87,14 @@ const $Runtime = ({
 };
 
 export const $APIGatewayRuntimeFactory = (): {
-  createMinimal: (deps: MinimalRuntimeDeps) => APIGatewayRuntime;
-  create: (deps: RuntimeDeps) => Promise<APIGatewayRuntime>;
+  create: (deps: RuntimeDeps) => APIGatewayRuntime;
 } => {
   const context = $Context();
 
   return {
-    createMinimal: ({ apiContext, factory }: MinimalRuntimeDeps) => {
+    create: ({ apiContext, factory }: RuntimeDeps) => {
       apiContext.callbackWaitsForEmptyEventLoop = false;
-      const handler = factory({ context });
-
-      return $Runtime({
-        requestId: apiContext.awsRequestId,
-        context,
-        handler,
-      });
-    },
-    create: async ({ apiContext, factory }: RuntimeDeps) => {
-      apiContext.callbackWaitsForEmptyEventLoop = false;
-      const services = await $ServiceProvider({ context });
-      const handler = factory({ context, services });
+      const handler = factory();
 
       return $Runtime({
         requestId: apiContext.awsRequestId,

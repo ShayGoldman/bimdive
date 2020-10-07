@@ -4,15 +4,17 @@ import {
   Context as APIGatewayContext,
 } from "aws-lambda";
 import { $GraphQL } from "../../api/graphql/graphql.service";
-import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";
+import { $APIEnvironment } from "../environments";
+
+const { context, runtimeFactory } = $APIEnvironment();
 
 export const grapqhl: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await $APIGatewayRuntimeFactory().create({
+  const runtime = runtimeFactory.create({
     apiContext,
-    factory: $GraphQL,
+    factory: () => $GraphQL({ context }),
   });
 
   return await runtime({ event });

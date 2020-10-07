@@ -5,20 +5,23 @@ import {
 } from "aws-lambda";
 import { $CreateScan } from "../../api/scan/create-scan.service";
 import { getFromEnv } from "../../utils/getFromEnv";
-import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";
+import { $APIEnvironment } from "../environments";
 
 const scanCreatedQueue = getFromEnv({
   name: "QUEUE_SCAN_CREATED",
   fatal: true,
 });
 
+const { context, runtimeFactory, servicesPromise } = $APIEnvironment();
+
 export const createScan: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await $APIGatewayRuntimeFactory().create({
+  const services = await servicesPromise;
+  const runtime = runtimeFactory.create({
     apiContext,
-    factory: ({ context, services }) =>
+    factory: () =>
       $CreateScan({
         context,
         services,

@@ -1,11 +1,10 @@
-import { getFromEnv } from "../utils/getFromEnv";
-import { $BIMApiFactory, BIMApiFactory } from "./bim-api-factory.service";
-import { $DB, DB } from "./db.service";
-import { $Logger, Logger } from "./logger.service";
-import { $SQS, SQS } from "./sqs.service";
 import axios from "axios";
 import querystring from "querystring";
+import { getFromEnv } from "../utils/getFromEnv";
+import { $BIMApiFactory, BIMApiFactory } from "./bim-api-factory.service";
 import { Context } from "./context.service";
+import { $DB, DB } from "./db.service";
+import { $SQS, SQS } from "./sqs.service";
 
 export type Services = {
   db: DB;

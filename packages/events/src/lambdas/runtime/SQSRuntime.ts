@@ -1,33 +1,30 @@
-import { SQSEvent, SQSRecord, Context as SQSContext } from "aws-lambda";
-import { $Context, Context } from "../../services/context.service";
-import { $ServiceProvider, Services } from "../../services/service-provider";
+import { Context as SQSContext, SQSEvent, SQSRecord } from "aws-lambda";
+import { $Context } from "../../services/context.service";
 
 type Handler = (params: { message: SQSRecord }) => Promise<void>;
 
-type Factory = (params: { context: Context; services: Services }) => Handler;
+type Factory = () => Handler;
 
-type CreateParams = {
+type RuntimeDeps = {
   factory: Factory;
   apiContext: SQSContext;
 };
 
 type SQSRuntimeFactory = {
-  create: (params: CreateParams) => Promise<SQSRuntime>;
+  create: (params: RuntimeDeps) => Promise<SQSRuntime>;
 };
 
 export type SQSRuntime = (params: { event: SQSEvent }) => Promise<void>;
 
 export const $SQSRuntimeFactory = (): SQSRuntimeFactory => {
   const context = $Context();
-  const servicesPromise = $ServiceProvider({ context });
 
   return {
-    create: async ({ factory, apiContext }: CreateParams) => {
+    create: async ({ factory, apiContext }: RuntimeDeps) => {
       apiContext.callbackWaitsForEmptyEventLoop = false;
-      const services = await servicesPromise;
 
       const { logger, environment } = context;
-      const handler = factory({ context, services });
+      const handler = factory();
 
       return async function sqsRuntime({ event }: { event: SQSEvent }) {
         const messages = event.Records.map((m) => m.messageId);

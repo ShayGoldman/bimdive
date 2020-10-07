@@ -100,13 +100,12 @@ program
     }
 
     const cmd = compact([
-      `npx dotenv -e ${envFile} --`,
       "npx sls deploy",
       `-s ${stage}`,
       functionName && `-f ${functionName}`,
     ]).join(" ");
 
-    execute(cmd);
+    execute(`npx dotenv -e ${envFile} -- bash -c '${cmd}'`);
   });
 
 program
