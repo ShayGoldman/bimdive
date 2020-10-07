@@ -1,21 +1,29 @@
-import { SQSEvent, SQSRecord } from "aws-lambda";
+import { SQSEvent, SQSRecord, Context as SQSContext } from "aws-lambda";
 import { $Context, Context } from "../../services/context.service";
 import { $ServiceProvider, Services } from "../../services/service-provider";
 
 type Handler = (params: { message: SQSRecord }) => Promise<void>;
 
-export type SQSRuntime = (params: { event: SQSEvent }) => Promise<void>;
-
 type Factory = (params: { context: Context; services: Services }) => Handler;
 
-export const $SQSRuntimeFactory = (): {
-  create: (params: { factory: Factory }) => Promise<SQSRuntime>;
-} => {
+type CreateParams = {
+  factory: Factory;
+  apiContext: SQSContext;
+};
+
+type SQSRuntimeFactory = {
+  create: (params: CreateParams) => Promise<SQSRuntime>;
+};
+
+export type SQSRuntime = (params: { event: SQSEvent }) => Promise<void>;
+
+export const $SQSRuntimeFactory = (): SQSRuntimeFactory => {
   const context = $Context();
   const servicesPromise = $ServiceProvider({ context });
 
   return {
-    create: async ({ factory }: { factory: Factory }) => {
+    create: async ({ factory, apiContext }: CreateParams) => {
+      apiContext.callbackWaitsForEmptyEventLoop = false;
       const services = await servicesPromise;
 
       const { logger, environment } = context;
@@ -27,6 +35,7 @@ export const $SQSRuntimeFactory = (): {
         logger.info({
           msg: "event recieved",
           messages,
+          requestId: apiContext.awsRequestId,
           environment,
         });
 
@@ -45,6 +54,7 @@ export const $SQSRuntimeFactory = (): {
           }
           logger.info({
             msg: "event handled",
+            requestId: apiContext.awsRequestId,
             messages,
           });
         } catch (e) {

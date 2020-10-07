@@ -1,4 +1,4 @@
-import { SQSEvent, SQSHandler } from "aws-lambda";
+import { Context, SQSEvent, SQSHandler } from "aws-lambda";
 import { $ScanCreatedHandler } from "../../handlers/scan-created.handler";
 import { getFromEnv } from "../../utils/getFromEnv";
 import { $SQSRuntimeFactory } from "../runtime/SQSRuntime";
@@ -21,8 +21,12 @@ const shouldEmitMessages = Boolean(
   )
 );
 
-export const handle: SQSHandler = async (event: SQSEvent) => {
+export const handle: SQSHandler = async (
+  event: SQSEvent,
+  apiContext: Context
+) => {
   const runtime = await runtimeFactory.create({
+    apiContext,
     factory: ({ context, services }) =>
       $ScanCreatedHandler({
         context,
