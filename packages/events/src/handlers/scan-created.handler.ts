@@ -1,5 +1,6 @@
 import { SQSRecord } from "aws-lambda";
 import { Context } from "../services/context.service";
+import { Services } from "../services/service-provider";
 
 type DataManagementAPI_GetHubs = any;
 type BIM360API_GetProjects = any;
@@ -10,8 +11,11 @@ export const $ScanCreatedHandler = ({
   issueDiscoveredQueue,
   issueContainerDiscoveredQueue,
   shouldEmitMessages,
+  services,
 }: {
   context: Context;
+  services: Services;
+
   issueDiscoveredQueue: string;
   issueContainerDiscoveredQueue: string;
   shouldEmitMessages: boolean;
@@ -21,7 +25,8 @@ export const $ScanCreatedHandler = ({
   }: {
     message: SQSRecord;
   }) {
-    const { logger, sqs, bimApiFactory, getTokenFromScanId } = context;
+    const { logger } = context;
+    const { sqs, bimApiFactory, getTokenFromScanId } = services;
 
     const { stringValue: scanId = "" } = message.messageAttributes.scanId;
 

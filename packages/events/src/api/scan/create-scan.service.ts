@@ -1,15 +1,19 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { Context } from "../../services/context.service";
+import { Services } from "../../services/service-provider";
 
 export const $CreateScan = ({
   context,
   scanCreatedQueue,
+  services,
 }: {
   context: Context;
+  services: Services;
   scanCreatedQueue: string;
 }) => {
   return async function createScan({ event }: { event: APIGatewayProxyEvent }) {
-    const { logger, db, sqs } = context;
+    const { logger } = context;
+    const { sqs, db } = services;
     const { email } = JSON.parse(event.body || "{}");
 
     logger.info({

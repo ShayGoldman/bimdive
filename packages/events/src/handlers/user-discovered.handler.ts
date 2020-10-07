@@ -3,11 +3,18 @@ import { Context } from "../services/context.service";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 import last from "lodash/last";
 import isEmpty from "lodash/isEmpty";
+import { Services } from "../services/service-provider";
 
 type BIM360API_GetUser = any;
 
-export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
-  const { db } = context;
+export const $UserDiscoveredHandler = ({
+  context,
+  services,
+}: {
+  context: Context;
+  services: Services;
+}) => {
+  const { db } = services;
   async function updateUserDetails(userData: any) {
     // autodesk's user id
     const userId = userData.uid;
@@ -44,8 +51,9 @@ export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
   }: {
     message: SQSRecord;
   }) {
-    const { logger, bimApiFactory, generateTemporaryAPIToken } = context;
-    logger.debug(message);
+    const { bimApiFactory, generateTemporaryAPIToken } = services;
+    const { logger } = context;
+
     const userProviderId = getAttributeFromMessage(message, "userProviderId");
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");

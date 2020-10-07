@@ -7,8 +7,6 @@ import { $CreateScan } from "../../api/scan/create-scan.service";
 import { getFromEnv } from "../../utils/getFromEnv";
 import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";
 
-const runtimeFactory = $APIGatewayRuntimeFactory();
-
 const scanCreatedQueue = getFromEnv({
   name: "QUEUE_SCAN_CREATED",
   fatal: true,
@@ -18,9 +16,14 @@ export const createScan: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await runtimeFactory.create({
+  const runtime = await $APIGatewayRuntimeFactory().create({
     apiContext,
-    factory: ({ context }) => $CreateScan({ context, scanCreatedQueue }),
+    factory: ({ context, services }) =>
+      $CreateScan({
+        context,
+        services,
+        scanCreatedQueue,
+      }),
   });
 
   return await runtime({ event });

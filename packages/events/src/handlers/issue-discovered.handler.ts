@@ -1,6 +1,7 @@
 import { SQSRecord } from "aws-lambda";
 import pick from "lodash/pick";
 import { Context } from "../services/context.service";
+import { Services } from "../services/service-provider";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
 type BIM360API_GetIssue = any;
@@ -12,16 +13,20 @@ export type IssueDiscoveredHandler = (params: {
 export const $IssueDiscoveredHandler = ({
   context,
   userDiscoveredQueue,
+  services,
 }: {
   context: Context;
   userDiscoveredQueue: string;
+  services: Services;
 }): IssueDiscoveredHandler => {
   return async function issueDiscoveredHandler({
     message,
   }: {
     message: SQSRecord;
   }) {
-    const { logger, bimApiFactory, getTokenFromScanId, db, sqs } = context;
+    const { logger } = context;
+    const { bimApiFactory, getTokenFromScanId, db, sqs } = services;
+
     const scanId = getAttributeFromMessage(message, "scanId");
     const issueId = getAttributeFromMessage(message, "issueId");
     const issueContainerId = getAttributeFromMessage(

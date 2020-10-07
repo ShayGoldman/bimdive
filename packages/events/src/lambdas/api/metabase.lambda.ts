@@ -12,13 +12,11 @@ const metabaseSecret = getFromEnv({
   fatal: true,
 });
 
-const runtimeFactory = $APIGatewayRuntimeFactory();
-
 export const embed: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await runtimeFactory.create({
+  const runtime = $APIGatewayRuntimeFactory().createMinimal({
     apiContext,
     factory: ({ context }) =>
       $MetabaseEmbedding({ context, secret: metabaseSecret }),

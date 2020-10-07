@@ -1,9 +1,17 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import dayjs from "dayjs";
 import { Context } from "../../services/context.service";
+import { Services } from "../../services/service-provider";
 
-export const $AuthenticateUser = ({ context }: { context: Context }) => {
-  const { bimApiFactory, db, logger } = context;
+export const $AuthenticateUser = ({
+  context,
+  services,
+}: {
+  context: Context;
+  services: Services;
+}) => {
+  const { logger } = context;
+  const { bimApiFactory, db } = services;
   const api = bimApiFactory({});
 
   async function getUserData(token: string): Promise<any> {

@@ -23,9 +23,10 @@ const shouldEmitMessages = Boolean(
 
 export const handle: SQSHandler = async (event: SQSEvent) => {
   const runtime = await runtimeFactory.create({
-    factory: ({ context }) =>
+    factory: ({ context, services }) =>
       $ScanCreatedHandler({
         context,
+        services,
         issueDiscoveredQueue,
         issueContainerDiscoveredQueue,
         shouldEmitMessages,

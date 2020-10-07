@@ -12,8 +12,8 @@ const runtimeFactory = $SQSRuntimeFactory();
 
 export const handle: SQSHandler = async (event: SQSEvent) => {
   const runtime = await runtimeFactory.create({
-    factory: ({ context }) =>
-      $IssueDiscoveredHandler({ context, userDiscoveredQueue }),
+    factory: ({ context, services }) =>
+      $IssueDiscoveredHandler({ context, services, userDiscoveredQueue }),
   });
 
   await runtime({ event });

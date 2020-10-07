@@ -6,15 +6,13 @@ import {
 import { $AuthenticateUser } from "../../api/auth/authenticate-user.service";
 import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";
 
-const runtimeFactory = $APIGatewayRuntimeFactory();
-
 export const authenticateUser: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await runtimeFactory.create({
+  const runtime = await $APIGatewayRuntimeFactory().create({
     apiContext,
-    factory: ({ context }) => $AuthenticateUser({ context }),
+    factory: $AuthenticateUser,
   });
 
   return await runtime({ event });
