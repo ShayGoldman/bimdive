@@ -143,7 +143,7 @@ functions:
         Ref: IssueContainerDiscoveredQueue
     events:
       - sqs:
-          batchSize: 1
+          batchSize: 20
           arn:
             Fn::GetAtt:
               - ScanCreatedQueue
@@ -166,10 +166,31 @@ functions:
         Ref: UserDiscoveredQueue
     events:
       - sqs:
-          batchSize: 1
+          batchSize: 20
           arn:
             Fn::GetAtt:
               - IssueDiscoveredQueue
+              - Arn
+
+  IssueContainerDiscovered:
+    handler: src/lambdas/events/issue-container-discovered.lambda.handle
+    memorySize: 128
+    reservedConcurrency: 10
+    disableLogs: true
+    environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      AWS_SQS_REGION: eu-west-2
+    events:
+      - sqs:
+          batchSize: 20
+          arn:
+            Fn::GetAtt:
+              - IssueContainerDiscoveredQueue
               - Arn
 
   UserDiscovered:
@@ -187,7 +208,7 @@ functions:
       AWS_SQS_REGION: eu-west-2
     events:
       - sqs:
-          batchSize: 1
+          batchSize: 20
           arn:
             Fn::GetAtt:
               - UserDiscoveredQueue
