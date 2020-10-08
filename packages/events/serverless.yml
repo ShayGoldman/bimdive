@@ -123,9 +123,7 @@ functions:
 
   ScanCreated:
     handler: src/lambdas/events/scan-created.lambda.handle
-    maximumRetryAttempts: 0
     memorySize: 128
-    batchSize: 1
     reservedConcurrency: 10
     disableLogs: true
     environment:
@@ -142,6 +140,7 @@ functions:
         Ref: IssueContainerDiscoveredQueue
     events:
       - sqs:
+          batchSize: 1
           arn:
             Fn::GetAtt:
               - ScanCreatedQueue
@@ -149,9 +148,7 @@ functions:
 
   IssueDiscovered:
     handler: src/lambdas/events/issue-discovered.lambda.handle
-    maximumRetryAttempts: 0
     memorySize: 128
-    batchSize: 1
     reservedConcurrency: 10
     disableLogs: true
     environment:
@@ -166,6 +163,7 @@ functions:
         Ref: UserDiscoveredQueue
     events:
       - sqs:
+          batchSize: 1
           arn:
             Fn::GetAtt:
               - IssueDiscoveredQueue
@@ -173,9 +171,7 @@ functions:
 
   UserDiscovered:
     handler: src/lambdas/events/user-discovered.lambda.handle
-    maximumRetryAttempts: 0
     memorySize: 128
-    batchSize: 1
     reservedConcurrency: 10
     disableLogs: true
     environment:
@@ -188,6 +184,7 @@ functions:
       AWS_SQS_REGION: eu-west-2
     events:
       - sqs:
+          batchSize: 1
           arn:
             Fn::GetAtt:
               - UserDiscoveredQueue
