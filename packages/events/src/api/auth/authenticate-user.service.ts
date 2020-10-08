@@ -84,7 +84,7 @@ export const $AuthenticateUser = ({
         expires_at: dayjs(issuedAt)
           .add(expires_in, "second")
           .toDate()
-          .toISOString(),
+          .toUTCString(),
       });
 
       const userId = await updateUserData({

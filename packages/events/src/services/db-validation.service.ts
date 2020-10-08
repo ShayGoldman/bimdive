@@ -37,9 +37,9 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
           issues.string("sub_type", 255);
           issues.string("assigned_to", 64);
           issues.text("assigned_to_type");
-          issues.timestamp("due_date", { precision: 3, useTz: false });
+          issues.timestamp("due_date", { precision: 3, useTz: true });
           issues
-            .timestamp("scanned_at", { precision: 3, useTz: false })
+            .timestamp("scanned_at", { precision: 3, useTz: true })
             .notNullable()
             .defaultTo(db.fn.now());
         });
@@ -60,11 +60,11 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
           users.text("profile_img_url");
           users.timestamp("scanned_at");
           users
-            .timestamp("modified_at", { precision: 3, useTz: false })
+            .timestamp("modified_at", { precision: 3, useTz: true })
             .notNullable()
             .defaultTo(db.fn.now());
           users
-            .timestamp("created_at", { precision: 3, useTz: false })
+            .timestamp("created_at", { precision: 3, useTz: true })
             .notNullable()
             .defaultTo(db.fn.now());
         });
@@ -76,11 +76,11 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
           tokens.text("access_token");
           tokens.text("refresh_token");
           tokens
-            .timestamp("issued_at", { precision: 3, useTz: false })
+            .timestamp("issued_at", { precision: 3, useTz: true })
             .notNullable()
             .defaultTo(db.fn.now());
           tokens
-            .timestamp("expires_at", { precision: 3, useTz: false })
+            .timestamp("expires_at", { precision: 3, useTz: true })
             .notNullable();
         });
       }
@@ -95,7 +95,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
             .defaultTo(db.raw("uuid_generate_v4()"));
           scans.uuid("initiating_user_id").notNullable();
           scans
-            .timestamp("created_at", { precision: 3, useTz: false })
+            .timestamp("created_at", { precision: 3, useTz: true })
             .notNullable()
             .defaultTo(db.fn.now());
         });
