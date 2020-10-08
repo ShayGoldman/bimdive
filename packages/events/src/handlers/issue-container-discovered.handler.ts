@@ -3,7 +3,7 @@ import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
-type BIM360API_GetIssue = any;
+type BIM360API_GetCustomAttributes = any;
 
 export const $IssueContainerDiscoveredHandler = ({
   context,
@@ -42,8 +42,8 @@ export const $IssueContainerDiscoveredHandler = ({
     const api = bimApiFactory({ token });
 
     const customAttributes = await api.get<
-      BIM360API_GetIssue,
-      BIM360API_GetIssue
+      BIM360API_GetCustomAttributes,
+      BIM360API_GetCustomAttributes
     >(`/issues/v2/containers/${issueContainerId}/issue-attribute-definitions`);
 
     console.log(/* LOG */ "---", "customAttributes", customAttributes);
