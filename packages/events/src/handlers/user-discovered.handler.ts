@@ -24,17 +24,9 @@ export const $UserDiscoveredHandler = ({
       .where({ provider_id: userId });
 
     if (isEmpty(user)) {
-      await db("events.users").insert({
-        provider_id: userId,
-        email: userData.email,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        profile_img_url: userData.image_url,
-        scanned_at: db.fn.now(),
-      });
-    } else {
-      await db("events.users")
-        .update({
+      const res = await db("events.users")
+        .insert({
+          provider_id: userId,
           email: userData.email,
           first_name: userData.first_name,
           last_name: userData.last_name,
@@ -43,6 +35,14 @@ export const $UserDiscoveredHandler = ({
           modified_at: db.fn.now(),
         })
         .where({ provider_id: userId });
+    } else {
+      await db("events.users").update({
+        email: userData.email,
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        profile_img_url: userData.image_url,
+        scanned_at: db.fn.now(),
+      });
     }
   }
 

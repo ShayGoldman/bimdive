@@ -15,6 +15,7 @@ export type Services = {
 };
 
 // part of 3-legged-token flow
+// https://forge.autodesk.com/en/docs/oauth/v2/tutorials/get-3-legged-token/
 function $GetTokenFromScanId({ db }: { db: DB }) {
   return async function getTokenFromScanId(scanId: string): Promise<string> {
     const {
@@ -33,6 +34,7 @@ function $GetTokenFromScanId({ db }: { db: DB }) {
 }
 
 // 2-legged-token
+// https://forge.autodesk.com/en/docs/oauth/v2/tutorials/get-2-legged-token/
 function $GenerateTemporaryAPIToken({
   clientId,
   clientSecret,

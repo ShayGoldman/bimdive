@@ -12,6 +12,54 @@ export const $IssueContainerDiscoveredHandler = ({
   context: Context;
   services: Services;
 }) => {
+  async function persistCustomAttributes(customAttributes) {
+    const { logger } = context;
+    const { db } = services;
+
+    for (const {
+      id,
+      containerId,
+      title,
+      dataType,
+      description,
+      createdAt,
+      updatedAt,
+      deletedAt,
+    } of customAttributes.results) {
+      try {
+        const res = await db("events.custom_attributes")
+          .update({
+            issue_container_provider_id: containerId,
+            type: dataType,
+            title,
+            description,
+            created_at: createdAt,
+            updated_at: updatedAt,
+            deleted_at: deletedAt,
+            scanned_at: db.fn.now(),
+          })
+          .where({ provider_id: id });
+
+        if (res === 0) {
+          throw new Error("failed update, reverting to insert");
+        }
+      } catch (e) {
+        logger.debug(e);
+        await db("events.custom_attributes").insert({
+          provider_id: id,
+          issue_container_provider_id: containerId,
+          type: dataType,
+          title,
+          description,
+          created_at: createdAt,
+          updated_at: updatedAt,
+          deleted_at: deletedAt,
+          scanned_at: db.fn.now(),
+        });
+      }
+    }
+  }
+
   return async function issueContainerDiscoveredHandler({
     message,
   }: {
@@ -46,20 +94,11 @@ export const $IssueContainerDiscoveredHandler = ({
       BIM360API_GetCustomAttributes
     >(`/issues/v2/containers/${issueContainerId}/issue-attribute-definitions`);
 
-    console.log(/* LOG */ "---", "customAttributes", customAttributes);
+    logger.info({
+      msg: "found custom attributes",
+      count: customAttributes.length,
+    });
 
-    // await db("events.issues").insert({
-    //   provider_id: issue.id,
-    //   type: type?.title || "",
-    //   sub_type: subType?.title || "",
-    //   ...pick(
-    //     issue.attributes,
-    //     "status",
-    //     "title",
-    //     "due_date",
-    //     "assigned_to",
-    //     "assigned_to_type"
-    //   ),
-    // });
+    await persistCustomAttributes(customAttributes);
   };
 };

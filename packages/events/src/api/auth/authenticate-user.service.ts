@@ -26,25 +26,25 @@ export const $AuthenticateUser = ({
 
   async function updateUserAccessToken(token: any): Promise<void> {
     try {
-      await db("events.access_tokens").insert(token);
-    } catch (e) {
-      logger.warn(e);
       await db("events.access_tokens")
         .update(token)
         .where({ user_provider_id: token.user_provider_id });
+    } catch (e) {
+      logger.warn(e);
+      await db("events.access_tokens").insert(token);
     }
   }
 
   async function updateUserData(userData: any): Promise<any> {
     try {
-      const [id] = await db("events.users").insert(userData, "id");
-      return id;
-    } catch (e) {
-      logger.warn(e);
       const [id] = await db("events.users").update(userData, "id").where({
         provider_id: userData.provider_id,
         modified_at: new Date().toUTCString(),
       });
+      return id;
+    } catch (e) {
+      logger.warn(e);
+      const [id] = await db("events.users").insert(userData, "id");
       return id;
     }
   }

@@ -78,25 +78,10 @@ export const $IssueDiscoveredHandler = ({
     }
 
     try {
-      await db("events.issues").insert({
-        provider_id: issue.id,
-        type: "",
-        issue_container_id: issueContainerId,
-        sub_type: "",
-        ...pick(
-          issue.attributes,
-          "status",
-          "title",
-          "due_date",
-          "assigned_to",
-          "assigned_to_type"
-        ),
-      });
-    } catch (e) {
-      await db("events.issues")
+      const res = await db("events.issues")
         .update({
           type: "",
-          issue_container_id: issueContainerId,
+          issue_container_provider_id: issueContainerId,
           sub_type: "",
           ...pick(
             issue.attributes,
@@ -109,6 +94,26 @@ export const $IssueDiscoveredHandler = ({
           scanned_at: db.fn.now(),
         })
         .where({ provider_id: issue.id });
+
+      if (res === 0) {
+        throw new Error("failed update, reverting to insert");
+      }
+    } catch (e) {
+      logger.debug(e);
+      await db("events.issues").insert({
+        provider_id: issue.id,
+        type: "",
+        issue_container_provider_id: issueContainerId,
+        sub_type: "",
+        ...pick(
+          issue.attributes,
+          "status",
+          "title",
+          "due_date",
+          "assigned_to",
+          "assigned_to_type"
+        ),
+      });
     }
   };
 };

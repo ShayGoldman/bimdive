@@ -44,6 +44,28 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
             .defaultTo(db.fn.now());
         });
       }
+      if (!(await eventsSchema().hasTable("custom_attributes"))) {
+        await eventsSchema().createTable("custom_attributes", (attributes) => {
+          attributes
+            .uuid("id")
+            .primary()
+            .notNullable()
+            .unique()
+            .defaultTo(uuid());
+          attributes.string("provider_id", 64).notNullable().unique();
+          attributes.uuid("issue_container_provider_id").notNullable();
+          attributes.string("type", 16).notNullable();
+          attributes.string("title", 128).notNullable();
+          attributes.string("description", 512);
+          attributes.timestamp("created_at", { precision: 3, useTz: true });
+          attributes.timestamp("updated_at", { precision: 3, useTz: true });
+          attributes.timestamp("deleted_at", { precision: 3, useTz: true });
+          attributes
+            .timestamp("scanned_at", { precision: 3, useTz: true })
+            .notNullable()
+            .defaultTo(db.fn.now());
+        });
+      }
 
       if (!(await eventsSchema().hasTable("users"))) {
         await eventsSchema().createTable("users", (users) => {
