@@ -54,6 +54,7 @@ functions:
     handler: src/lambdas/api/graphql.lambda.graphql
     memorySize: 128
     disableLogs: true
+    reservedConcurrency: 2
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -71,6 +72,7 @@ functions:
     handler: src/lambdas/api/metabase.lambda.embed
     memorySize: 128
     disableLogs: true
+    reservedConcurrency: 2
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -105,6 +107,7 @@ functions:
     handler: src/lambdas/api/scan.lambda.createScan
     memorySize: 128
     disableLogs: true
+    reservedConcurrency: 1
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -124,7 +127,7 @@ functions:
   ScanCreated:
     handler: src/lambdas/events/scan-created.lambda.handle
     memorySize: 128
-    reservedConcurrency: 10
+    reservedConcurrency: 1
     disableLogs: true
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
