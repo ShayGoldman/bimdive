@@ -1,5 +1,5 @@
 {
-  "name": "@bimdive/api",
+  "name": "@bimdive/rest-api",
   "version": "0.0.0",
   "scripts": {
     "dev": "docker-compose --env-file .env.prod up"
