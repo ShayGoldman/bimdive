@@ -2,7 +2,12 @@
   "name": "@bimdive/rest-api",
   "version": "0.0.0",
   "scripts": {
-    "dev": "docker-compose --env-file .env.prod up"
+    "dev": "docker-compose --env-file .env.prod up",
+    "deploy": "npx dotenv -e .env.prod -- bash -c 'aws ecs update-service --cluster $PROD_CLUSTER_ARN --service rest-api-prod --force-new-deployment'",
+    "deploy:status": "npx dotenv -e .env.prod -- bash -c 'aws ecs describe-services --cluster $PROD_CLUSTER_ARN --services rest-api-prod'"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv-cli": "^4.0.0"
+  }
 }
