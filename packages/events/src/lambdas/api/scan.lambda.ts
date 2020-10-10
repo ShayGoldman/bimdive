@@ -12,13 +12,12 @@ const scanCreatedQueue = getFromEnv({
   fatal: true,
 });
 
-const { context, runtimeFactory, servicesPromise } = $APIEnvironment();
+const { context, runtimeFactory } = $APIEnvironment();
 
 export const createScan: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const services = await servicesPromise;
   const runtime = runtimeFactory.create({
     apiContext,
     factory: () =>

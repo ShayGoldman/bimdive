@@ -19,14 +19,12 @@ const shouldEmitMessages = Boolean(
   )
 );
 
-const { context, runtimeFactory, servicesPromise } = $SQSEnvironment();
+const { context, runtimeFactory, services } = $SQSEnvironment();
 
 export const handle: SQSHandler = async (
   event: SQSEvent,
   apiContext: Context
 ) => {
-  const services = await servicesPromise;
-
   const runtime = await runtimeFactory.create({
     apiContext,
     factory: () =>

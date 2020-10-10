@@ -121,6 +121,28 @@ functions:
           method: post
           cors: true
 
+  RefreshAuthTokens:
+    handler: src/lambdas/events/refresh-auth-tokens.lambda.handle
+    memorySize: 128
+    disableLogs: true
+    timeout: 30
+    reservedConcurrency: 2
+    environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
+      LOOK_AHEAD_IN_MINUTES: ${env:LOOK_AHEAD_IN_MINUTES, param:LOOK_AHEAD_IN_MINUTES}
+    events:
+      - schedule:
+          name: refresh-auth-tokens
+          description: refreshes all access tokens for authenticated users (keeps tokens valid)
+          rate: rate(45 minutes)
+          enabled: true
+
   ScanCreated:
     handler: src/lambdas/events/scan-created.lambda.handle
     memorySize: 128

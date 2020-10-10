@@ -95,11 +95,11 @@ function $GenerateTemporaryAPIToken({
   };
 }
 
-export const $ServiceProvider = async ({
+export const $ServiceProvider = ({
   context,
 }: {
   context: Context;
-}): Promise<Services> => {
+}): Services => {
   const { logger } = context;
 
   const clientId = getFromEnv({ name: "FORGE_CLIENT_ID", fatal: true });

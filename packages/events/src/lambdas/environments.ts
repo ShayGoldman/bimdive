@@ -6,11 +6,11 @@ import { $SQSRuntimeFactory } from "./runtime/SQSRuntime";
 export function $APIEnvironment() {
   const runtimeFactory = $APIGatewayRuntimeFactory();
   const context = $Context();
-  const servicesPromise = $ServiceProvider({ context });
+  const services = $ServiceProvider({ context });
 
   return {
     context,
-    servicesPromise,
+    services,
     runtimeFactory,
   };
 }
@@ -18,11 +18,11 @@ export function $APIEnvironment() {
 export function $SQSEnvironment() {
   const runtimeFactory = $SQSRuntimeFactory();
   const context = $Context();
-  const servicesPromise = $ServiceProvider({ context });
+  const services = $ServiceProvider({ context });
 
   return {
     context,
-    servicesPromise,
+    services,
     runtimeFactory,
   };
 }
