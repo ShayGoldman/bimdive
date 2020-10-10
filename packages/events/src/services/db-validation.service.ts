@@ -100,7 +100,6 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
           comments.string("comment_provider_id", 64).notNullable();
           comments.string("created_by", 64);
           comments.text("body").defaultTo("");
-          comments.string("value", 512);
           comments
             .timestamp("created_at", { precision: 3, useTz: true })
             .notNullable();

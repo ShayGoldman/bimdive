@@ -6,11 +6,6 @@ app: bimdive
 org: shaygoldmanz
 frameworkVersion: "2"
 
-custom:
-  webpack:
-    webpackConfig: ./webpack.config.js
-    includeModules: true
-
 plugins:
   - serverless-plugin-typescript
 
@@ -108,7 +103,7 @@ functions:
     handler: src/lambdas/api/scan.lambda.createScan
     memorySize: 128
     disableLogs: true
-    reservedConcurrency: 1
+    reservedConcurrency: 2
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -129,7 +124,7 @@ functions:
   ScanCreated:
     handler: src/lambdas/events/scan-created.lambda.handle
     memorySize: 128
-    reservedConcurrency: 1
+    reservedConcurrency: 2
     disableLogs: true
     timeout: 20
     environment:
@@ -156,7 +151,7 @@ functions:
   IssueDiscovered:
     handler: src/lambdas/events/issue-discovered.lambda.handle
     memorySize: 128
-    reservedConcurrency: 10
+    reservedConcurrency: 5
     disableLogs: true
     timeout: 20
     environment:
@@ -229,7 +224,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-ScanCreated
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 2
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue
@@ -239,7 +234,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-UserDiscoveredQueue
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 3
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue
@@ -249,7 +244,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-IssueContainerDiscovered
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 3
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue
@@ -259,7 +254,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-IssueDiscovered
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 3
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue

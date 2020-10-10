@@ -1,5 +1,6 @@
 import { IssueCustomAttributesApi, IssuesApi } from "@bimdive/rest-api-client";
 import { SQSRecord } from "aws-lambda";
+import compact from "lodash/compact";
 import flatten from "lodash/flatten";
 import omit from "lodash/omit";
 import uniqBy from "lodash/uniqBy";
@@ -115,14 +116,21 @@ export const $IssueDiscoveredHandler = ({
   }
 
   async function persistIssue({
-    type,
-    subType,
+    issue,
+    types,
+    subTypes,
     issueContainerProviderId,
-    ...issue
   }) {
     const { logger } = context;
     const { restApiUtils } = services;
     const issues = new IssuesApi(restApiUtils.configuration);
+
+    const type =
+      types.find(({ id }) => issue.attributes.ng_issue_type_id === id)?.title ||
+      "";
+    const subType =
+      subTypes.find(({ id }) => issue.attributes.ng_issue_subtype_id === id)
+        ?.title || "";
 
     const [existing] = await issues.issuesGet({
       providerId: restApiUtils.operators.equals(issue.id),
@@ -153,16 +161,32 @@ export const $IssueDiscoveredHandler = ({
     });
   }
 
+  async function persistIssueComments(comments) {
+    const { logger } = context;
+
+    logger.debug(comments);
+  }
+
   async function emitUserDiscoveredEvent({
+    relation,
     userProviderId,
     scanId,
     hubId,
   }: {
+    relation: string;
     scanId: string;
     hubId: string;
     userProviderId: string;
   }) {
+    const { logger } = context;
     const { sqs } = services;
+
+    logger.info({
+      msg: "user found",
+      relation,
+      userProviderId,
+      scanId,
+    });
     await sqs.sendMessage({
       queue: userDiscoveredQueue,
       message: {
@@ -194,65 +218,56 @@ export const $IssueDiscoveredHandler = ({
       msg: "issue discovered",
       scanId,
       issueId,
-    });
-
-    const token = await getTokenFromScanId(scanId);
-
-    const api = bimApiFactory({ token });
-
-    const { data: issue } = await api.get<
-      BIM360API_GetIssue,
-      BIM360API_GetIssue
-    >(
-      `/issues/v1/containers/${issueContainerProviderId}/quality-issues/${issueId}`,
-      {
-        params: {
-          include: "comments",
-        },
-      }
-    );
-
-    await emitUserDiscoveredEvent({
-      scanId,
-      hubId,
-      userProviderId: issue.attributes.owner,
-    });
-
-    if (
-      issue.attributes.assigned_to &&
-      issue.attributes.assigned_to_type === "user"
-    ) {
-      logger.info({
-        msg: "user discovered",
-        id: issue.attributes.assigned_to,
-        hubId,
-      });
-
-      await emitUserDiscoveredEvent({
-        scanId,
-        hubId,
-        userProviderId: issue.attributes.assigned_to,
-      });
-    }
-
-    const { types, subTypes } = await getAllIssuesTypes({
-      api,
       issueContainerProviderId,
     });
+
+    const api = bimApiFactory({ token: await getTokenFromScanId(scanId) });
+
+    const [{ data: issue }, { types, subTypes }] = await Promise.all([
+      await api.get(
+        `/issues/v1/containers/${issueContainerProviderId}/quality-issues/${issueId}`,
+        {
+          params: {
+            include: "comments",
+          },
+        }
+      ),
+      await getAllIssuesTypes({
+        api,
+        issueContainerProviderId,
+      }),
+    ]);
+
+    await Promise.all(
+      compact([
+        emitUserDiscoveredEvent({
+          relation: "owner",
+          scanId,
+          hubId,
+          userProviderId: issue.attributes.owner,
+        }),
+        issue.attributes.assigned_to &&
+          issue.attributes.assigned_to_type === "user" &&
+          emitUserDiscoveredEvent({
+            relation: "assigned_to",
+            scanId,
+            hubId,
+            userProviderId: issue.attributes.assigned_to,
+          }),
+      ])
+    );
 
     await persistIssueCustomAttributes(
       issue.id,
       issue.attributes.custom_attributes
     );
 
+    await persistIssueComments(issue.relationships.comments.data);
+
     await persistIssue({
-      ...issue,
-      type:
-        types.find(({ id }) => issue.attributes.ng_issue_type_id === id)
-          ?.title || "",
-      subType:
-        subTypes.find(({ id }) => issue.attributes.ng_issue_subtype_id === id)
-          ?.title || "",
+      issue,
+      types,
+      subTypes,
       issueContainerProviderId,
     });
   };
