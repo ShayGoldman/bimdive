@@ -7,7 +7,7 @@ packages/*/dist
 playground.ts
 yarn-error.log
 .env*
-
+*.nvmrc
 
 # interface
 packages/interface/.next
