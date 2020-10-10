@@ -23,6 +23,7 @@ export interface IssuesDeleteRequest {
   status?: string;
   type?: string;
   subType?: string;
+  ownedBy?: string;
   assignedTo?: string;
   assignedToType?: string;
   dueDate?: string;
@@ -38,6 +39,7 @@ export interface IssuesGetRequest {
   status?: string;
   type?: string;
   subType?: string;
+  ownedBy?: string;
   assignedTo?: string;
   assignedToType?: string;
   dueDate?: string;
@@ -59,6 +61,7 @@ export interface IssuesPatchRequest {
   status?: string;
   type?: string;
   subType?: string;
+  ownedBy?: string;
   assignedTo?: string;
   assignedToType?: string;
   dueDate?: string;
@@ -111,6 +114,10 @@ export class IssuesApi extends runtime.BaseAPI {
 
     if (requestParameters.subType !== undefined) {
       queryParameters["sub_type"] = requestParameters.subType;
+    }
+
+    if (requestParameters.ownedBy !== undefined) {
+      queryParameters["owned_by"] = requestParameters.ownedBy;
     }
 
     if (requestParameters.assignedTo !== undefined) {
@@ -188,6 +195,10 @@ export class IssuesApi extends runtime.BaseAPI {
 
     if (requestParameters.subType !== undefined) {
       queryParameters["sub_type"] = requestParameters.subType;
+    }
+
+    if (requestParameters.ownedBy !== undefined) {
+      queryParameters["owned_by"] = requestParameters.ownedBy;
     }
 
     if (requestParameters.assignedTo !== undefined) {
@@ -298,6 +309,10 @@ export class IssuesApi extends runtime.BaseAPI {
 
     if (requestParameters.subType !== undefined) {
       queryParameters["sub_type"] = requestParameters.subType;
+    }
+
+    if (requestParameters.ownedBy !== undefined) {
+      queryParameters["owned_by"] = requestParameters.ownedBy;
     }
 
     if (requestParameters.assignedTo !== undefined) {

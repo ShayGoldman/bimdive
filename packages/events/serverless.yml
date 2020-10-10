@@ -158,7 +158,7 @@ functions:
     memorySize: 128
     reservedConcurrency: 10
     disableLogs: true
-    timeout: 10
+    timeout: 20
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}

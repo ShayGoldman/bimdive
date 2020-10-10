@@ -67,6 +67,12 @@ export interface Issues {
    * @type {string}
    * @memberof Issues
    */
+  ownedBy?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Issues
+   */
   assignedTo?: string;
   /**
    *
@@ -107,6 +113,7 @@ export function IssuesFromJSONTyped(
     status: json["status"],
     type: !exists(json, "type") ? undefined : json["type"],
     subType: !exists(json, "sub_type") ? undefined : json["sub_type"],
+    ownedBy: !exists(json, "owned_by") ? undefined : json["owned_by"],
     assignedTo: !exists(json, "assigned_to") ? undefined : json["assigned_to"],
     assignedToType: !exists(json, "assigned_to_type")
       ? undefined
@@ -131,6 +138,7 @@ export function IssuesToJSON(value?: Issues | null): any {
     status: value.status,
     type: value.type,
     sub_type: value.subType,
+    owned_by: value.ownedBy,
     assigned_to: value.assignedTo,
     assigned_to_type: value.assignedToType,
     due_date: value.dueDate,

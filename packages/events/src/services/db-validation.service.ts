@@ -35,6 +35,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
           issues.string("status", 127).notNullable();
           issues.string("type", 255);
           issues.string("sub_type", 255);
+          issues.string("owned_by", 64);
           issues.string("assigned_to", 64);
           issues.text("assigned_to_type");
           issues.timestamp("due_date", { precision: 3, useTz: true });
@@ -92,6 +93,28 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
         );
       }
 
+      if (!(await eventsSchema().hasTable("issue_comments"))) {
+        await eventsSchema().createTable("issue_comments", (comments) => {
+          comments.uuid("id").primary();
+          comments.string("issue_provider_id", 64).notNullable();
+          comments.string("comment_provider_id", 64).notNullable();
+          comments.string("created_by", 64);
+          comments.text("body").defaultTo("");
+          comments.string("value", 512);
+          comments
+            .timestamp("created_at", { precision: 3, useTz: true })
+            .notNullable();
+          comments
+            .timestamp("updated_at", { precision: 3, useTz: true })
+            .notNullable();
+
+          comments
+            .timestamp("scanned_at", { precision: 3, useTz: true })
+            .notNullable()
+            .defaultTo(db.fn.now());
+        });
+      }
+
       if (!(await eventsSchema().hasTable("users"))) {
         await eventsSchema().createTable("users", (users) => {
           users.uuid("id").primary().defaultTo(uuid());
@@ -137,6 +160,37 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
             .defaultTo(db.fn.now());
         });
       }
+
+      // Views
+      // events.v_issue_custom_attributes
+      await db.raw(`
+      CREATE OR REPLACE VIEW events.v_issue_custom_attributes AS
+      SELECT
+        issue.id,
+        issue.provider_id,
+      array_agg((((
+        CASE WHEN ((issue_attributes.type)::text = 'list'::text) THEN
+          list_attributes.title
+        ELSE
+          single_attributes.title
+        END)::text || ': '::text) || (
+      CASE WHEN ((issue_attributes.type)::text = 'list'::text) THEN
+        list_attributes.value
+      ELSE
+        issue_attributes.value
+      END)::text)) AS attributes
+    FROM (((events.issues issue
+          JOIN events.issue_custom_attributes issue_attributes ON ((((issue_attributes.issue_provider_id)::text = (issue.provider_id)::text)
+                AND(issue_attributes.value IS NOT NULL))))
+        LEFT JOIN events.custom_attributes single_attributes ON ((((single_attributes.provider_id)::text = (issue_attributes.custom_attribute_provider_id)::text)
+              AND(NOT((single_attributes.type)::text = 'list'::text)))))
+      LEFT JOIN events.custom_attributes list_attributes ON ((((list_attributes.provider_id)::text = (issue_attributes.custom_attribute_provider_id)::text)
+            AND((issue_attributes.type)::text = 'list'::text)
+            AND((issue_attributes.value)::text = (list_attributes.value_id)::text))))
+    GROUP BY
+      issue.id,
+      issue.provider_id
+      `);
 
       logger.info("database validation passed");
     } catch (error) {

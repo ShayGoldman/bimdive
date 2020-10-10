@@ -9,10 +9,12 @@ type Params = {
   token?: string;
 };
 
-export type BIMApiFactory = (parms: Params) => AxiosInstance;
+export type BIMApi = AxiosInstance;
+
+export type BIMApiFactory = (parms: Params) => BIMApi;
 
 export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
-  return function $BimApi({ token }: { token?: string }): AxiosInstance {
+  return function $BimApi({ token }: { token?: string }): BIMApi {
     const instance = axios.create({
       baseURL: "https://developer.api.autodesk.com",
       headers: Object.assign(

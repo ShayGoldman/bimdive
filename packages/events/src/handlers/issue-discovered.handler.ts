@@ -1,10 +1,15 @@
 import { IssueCustomAttributesApi, IssuesApi } from "@bimdive/rest-api-client";
 import { SQSRecord } from "aws-lambda";
+import flatten from "lodash/flatten";
+import omit from "lodash/omit";
+import uniqBy from "lodash/uniqBy";
+import { BIMApi } from "../services/bim-api-factory.service";
 import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
 type BIM360API_GetIssue = any;
+type BIM360API_GetIssueTypes = any;
 
 export type IssueDiscoveredHandler = (params: {
   message: SQSRecord;
@@ -19,6 +24,41 @@ export const $IssueDiscoveredHandler = ({
   userDiscoveredQueue: string;
   services: Services;
 }): IssueDiscoveredHandler => {
+  async function getAllIssuesTypes({
+    api,
+    issueContainerProviderId,
+  }: {
+    api: BIMApi;
+    issueContainerProviderId: string;
+  }): Promise<{ types: any[]; subTypes: any[] }> {
+    const { logger } = context;
+    const { results: allIssueTypes } = await api.get<
+      BIM360API_GetIssueTypes,
+      BIM360API_GetIssueTypes
+    >(`/issues/v1/containers/${issueContainerProviderId}/ng-issue-types`, {
+      params: {
+        include: "subtypes",
+      },
+    });
+
+    const types = allIssueTypes.map((i) => omit(i, "subtypes"));
+    const subTypes = uniqBy(
+      flatten(allIssueTypes.map(({ subtypes }) => subtypes)),
+      ({ id }) => id
+    );
+
+    logger.info({
+      msg: "found types & subtypes",
+      types: types.length,
+      subTypes: subTypes.length,
+    });
+
+    return {
+      types,
+      subTypes,
+    };
+  }
+
   async function persistIssueCustomAttributes(
     issueProviderId: string,
     attributes
@@ -74,7 +114,12 @@ export const $IssueDiscoveredHandler = ({
     }
   }
 
-  async function persistIssue(issue, issueContainerId: string) {
+  async function persistIssue({
+    type,
+    subType,
+    issueContainerProviderId,
+    ...issue
+  }) {
     const { logger } = context;
     const { restApiUtils } = services;
     const issues = new IssuesApi(restApiUtils.configuration);
@@ -83,16 +128,18 @@ export const $IssueDiscoveredHandler = ({
       providerId: restApiUtils.operators.equals(issue.id),
     });
 
+    const issueId = existing?.id || restApiUtils.generateUUID();
     await issues.issuesPost({
       issues: {
-        id: existing?.id || restApiUtils.generateUUID(),
+        id: issueId,
         providerId: issue.id,
-        type: "",
-        subType: "",
-        issueContainerProviderId: issueContainerId,
+        type,
+        subType,
+        issueContainerProviderId,
         status: issue.attributes.status,
         title: issue.attributes.title,
         dueDate: issue.attributes.due_date,
+        ownedBy: issue.attributes.owner,
         assignedTo: issue.attributes.assigned_to,
         assignedToType: issue.attributes.assigned_to_type,
         scannedAt: restApiUtils.now(),
@@ -101,7 +148,29 @@ export const $IssueDiscoveredHandler = ({
 
     logger.info({
       msg: "saved issue",
+      id: issueId,
       providerId: issue.id,
+    });
+  }
+
+  async function emitUserDiscoveredEvent({
+    userProviderId,
+    scanId,
+    hubId,
+  }: {
+    scanId: string;
+    hubId: string;
+    userProviderId: string;
+  }) {
+    const { sqs } = services;
+    await sqs.sendMessage({
+      queue: userDiscoveredQueue,
+      message: {
+        type: "UserDiscovered",
+        userProviderId,
+        scanId,
+        hubId,
+      },
     });
   }
 
@@ -111,15 +180,15 @@ export const $IssueDiscoveredHandler = ({
     message: SQSRecord;
   }) {
     const { logger } = context;
-    const { bimApiFactory, getTokenFromScanId, sqs } = services;
+    const { bimApiFactory, getTokenFromScanId } = services;
 
     const scanId = getAttributeFromMessage(message, "scanId");
+    const hubId = getAttributeFromMessage(message, "hubId");
     const issueId = getAttributeFromMessage(message, "issueId");
-    const issueContainerId = getAttributeFromMessage(
+    const issueContainerProviderId = getAttributeFromMessage(
       message,
       "issueContainerId"
     );
-    const hubId = getAttributeFromMessage(message, "hubId");
 
     logger.info({
       msg: "issue discovered",
@@ -129,18 +198,25 @@ export const $IssueDiscoveredHandler = ({
 
     const token = await getTokenFromScanId(scanId);
 
-    logger.debug({
-      msg: "token found",
-      token,
-      scanId,
-    });
-
     const api = bimApiFactory({ token });
 
     const { data: issue } = await api.get<
       BIM360API_GetIssue,
       BIM360API_GetIssue
-    >(`/issues/v1/containers/${issueContainerId}/quality-issues/${issueId}`);
+    >(
+      `/issues/v1/containers/${issueContainerProviderId}/quality-issues/${issueId}`,
+      {
+        params: {
+          include: "comments",
+        },
+      }
+    );
+
+    await emitUserDiscoveredEvent({
+      scanId,
+      hubId,
+      userProviderId: issue.attributes.owner,
+    });
 
     if (
       issue.attributes.assigned_to &&
@@ -152,22 +228,32 @@ export const $IssueDiscoveredHandler = ({
         hubId,
       });
 
-      await sqs.sendMessage({
-        queue: userDiscoveredQueue,
-        message: {
-          type: "UserDiscovered",
-          userProviderId: issue.attributes.assigned_to,
-          scanId,
-          hubId,
-        },
+      await emitUserDiscoveredEvent({
+        scanId,
+        hubId,
+        userProviderId: issue.attributes.assigned_to,
       });
     }
+
+    const { types, subTypes } = await getAllIssuesTypes({
+      api,
+      issueContainerProviderId,
+    });
 
     await persistIssueCustomAttributes(
       issue.id,
       issue.attributes.custom_attributes
     );
 
-    await persistIssue(issue, issueContainerId);
+    await persistIssue({
+      ...issue,
+      type:
+        types.find(({ id }) => issue.attributes.ng_issue_type_id === id)
+          ?.title || "",
+      subType:
+        subTypes.find(({ id }) => issue.attributes.ng_issue_subtype_id === id)
+          ?.title || "",
+      issueContainerProviderId,
+    });
   };
 };
