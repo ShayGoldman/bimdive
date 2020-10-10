@@ -1,9 +1,9 @@
+import { UsersApi } from "@bimdive/rest-api-client";
 import { SQSRecord } from "aws-lambda";
-import { Context } from "../services/context.service";
-import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 import last from "lodash/last";
-import isEmpty from "lodash/isEmpty";
+import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
+import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
 type BIM360API_GetUser = any;
 
@@ -14,36 +14,30 @@ export const $UserDiscoveredHandler = ({
   context: Context;
   services: Services;
 }) => {
-  const { db } = services;
-  async function updateUserDetails(userData: any) {
-    // autodesk's user id
-    const userId = userData.uid;
+  async function persistUserDetails(userData: any) {
+    const { restApiUtils } = services;
+    const { logger } = context;
 
-    const user = await db("events.users")
-      .select()
-      .where({ provider_id: userId });
+    logger.debug(userData);
+    const users = new UsersApi(restApiUtils.configuration);
 
-    if (isEmpty(user)) {
-      const res = await db("events.users")
-        .insert({
-          provider_id: userId,
-          email: userData.email,
-          first_name: userData.first_name,
-          last_name: userData.last_name,
-          profile_img_url: userData.image_url,
-          scanned_at: db.fn.now(),
-          modified_at: db.fn.now(),
-        })
-        .where({ provider_id: userId });
-    } else {
-      await db("events.users").update({
+    const [existing] = await users.usersGet({
+      providerId: restApiUtils.operators.equals(userData.uid),
+    });
+
+    await users.usersPost({
+      users: {
+        id: existing?.id || restApiUtils.generateUUID(),
+        providerId: userData.uid,
         email: userData.email,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        profile_img_url: userData.image_url,
-        scanned_at: db.fn.now(),
-      });
-    }
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        profileImgUrl: userData.image_url,
+        scannedAt: restApiUtils.now(),
+        modifiedAt: restApiUtils.now(),
+        createdAt: restApiUtils.now(),
+      },
+    });
   }
 
   return async function userDiscoveredHandler({
@@ -71,11 +65,10 @@ export const $UserDiscoveredHandler = ({
       `/hq/v1/accounts/${accountId}/users/${userProviderId}`
     );
 
-    logger.debug(user);
-    await updateUserDetails(user);
+    await persistUserDetails(user);
 
     logger.info({
-      msg: "user details fetched",
+      msg: "user details saved",
       userProviderId,
       scanId,
     });

@@ -37,7 +37,7 @@ export interface Issues {
    * @type {string}
    * @memberof Issues
    */
-  issueContainerProviderId?: string;
+  issueContainerProviderId: string;
   /**
    *
    * @type {string}
@@ -49,7 +49,7 @@ export interface Issues {
    * @type {string}
    * @memberof Issues
    */
-  status?: string;
+  status: string;
   /**
    *
    * @type {string}
@@ -86,12 +86,6 @@ export interface Issues {
    * @memberof Issues
    */
   scannedAt: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Issues
-   */
-  issueContainerId?: string;
 }
 
 export function IssuesFromJSON(json: any): Issues {
@@ -108,11 +102,9 @@ export function IssuesFromJSONTyped(
   return {
     id: json["id"],
     providerId: json["provider_id"],
-    issueContainerProviderId: !exists(json, "issue_container_provider_id")
-      ? undefined
-      : json["issue_container_provider_id"],
+    issueContainerProviderId: json["issue_container_provider_id"],
     title: json["title"],
-    status: !exists(json, "status") ? undefined : json["status"],
+    status: json["status"],
     type: !exists(json, "type") ? undefined : json["type"],
     subType: !exists(json, "sub_type") ? undefined : json["sub_type"],
     assignedTo: !exists(json, "assigned_to") ? undefined : json["assigned_to"],
@@ -121,9 +113,6 @@ export function IssuesFromJSONTyped(
       : json["assigned_to_type"],
     dueDate: !exists(json, "due_date") ? undefined : json["due_date"],
     scannedAt: json["scanned_at"],
-    issueContainerId: !exists(json, "issue_container_id")
-      ? undefined
-      : json["issue_container_id"],
   };
 }
 
@@ -146,6 +135,5 @@ export function IssuesToJSON(value?: Issues | null): any {
     assigned_to_type: value.assignedToType,
     due_date: value.dueDate,
     scanned_at: value.scannedAt,
-    issue_container_id: value.issueContainerId,
   };
 }

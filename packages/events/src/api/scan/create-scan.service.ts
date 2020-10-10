@@ -1,3 +1,4 @@
+import { ScansApi, UsersApi } from "@bimdive/rest-api-client";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { Context } from "../../services/context.service";
 import { Services } from "../../services/service-provider";
@@ -13,7 +14,9 @@ export const $CreateScan = ({
 }) => {
   return async function createScan({ event }: { event: APIGatewayProxyEvent }) {
     const { logger } = context;
-    const { sqs, db } = services;
+    const { sqs, restApiUtils } = services;
+    const users = new UsersApi(restApiUtils.configuration);
+    const scans = new ScansApi(restApiUtils.configuration);
     const { email } = JSON.parse(event.body || "{}");
 
     logger.info({
@@ -21,18 +24,23 @@ export const $CreateScan = ({
       email,
     });
 
-    const [initiatingUser] = await db("events.users").select().where({ email });
+    const [initiatingUser] = await users.usersGet({
+      email: restApiUtils.operators.equals(email),
+      limit: "1",
+    });
 
     if (!initiatingUser) {
       return { error: "scan not possible" };
     }
 
-    const [scanId] = await db("events.scans").insert(
-      {
-        initiating_user_id: initiatingUser.id,
+    const scanId = restApiUtils.generateUUID();
+    await scans.scansPost({
+      scans: {
+        id: scanId,
+        initiatingUserId: initiatingUser.id,
+        createdAt: restApiUtils.now(),
       },
-      "id"
-    );
+    });
 
     logger.info({
       msg: "scan created",

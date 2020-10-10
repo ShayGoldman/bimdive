@@ -1,5 +1,11 @@
 # api-client
 
+# Instructions
+
+1. Make sure the rest api is up-to-date (follow instructions for the `rest-api` package)
+1. Run `yarn build` to generate new client
+1. Run `yarn install` in any dependant library
+
 ## generate client
 
 ```

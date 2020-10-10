@@ -3,11 +3,13 @@ import querystring from "querystring";
 import { getFromEnv } from "../utils/getFromEnv";
 import { $BIMApiFactory, BIMApiFactory } from "./bim-api-factory.service";
 import { Context } from "./context.service";
-import { $DB, DB } from "./db.service";
+import { Logger } from "./logger.service";
 import { $SQS, SQS } from "./sqs.service";
+import { $RESTApiUtils, RESTApiUtils } from "./rest-api-utils";
+import { AccessTokensApi, ScansApi, UsersApi } from "@bimdive/rest-api-client";
 
 export type Services = {
-  db: DB;
+  restApiUtils: RESTApiUtils;
   bimApiFactory: BIMApiFactory;
   sqs: SQS;
   getTokenFromScanId: (scanId: string) => Promise<string>;
@@ -16,20 +18,51 @@ export type Services = {
 
 // part of 3-legged-token flow
 // https://forge.autodesk.com/en/docs/oauth/v2/tutorials/get-3-legged-token/
-function $GetTokenFromScanId({ db }: { db: DB }) {
+function $GetTokenFromScanId({
+  logger,
+  restApiUtils,
+}: {
+  logger: Logger;
+  restApiUtils: RESTApiUtils;
+}) {
   return async function getTokenFromScanId(scanId: string): Promise<string> {
-    const {
-      rows: [{ access_token }],
-    } = await db.raw(
-      `
-      SELECT * from events.access_tokens
-      JOIN events.users ON events.access_tokens.user_provider_id=events.users.provider_id 
-      JOIN events.scans ON events.scans.initiating_user_id=events.users.id AND events.scans.id=?
-      `,
-      scanId
-    );
+    const users = new UsersApi(restApiUtils.configuration);
+    const scans = new ScansApi(restApiUtils.configuration);
+    const tokens = new AccessTokensApi(restApiUtils.configuration);
 
-    return access_token;
+    const [scan] = await scans.scansGet({
+      id: restApiUtils.operators.equals(scanId),
+      limit: "1",
+    });
+
+    logger.debug({
+      msg: "found scan for token",
+      ...scan,
+    });
+
+    const [user] = await users.usersGet({
+      id: restApiUtils.operators.equals(scan.initiatingUserId),
+      limit: "1",
+    });
+
+    logger.debug({
+      msg: "found user for token",
+      ...user,
+    });
+
+    const [{ accessToken }] = await tokens.accessTokensGet({
+      userProviderId: restApiUtils.operators.equals(user.providerId),
+    });
+
+    logger.debug({
+      msg: "token for scan",
+      scanId,
+      token: Boolean(accessToken),
+      success: Boolean(accessToken),
+      ...user,
+    });
+
+    return accessToken;
   };
 }
 
@@ -68,11 +101,6 @@ export const $ServiceProvider = async ({
   context: Context;
 }): Promise<Services> => {
   const { logger } = context;
-  const db = await $DB({
-    db_connection_string:
-      getFromEnv({ name: "DB_CONNECTION_URI", logValue: false }) || "",
-    logger,
-  });
 
   const clientId = getFromEnv({ name: "FORGE_CLIENT_ID", fatal: true });
   const clientSecret = getFromEnv({ name: "FORGE_CLIENT_SECRET", fatal: true });
@@ -81,11 +109,13 @@ export const $ServiceProvider = async ({
 
   const bimApiFactory = $BIMApiFactory({ logger });
 
+  const restApiUtils = $RESTApiUtils({ context });
+
   return {
-    db,
     bimApiFactory,
     sqs,
-    getTokenFromScanId: $GetTokenFromScanId({ db }),
+    restApiUtils,
+    getTokenFromScanId: $GetTokenFromScanId({ logger, restApiUtils }),
     generateTemporaryAPIToken: $GenerateTemporaryAPIToken({
       clientId,
       clientSecret,

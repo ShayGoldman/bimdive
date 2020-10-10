@@ -1,10 +1,10 @@
 {
   "name": "@bimdive/rest-api-client",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf src dist && ./generate.sh && npx tsc && yarn version --patch --no-git-tag-version"
+    "build": "rm -rf src dist && API_URI=https://rest.bimdive.com ./generate.sh && npx tsc && yarn version --patch --no-git-tag-version"
   },
   "devDependencies": {
     "@types/request": "^2.48.5",

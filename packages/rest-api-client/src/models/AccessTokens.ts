@@ -20,7 +20,8 @@ import { exists, mapValues } from "../runtime";
  */
 export interface AccessTokens {
   /**
-   *
+   * Note:
+   * This is a Primary Key.<pk/>
    * @type {string}
    * @memberof AccessTokens
    */
@@ -30,13 +31,13 @@ export interface AccessTokens {
    * @type {string}
    * @memberof AccessTokens
    */
-  accessToken?: string;
+  accessToken: string;
   /**
    *
    * @type {string}
    * @memberof AccessTokens
    */
-  refreshToken?: string;
+  refreshToken: string;
   /**
    *
    * @type {string}
@@ -64,12 +65,8 @@ export function AccessTokensFromJSONTyped(
   }
   return {
     userProviderId: json["user_provider_id"],
-    accessToken: !exists(json, "access_token")
-      ? undefined
-      : json["access_token"],
-    refreshToken: !exists(json, "refresh_token")
-      ? undefined
-      : json["refresh_token"],
+    accessToken: json["access_token"],
+    refreshToken: json["refresh_token"],
     issuedAt: json["issued_at"],
     expiresAt: json["expires_at"],
   };

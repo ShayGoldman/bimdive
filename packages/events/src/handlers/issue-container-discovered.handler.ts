@@ -2,6 +2,7 @@ import { SQSRecord } from "aws-lambda";
 import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
+import { CustomAttributesApi } from "@bimdive/rest-api-client";
 
 type BIM360API_GetCustomAttributes = any;
 
@@ -12,49 +13,55 @@ export const $IssueContainerDiscoveredHandler = ({
   context: Context;
   services: Services;
 }) => {
-  async function persistCustomAttributes(customAttributes) {
+  async function persistCustomAttributes({ results }) {
     const { logger } = context;
-    const { db } = services;
+    const { restApiUtils } = services;
+
+    const customAttributes = new CustomAttributesApi(
+      restApiUtils.configuration
+    );
 
     for (const {
       id,
       containerId,
       title,
       dataType,
+      metadata,
       description,
       createdAt,
       updatedAt,
       deletedAt,
-    } of customAttributes.results) {
-      try {
-        const res = await db("events.custom_attributes")
-          .update({
-            issue_container_provider_id: containerId,
+    } of results) {
+      const attributes = dataType === "list" ? metadata.list.options : [{}];
+
+      for (const { value = null, id: valueId = null } of attributes) {
+        const [existingAttribute] = await customAttributes.customAttributesGet({
+          limit: "1",
+          providerId: restApiUtils.operators.equals(id),
+          valueId: valueId
+            ? restApiUtils.operators.equals(valueId)
+            : restApiUtils.operators.null(),
+        });
+
+        await customAttributes.customAttributesPost({
+          customAttributes: {
+            id: existingAttribute?.id || restApiUtils.generateUUID(),
+            providerId: id,
+            issueContainerProviderId: containerId,
             type: dataType,
             title,
             description,
-            created_at: createdAt,
-            updated_at: updatedAt,
-            deleted_at: deletedAt,
-            scanned_at: db.fn.now(),
-          })
-          .where({ provider_id: id });
-
-        if (res === 0) {
-          throw new Error("failed update, reverting to insert");
-        }
-      } catch (e) {
-        logger.debug(e);
-        await db("events.custom_attributes").insert({
-          provider_id: id,
-          issue_container_provider_id: containerId,
-          type: dataType,
-          title,
-          description,
-          created_at: createdAt,
-          updated_at: updatedAt,
-          deleted_at: deletedAt,
-          scanned_at: db.fn.now(),
+            value,
+            valueId: valueId,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
+            scannedAt: restApiUtils.now(),
+          },
+        });
+        logger.info({
+          msg: "attribute saved",
+          providerId: id,
         });
       }
     }
@@ -99,6 +106,10 @@ export const $IssueContainerDiscoveredHandler = ({
       count: customAttributes.length,
     });
 
-    await persistCustomAttributes(customAttributes);
+    try {
+      await persistCustomAttributes(customAttributes);
+    } catch (e) {
+      logger.error(e);
+    }
   };
 };

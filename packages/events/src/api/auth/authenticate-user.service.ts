@@ -1,3 +1,4 @@
+import { AccessTokensApi, UsersApi } from "@bimdive/rest-api-client";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import dayjs from "dayjs";
 import { Context } from "../../services/context.service";
@@ -10,8 +11,7 @@ export const $AuthenticateUser = ({
   context: Context;
   services: Services;
 }) => {
-  const { logger } = context;
-  const { bimApiFactory, db } = services;
+  const { bimApiFactory } = services;
   const api = bimApiFactory({});
 
   async function getUserData(token: string): Promise<any> {
@@ -24,35 +24,69 @@ export const $AuthenticateUser = ({
     return response;
   }
 
-  async function updateUserAccessToken(token: any): Promise<void> {
-    try {
-      const res = await db("events.access_tokens")
-        .update(token)
-        .where({ user_provider_id: token.user_provider_id });
-      if (res === 0) {
-        throw new Error("failed update, reverting to insert");
-      }
-    } catch (e) {
-      logger.warn(e);
-      await db("events.access_tokens").insert(token);
-    }
+  async function updateUserAccessToken({
+    userProviderId,
+    ...token
+  }: any): Promise<void> {
+    const { logger } = context;
+    const { restApiUtils } = services;
+    const tokens = new AccessTokensApi(restApiUtils.configuration);
+
+    const issuedAt = restApiUtils.now();
+    const expiresAt = dayjs(issuedAt)
+      .add(token.expires_in - 60, "second") // minus 60 for safety, doesn't really matter
+      .toDate()
+      .toUTCString();
+
+    await tokens.accessTokensPost({
+      accessTokens: {
+        accessToken: token.access_token,
+        expiresAt,
+        issuedAt,
+        refreshToken: token.refresh_token,
+        userProviderId,
+      },
+    });
+
+    logger.info({
+      msg: "token saved",
+      userProviderId,
+    });
   }
 
   async function updateUserData(userData: any): Promise<any> {
-    try {
-      const [id] = await db("events.users").update(userData, "id").where({
-        provider_id: userData.provider_id,
-        modified_at: new Date().toUTCString(),
-      });
-      if (!id) {
-        throw new Error("failed update, reverting to insert");
-      }
-      return id;
-    } catch (e) {
-      logger.warn(e);
-      const [id] = await db("events.users").insert(userData, "id");
-      return id;
-    }
+    const { logger } = context;
+    const { restApiUtils } = services;
+
+    const users = new UsersApi(restApiUtils.configuration);
+
+    const [existing] = await users.usersGet({
+      providerId: restApiUtils.operators.equals(userData.provider_id),
+      limit: "1",
+    });
+
+    const userId = existing?.id || restApiUtils.generateUUID();
+
+    await users.usersPost({
+      users: {
+        id: userId,
+        providerId: userData.userId,
+        email: userData.emailId,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        profileImgUrl: userData.profileImages.sizeX240,
+        modifiedAt: restApiUtils.now(),
+        createdAt: existing?.createdAt || restApiUtils.now(),
+      },
+    });
+
+    logger.info({
+      msg: "user data saved",
+      id: userId,
+      providerId: userData.provider_id,
+    });
+
+    return userId;
   }
 
   return async function authenticateUser({
@@ -62,7 +96,8 @@ export const $AuthenticateUser = ({
   }) {
     const { logger } = context;
 
-    const { access_token, refresh_token, expires_in, code } = JSON.parse(
+    // code property too
+    const { access_token, refresh_token, expires_in } = JSON.parse(
       event.body || "{}"
     );
 
@@ -71,8 +106,6 @@ export const $AuthenticateUser = ({
     }
 
     try {
-      const issuedAt = new Date().toUTCString();
-
       const userData = await getUserData(access_token);
 
       logger.debug({
@@ -83,23 +116,13 @@ export const $AuthenticateUser = ({
       const userProviderId = userData.userId;
 
       await updateUserAccessToken({
-        user_provider_id: userProviderId,
-        access_token: access_token,
-        refresh_token: refresh_token,
-        issued_at: issuedAt,
-        expires_at: dayjs(issuedAt)
-          .add(expires_in, "second")
-          .toDate()
-          .toUTCString(),
+        userProviderId,
+        access_token,
+        refresh_token,
+        expires_in,
       });
 
-      const userId = await updateUserData({
-        provider_id: userProviderId,
-        email: userData.emailId,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        profile_img_url: userData.profileImages.sizeX240,
-      });
+      const userId = await updateUserData(userData);
 
       logger.info({
         msg: "successfully authenticated user",

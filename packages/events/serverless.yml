@@ -96,6 +96,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
     events:
@@ -115,6 +116,7 @@ functions:
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       AWS_SQS_REGION: eu-west-2
       QUEUE_SCAN_CREATED:
         Ref: ScanCreatedQueue
@@ -129,6 +131,7 @@ functions:
     memorySize: 128
     reservedConcurrency: 1
     disableLogs: true
+    timeout: 20
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -136,6 +139,7 @@ functions:
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       AWS_SQS_REGION: eu-west-2
       QUEUE_ISSUE_DISCOVERED:
         Ref: IssueDiscoveredQueue
@@ -154,6 +158,7 @@ functions:
     memorySize: 128
     reservedConcurrency: 10
     disableLogs: true
+    timeout: 10
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -161,6 +166,7 @@ functions:
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       AWS_SQS_REGION: eu-west-2
       QUEUE_USER_DISCOVERED:
         Ref: UserDiscoveredQueue
@@ -177,6 +183,7 @@ functions:
     memorySize: 128
     reservedConcurrency: 10
     disableLogs: true
+    timeout: 10
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -184,6 +191,7 @@ functions:
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
     events:
       - sqs:
           batchSize: 10
@@ -204,6 +212,7 @@ functions:
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       AWS_SQS_REGION: eu-west-2
     events:
       - sqs:

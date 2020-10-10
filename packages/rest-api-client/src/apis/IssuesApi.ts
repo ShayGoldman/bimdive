@@ -27,7 +27,6 @@ export interface IssuesDeleteRequest {
   assignedToType?: string;
   dueDate?: string;
   scannedAt?: string;
-  issueContainerId?: string;
   prefer?: IssuesDeletePreferEnum;
 }
 
@@ -43,7 +42,6 @@ export interface IssuesGetRequest {
   assignedToType?: string;
   dueDate?: string;
   scannedAt?: string;
-  issueContainerId?: string;
   select?: string;
   order?: string;
   range?: string;
@@ -65,7 +63,6 @@ export interface IssuesPatchRequest {
   assignedToType?: string;
   dueDate?: string;
   scannedAt?: string;
-  issueContainerId?: string;
   prefer?: IssuesPatchPreferEnum;
   issues?: Issues;
 }
@@ -130,11 +127,6 @@ export class IssuesApi extends runtime.BaseAPI {
 
     if (requestParameters.scannedAt !== undefined) {
       queryParameters["scanned_at"] = requestParameters.scannedAt;
-    }
-
-    if (requestParameters.issueContainerId !== undefined) {
-      queryParameters["issue_container_id"] =
-        requestParameters.issueContainerId;
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -212,11 +204,6 @@ export class IssuesApi extends runtime.BaseAPI {
 
     if (requestParameters.scannedAt !== undefined) {
       queryParameters["scanned_at"] = requestParameters.scannedAt;
-    }
-
-    if (requestParameters.issueContainerId !== undefined) {
-      queryParameters["issue_container_id"] =
-        requestParameters.issueContainerId;
     }
 
     if (requestParameters.select !== undefined) {
@@ -327,11 +314,6 @@ export class IssuesApi extends runtime.BaseAPI {
 
     if (requestParameters.scannedAt !== undefined) {
       queryParameters["scanned_at"] = requestParameters.scannedAt;
-    }
-
-    if (requestParameters.issueContainerId !== undefined) {
-      queryParameters["issue_container_id"] =
-        requestParameters.issueContainerId;
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
