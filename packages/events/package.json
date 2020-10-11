@@ -6,7 +6,7 @@
     "commander": "npx ts-node ./scripts/commander.ts",
     "deploy": "yarn commander deploy",
     "dev": "yarn run commander dev -e .env.dev",
-    "install:rest-api-client": "./scripts/install_rest_api_client.sh"
+    "test": "npx tsc --noEmit"
   },
   "dependencies": {
     "@bimdive/rest-api-client": "file:./../rest-api-client",

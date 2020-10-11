@@ -15,6 +15,11 @@
   dependencies:
     node-fetch "^2.6.1"
 
+"@bimdive/rest-api-client@file:./../rest-api-client":
+  version "1.0.9"
+  dependencies:
+    node-fetch "^2.6.1"
+
 "@hapi/bourne@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@hapi/bourne/-/bourne-2.0.0.tgz#5bb2193eb685c0007540ca61d166d4e1edaf918d"

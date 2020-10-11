@@ -12,7 +12,7 @@ const scanCreatedQueue = getFromEnv({
   fatal: true,
 });
 
-const { context, runtimeFactory } = $APIEnvironment();
+const { context, services, runtimeFactory } = $APIEnvironment();
 
 export const createScan: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,

@@ -9,9 +9,6 @@ import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
-type BIM360API_GetIssue = any;
-type BIM360API_GetIssueTypes = any;
-
 export type IssueDiscoveredHandler = (params: {
   message: SQSRecord;
 }) => Promise<void>;
@@ -33,14 +30,14 @@ export const $IssueDiscoveredHandler = ({
     issueContainerProviderId: string;
   }): Promise<{ types: any[]; subTypes: any[] }> {
     const { logger } = context;
-    const { results: allIssueTypes } = await api.get<
-      BIM360API_GetIssueTypes,
-      BIM360API_GetIssueTypes
-    >(`/issues/v1/containers/${issueContainerProviderId}/ng-issue-types`, {
-      params: {
-        include: "subtypes",
-      },
-    });
+    const { results: allIssueTypes } = await api.get<any, any>(
+      `/issues/v1/containers/${issueContainerProviderId}/ng-issue-types`,
+      {
+        params: {
+          include: "subtypes",
+        },
+      }
+    );
 
     const types = allIssueTypes.map((i) => omit(i, "subtypes"));
     const subTypes = uniqBy(
