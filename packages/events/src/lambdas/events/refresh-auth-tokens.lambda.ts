@@ -30,10 +30,10 @@ export const handle: ScheduledHandler = async (
   event: ScheduledEvent,
   apiContext: Context
 ) => {
+  apiContext.callbackWaitsForEmptyEventLoop = false;
   const { logger } = context;
   const { restApiUtils } = services;
   const tokens = new AccessTokensApi(restApiUtils.configuration);
-
   logger.info({
     msg: "recieved event",
     id: event.id,
