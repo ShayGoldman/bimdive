@@ -11,7 +11,7 @@ export const $IssueContainerDiscoveredHandler = ({
   context: Context;
   services: Services;
 }) => {
-  async function persistCustomAttributes({ results }) {
+  async function persistCustomAttributes(attributes) {
     const { logger } = context;
     const { restApiUtils } = services;
 
@@ -29,7 +29,7 @@ export const $IssueContainerDiscoveredHandler = ({
       createdAt,
       updatedAt,
       deletedAt,
-    } of results) {
+    } of attributes) {
       const attributes = dataType === "list" ? metadata.list.options : [{}];
 
       for (const { value = null, id: valueId = null } of attributes) {
@@ -72,7 +72,7 @@ export const $IssueContainerDiscoveredHandler = ({
         page,
         limit,
       });
-      const issues = await api.get(
+      const { results, pagination } = await api.get(
         `/issues/v2/containers/${issueContainerId}/issue-attribute-definitions`,
         {
           params: {
@@ -82,12 +82,12 @@ export const $IssueContainerDiscoveredHandler = ({
         }
       );
 
-      const issueCount = issues.meta.record_count;
+      const attributesCount = pagination.totalResults;
 
-      if ((page + 1) * limit < issueCount) {
-        return issues.data.concat(await fetchCustomAttributesPage(page + 1));
+      if ((page + 1) * limit < attributesCount) {
+        return results.concat(await fetchCustomAttributesPage(page + 1));
       } else {
-        return issues.data;
+        return results;
       }
     }
 
