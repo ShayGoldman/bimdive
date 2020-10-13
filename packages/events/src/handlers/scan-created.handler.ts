@@ -1,7 +1,6 @@
 import { SQSRecord } from "aws-lambda";
 import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
-import uniq from "lodash/uniq";
 
 type DataManagementAPI_GetHubs = any;
 type BIM360API_GetProjects = any;

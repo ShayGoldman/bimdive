@@ -1,10 +1,8 @@
+import { CustomAttributesApi } from "@bimdive/rest-api-client";
 import { SQSRecord } from "aws-lambda";
 import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
-import { CustomAttributesApi } from "@bimdive/rest-api-client";
-
-type BIM360API_GetCustomAttributes = any;
 
 export const $IssueContainerDiscoveredHandler = ({
   context,

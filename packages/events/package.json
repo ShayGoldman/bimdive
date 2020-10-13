@@ -4,7 +4,7 @@
   "description": "Serverless webpack example using Typescript",
   "scripts": {
     "commander": "npx ts-node ./scripts/commander.ts",
-    "deploy": "yarn commander deploy",
+    "deploy": "yarn test && yarn commander deploy",
     "dev": "yarn run commander dev -e .env.dev",
     "test": "npx tsc --noEmit"
   },
