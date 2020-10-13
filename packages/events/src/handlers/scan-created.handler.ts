@@ -48,13 +48,79 @@ export const $ScanCreatedHandler = ({
     return fetchIssuesPage(0);
   }
 
+  async function processProject({ api, project, scanId, hubId }) {
+    const { logger } = context;
+    const { sqs } = services;
+    const issueContainerId = project.relationships.issues.data.id;
+
+    logger.info({
+      msg: "issue container discovered",
+      issueContainerId,
+    });
+
+    if (shouldEmitMessages) {
+      await sqs.sendMessage({
+        queue: issueContainerDiscoveredQueue,
+        message: {
+          type: "IssueContainerDiscovered",
+          scanId,
+          issueContainerId,
+          projectId: project.id,
+          hubId,
+        },
+      });
+    }
+
+    try {
+      const issues = await fetchAllIssues({
+        api,
+        issueContainerId,
+        logger,
+      });
+
+      for (const issue of issues) {
+        logger.info({
+          msg: "issue discovered",
+          issueId: issue.id,
+          scanId,
+          issueContainerId,
+          hubId,
+        });
+      }
+
+      if (shouldEmitMessages) {
+        await sqs.sendMessagesBatch({
+          queue: issueDiscoveredQueue,
+          messages: issues.map((issue) => ({
+            type: "IssueDiscovered",
+            scanId,
+            issueId: issue.id,
+            issueContainerId,
+            hubId,
+          })),
+        });
+      }
+
+      logger.info({
+        issuesDiscovered: issues.length,
+        hubId,
+        projectID: project.id,
+      });
+    } catch (e) {
+      logger.error({
+        ...e,
+        msg: "failed discovering all issues",
+      });
+    }
+  }
+
   return async function scanCreatedHandler({
     message,
   }: {
     message: SQSRecord;
   }) {
     const { logger } = context;
-    const { sqs, bimApiFactory, getTokenFromScanId } = services;
+    const { bimApiFactory, getTokenFromScanId } = services;
 
     const { stringValue: scanId = "" } = message.messageAttributes.scanId;
 
@@ -62,89 +128,40 @@ export const $ScanCreatedHandler = ({
 
     const api = bimApiFactory({ token });
 
-    try {
-      const hubs = await api.get<
-        DataManagementAPI_GetHubs,
-        DataManagementAPI_GetHubs
-      >("/project/v1/hubs");
+    const hubs = await api.get<
+      DataManagementAPI_GetHubs,
+      DataManagementAPI_GetHubs
+    >("/project/v1/hubs");
 
-      for (const hub of hubs.data) {
+    for (const hub of hubs.data) {
+      try {
+        logger.info({
+          msg: "processing hub",
+          hubId: hub.id,
+        });
         const projects = await api.get<
           BIM360API_GetProjects,
           BIM360API_GetProjects
         >(`/project/v1/hubs/${hub.id}/projects`);
 
         for (const project of projects.data) {
-          const issueContainerId = project.relationships.issues.data.id;
-
-          logger.info({
-            msg: "issue container discovered",
-            issueContainerId,
-          });
-
-          if (shouldEmitMessages) {
-            await sqs.sendMessage({
-              queue: issueContainerDiscoveredQueue,
-              message: {
-                type: "IssueContainerDiscovered",
-                scanId,
-                issueContainerId,
-                projectId: project.id,
-                hubId: hub.id,
-              },
-            });
-          }
-
           try {
-            const issues = await fetchAllIssues({
-              api,
-              issueContainerId,
-              logger,
-            });
-
-            for (const issue of issues) {
-              logger.info({
-                msg: "issue discovered",
-                issueId: issue.id,
-                scanId,
-                issueContainerId,
-                hubId: hub.id,
-              });
-            }
-
-            if (shouldEmitMessages) {
-              await sqs.sendMessagesBatch({
-                queue: issueDiscoveredQueue,
-                messages: issues.map((issue) => ({
-                  type: "IssueDiscovered",
-                  scanId,
-                  issueId: issue.id,
-                  issueContainerId,
-                  hubId: hub.id,
-                })),
-              });
-            }
-
-            logger.info({
-              issuesDiscovered: issues.length,
-              hubId: hub.id,
-              projectID: project.id,
-            });
+            await processProject({ project, api, scanId, hubId: hub.id });
           } catch (e) {
             logger.error({
+              msg: "failed to process project",
+              id: project.id,
               ...e,
-              msg: "failed discovering all issues",
             });
           }
         }
+      } catch (e) {
+        logger.error({
+          msg: "failed to process hub",
+          id: hub.id,
+          ...e,
+        });
       }
-    } catch (e) {
-      logger.error({
-        ...e,
-        msg: "failed to initiate scan",
-      });
     }
-
-    logger.info("scan complete");
   };
 };

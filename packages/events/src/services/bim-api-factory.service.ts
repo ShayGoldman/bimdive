@@ -13,6 +13,11 @@ export type BIMApi = AxiosInstance;
 
 export type BIMApiFactory = (parms: Params) => BIMApi;
 
+/*
+    const token = await getTokenFromScanId(scanId);
+    const api = bimApiFactory({ token });
+*/
+// todo moving token fetching here
 export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
   return function $BimApi({ token }: { token?: string }): BIMApi {
     const instance = axios.create({
