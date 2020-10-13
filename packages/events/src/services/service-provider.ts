@@ -7,6 +7,10 @@ import { Logger } from "./logger.service";
 import { $SQS, SQS } from "./sqs.service";
 import { $RESTApiUtils, RESTApiUtils } from "./rest-api-utils";
 import { AccessTokensApi, ScansApi, UsersApi } from "@bimdive/rest-api-client";
+import {
+  $BIMAccessTokensService,
+  BIMAccessTokensService,
+} from "./bim-access-tokens.service";
 
 export type Services = {
   restApiUtils: RESTApiUtils;
@@ -14,6 +18,7 @@ export type Services = {
   sqs: SQS;
   getTokenFromScanId: (scanId: string) => Promise<string>;
   generateTemporaryAPIToken: () => Promise<string>;
+  tokens: BIMAccessTokensService;
 };
 
 // part of 3-legged-token flow
@@ -102,14 +107,29 @@ export const $ServiceProvider = ({
 }): Services => {
   const { logger } = context;
 
-  const clientId = getFromEnv({ name: "FORGE_CLIENT_ID", fatal: true });
-  const clientSecret = getFromEnv({ name: "FORGE_CLIENT_SECRET", fatal: true });
+  const clientId = getFromEnv({
+    name: "FORGE_CLIENT_ID",
+    fatal: true,
+    logValue: false,
+  });
+  const clientSecret = getFromEnv({
+    name: "FORGE_CLIENT_SECRET",
+    fatal: true,
+    logValue: false,
+  });
 
   const sqs = $SQS({ logger });
 
   const bimApiFactory = $BIMApiFactory({ logger });
 
   const restApiUtils = $RESTApiUtils({ context });
+
+  const tokens = $BIMAccessTokensService({
+    forgeClientId: clientId,
+    forgeClientSecret: clientSecret,
+    logger,
+    restApiUtils,
+  });
 
   return {
     bimApiFactory,
@@ -120,5 +140,6 @@ export const $ServiceProvider = ({
       clientId,
       clientSecret,
     }),
+    tokens,
   };
 };

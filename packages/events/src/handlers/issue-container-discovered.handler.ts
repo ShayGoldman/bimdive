@@ -67,6 +67,35 @@ export const $IssueContainerDiscoveredHandler = ({
     }
   }
 
+  async function fetchAllCustomAttributes({ api, logger, issueContainerId }) {
+    async function fetchCustomAttributesPage(page: number, limit: number = 5) {
+      logger.info({
+        msg: "fetching custom attributes",
+        page,
+        limit,
+      });
+      const issues = await api.get(
+        `/issues/v2/containers/${issueContainerId}/issue-attribute-definitions`,
+        {
+          params: {
+            limit: limit,
+            offset: page * limit,
+          },
+        }
+      );
+
+      const issueCount = issues.meta.record_count;
+
+      if ((page + 1) * limit < issueCount) {
+        return issues.data.concat(await fetchCustomAttributesPage(page + 1));
+      } else {
+        return issues.data;
+      }
+    }
+
+    return fetchCustomAttributesPage(0);
+  }
+
   return async function issueContainerDiscoveredHandler({
     message,
   }: {
@@ -96,10 +125,11 @@ export const $IssueContainerDiscoveredHandler = ({
 
     const api = bimApiFactory({ token });
 
-    const customAttributes = await api.get<
-      BIM360API_GetCustomAttributes,
-      BIM360API_GetCustomAttributes
-    >(`/issues/v2/containers/${issueContainerId}/issue-attribute-definitions`);
+    const customAttributes = await fetchAllCustomAttributes({
+      api,
+      issueContainerId,
+      logger,
+    });
 
     logger.info({
       msg: "found custom attributes",

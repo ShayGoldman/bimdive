@@ -14,7 +14,7 @@ export const $CreateScan = ({
 }) => {
   return async function createScan({ event }: { event: APIGatewayProxyEvent }) {
     const { logger } = context;
-    const { sqs, restApiUtils } = services;
+    const { sqs, restApiUtils, tokens } = services;
     const users = new UsersApi(restApiUtils.configuration);
     const scans = new ScansApi(restApiUtils.configuration);
     const { email } = JSON.parse(event.body || "{}");
@@ -34,6 +34,9 @@ export const $CreateScan = ({
     }
 
     const scanId = restApiUtils.generateUUID();
+
+    await tokens.refreshToken(initiatingUser.providerId);
+
     await scans.scansPost({
       scans: {
         id: scanId,

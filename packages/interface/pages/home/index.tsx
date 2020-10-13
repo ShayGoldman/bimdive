@@ -1,10 +1,8 @@
 import axios from "axios";
 import { useCallback } from "react";
-import { useAsync, useSearchParam } from "react-use";
-import { useRouter } from "next/router";
-import querystring from "querystring";
+import { useAsync } from "react-use";
 
-const apiUrl = `https://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod`;
+const apiUrl = `https://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod`;
 
 const Spinner = () => (
   <img src="https://i.imgflip.com/4hkjrq.jpg" width="200" />

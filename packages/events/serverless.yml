@@ -140,7 +140,7 @@ functions:
       - schedule:
           name: refresh-auth-tokens
           description: refreshes all access tokens for authenticated users (keeps tokens valid)
-          rate: rate(45 minutes)
+          rate: rate(6 hours)
           enabled: true
 
   ScanCreated:
