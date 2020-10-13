@@ -75,7 +75,7 @@ export const $SQS = ({ logger }: Deps): SQS => {
 
     const batches = chunks.map((chunk, chunkIdx) => {
       return chunk.map((message, messageIdx) => ({
-        Id: `${chunkIdx}:${messageIdx}`,
+        Id: `${chunkIdx}_${messageIdx}`,
         DelaySeconds: 5,
         MessageBody: message.type,
         MessageAttributes: messageToMessageAttributesAdapter(message),
