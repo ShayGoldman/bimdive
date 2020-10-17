@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
+import { serialize } from "cookie";
 
 const clientId = process.env.FORGE_CLIENT_ID;
 const clientSecret = process.env.FORGE_CLIENT_SECRET;
@@ -63,12 +64,15 @@ export default async function authCallback(
     const userData = await getUserData(token.access_token);
     console.log(`authed user ${userData.emailId}`);
 
-    await axios.post(
+    const {
+      data: { id },
+    } = await axios.post(
       "http://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
       { ...token, code }
     );
 
-    res.redirect(`/home?email=${userData.emailId}`);
+    res.setHeader("Set-Cookie", serialize("_bimdive", JSON.stringify({ id })));
+    res.redirect(`/home`);
   } catch (e) {
     console.log(e);
     res.redirect("/error");
