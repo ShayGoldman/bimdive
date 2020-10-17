@@ -66,17 +66,16 @@ export default async function authCallback(
     console.log(`authed user ${userData.emailId}`);
 
     const {
-      data: {
-        data: { id },
-      },
+      data,
     } = await axios.post(
       "http://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
       { ...token, code }
     );
+    console.log(/* LOG */ "---", "data", data);
 
     res.setHeader(
       "Set-Cookie",
-      serialize("_bimdive", JSON.stringify({ id }), {
+      serialize("_bimdive", JSON.stringify({ id: "123" }), {
         expires: dayjs().add(1, "year").toDate(),
       })
     );
