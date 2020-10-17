@@ -72,7 +72,7 @@ export const $CreateProjectScans = ({
     });
 
     if (!initiatingUser) {
-      return { error: "scan not possible" };
+      throw new Error("Scan creation failed {MissingInitiatingUser}");
     }
 
     const accessToken = await tokens.getTokenForUser(initiatingUser.providerId);

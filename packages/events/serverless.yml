@@ -8,6 +8,7 @@ frameworkVersion: "2"
 
 plugins:
   - serverless-plugin-typescript
+#  - serverless-domain-manager
 
 provider:
   name: aws
@@ -43,6 +44,14 @@ provider:
         Fn::GetAtt:
           - UserDiscoveredQueue
           - Arn
+
+custom:
+  customDomain:
+    api:
+      domainName: api.bimdive.com
+      certificateName: "*.bimdive.com"
+      stage: ${self:provider.stage}
+      createRoute53Record: true
 
 functions:
   GraphQL:

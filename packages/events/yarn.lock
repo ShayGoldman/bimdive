@@ -11,12 +11,7 @@
     es5-ext "^0.10.47"
 
 "@bimdive/rest-api-client@file:../rest-api-client":
-  version "1.0.10"
-  dependencies:
-    node-fetch "^2.6.1"
-
-"@bimdive/rest-api-client@file:./../rest-api-client":
-  version "1.0.10"
+  version "1.0.11"
   dependencies:
     node-fetch "^2.6.1"
 
@@ -789,6 +784,21 @@ atomic-sleep@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/atomic-sleep/-/atomic-sleep-1.0.0.tgz#eb85b77a601fc932cfe432c5acd364a9e2c9075b"
   integrity sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==
+
+aws-sdk@^2.756.0:
+  version "2.773.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.773.0.tgz#a8cc51eb0ee0a0fab00d2d9b61acccf4a54ad51b"
+  integrity sha512-bwqEm/x3HMUd/xfcUeTjCQFi904oSNcwl2ZNz3mwAdEIqt3sQ9aE3GYoZQxKXw/XHQlF7hPiKO07GDGmS6x4AQ==
+  dependencies:
+    buffer "4.9.2"
+    events "1.1.1"
+    ieee754 "1.1.13"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
+    xml2js "0.4.19"
 
 aws-sdk@^2.760.0:
   version "2.760.0"
@@ -4432,6 +4442,14 @@ semver@^7.3.2:
   version "7.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.2.tgz#604962b052b81ed0786aae84389ffba70ffd3938"
   integrity sha512-OrOb32TeeambH6UrhtShmF7CRDqhL6/5XpPNp2DuRH6+9QLw/orhp72j87v8Qa1ScDkvrrBNpZcDejAirJmfXQ==
+
+serverless-domain-manager@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/serverless-domain-manager/-/serverless-domain-manager-5.0.0.tgz#6120580006d1cb33f615f6fbb83affbf075c9782"
+  integrity sha512-bE+mFd0sXp455LZQ46F1HyQvaFmndISt/fBfxcHZR+ZSt0m28ryGl5satGFesY37EMd7oLNap0AcumQzldp53Q==
+  dependencies:
+    aws-sdk "^2.756.0"
+    chalk "^4.1.0"
 
 serverless-plugin-typescript@^1.1.9:
   version "1.1.9"

@@ -11,7 +11,6 @@ type HandlerParams = { event: APIGatewayProxyEvent };
 type HandlerResult = {
   data?: string | number | object | null;
   redirect?: string;
-  error?: string;
 };
 
 type Handler = (params: HandlerParams) => Promise<HandlerResult>;
@@ -56,17 +55,13 @@ const $Runtime = ({
     });
 
     try {
-      const { data, redirect: redirectUrl, error: errorText } = await handler({
+      const { data, redirect: redirectUrl } = await handler({
         event,
       });
       logger.info({
         msg: "request handled",
         requestId,
       });
-
-      if (errorText) {
-        return error(errorText || "Unknown error");
-      }
 
       if (redirectUrl) {
         return redirect(redirectUrl);

@@ -102,37 +102,32 @@ export const $AuthenticateUser = ({
     );
 
     if (!access_token) {
-      return { error: "error authenticating user" };
+      throw new Error("Authentication failed {TokenMissing}");
     }
 
-    try {
-      const userData = await getUserData(access_token);
+    const userData = await getUserData(access_token);
 
-      logger.debug({
-        msg: "user data fetched",
-        ...userData,
-      });
+    logger.debug({
+      msg: "user data fetched",
+      ...userData,
+    });
 
-      const userProviderId = userData.userId;
+    const userProviderId = userData.userId;
 
-      await updateUserAccessToken({
-        userProviderId,
-        access_token,
-        refresh_token,
-        expires_in,
-      });
+    await updateUserAccessToken({
+      userProviderId,
+      access_token,
+      refresh_token,
+      expires_in,
+    });
 
-      const userId = await updateUserData(userData);
+    const userId = await updateUserData(userData);
 
-      logger.info({
-        msg: "successfully authenticated user",
-        userProviderId,
-      });
+    logger.info({
+      msg: "successfully authenticated user",
+      userProviderId,
+    });
 
-      return { data: { id: userId } };
-    } catch (e) {
-      logger.error(e);
-      return { error: e.message };
-    }
+    return { data: { id: userId } };
   };
 };
