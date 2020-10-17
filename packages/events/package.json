@@ -11,6 +11,7 @@
   "dependencies": {
     "@bimdive/rest-api-client": "file:./../rest-api-client",
     "axios": "^0.20.0",
+    "bluebird": "^3.7.2",
     "dayjs": "^1.9.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.6",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
+    "@types/bluebird": "^3.5.32",
     "@types/inquirer": "^7.3.1",
     "@types/lodash": "^4.14.161",
     "@types/node": "^10.12.18",

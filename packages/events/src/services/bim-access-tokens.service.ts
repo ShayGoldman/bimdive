@@ -7,6 +7,7 @@ import { AccessTokensApi } from "@bimdive/rest-api-client";
 
 export type BIMAccessTokensService = {
   refreshToken: (userProviderId: string) => Promise<void>;
+  getTokenForUser: (userProviderId: string) => Promise<string>;
 };
 
 type Deps = {
@@ -81,7 +82,21 @@ export const $BIMAccessTokensService = ({
     });
   }
 
+  async function getTokenForUser(userProviderId: string) {
+    await refreshToken(userProviderId);
+    const [token] = await tokens.accessTokensGet({
+      userProviderId: restApiUtils.operators.equals(userProviderId),
+    });
+
+    if (!token) {
+      throw new Error(`Token not found for [${userProviderId}]`);
+    }
+
+    return token.accessToken;
+  }
+
   return {
     refreshToken,
+    getTokenForUser,
   };
 };

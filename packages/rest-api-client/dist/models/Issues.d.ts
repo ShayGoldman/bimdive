@@ -33,7 +33,7 @@ export interface Issues {
    * @type {string}
    * @memberof Issues
    */
-  issueContainerProviderId: string;
+  projectProviderId: string;
   /**
    *
    * @type {string}

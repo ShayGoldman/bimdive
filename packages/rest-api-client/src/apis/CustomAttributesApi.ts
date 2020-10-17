@@ -22,7 +22,6 @@ import {
 export interface CustomAttributesDeleteRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
   type?: string;
   title?: string;
   description?: string;
@@ -38,7 +37,6 @@ export interface CustomAttributesDeleteRequest {
 export interface CustomAttributesGetRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
   type?: string;
   title?: string;
   description?: string;
@@ -60,7 +58,6 @@ export interface CustomAttributesGetRequest {
 export interface CustomAttributesPatchRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
   type?: string;
   title?: string;
   description?: string;
@@ -97,11 +94,6 @@ export class CustomAttributesApi extends runtime.BaseAPI {
 
     if (requestParameters.providerId !== undefined) {
       queryParameters["provider_id"] = requestParameters.providerId;
-    }
-
-    if (requestParameters.issueContainerProviderId !== undefined) {
-      queryParameters["issue_container_provider_id"] =
-        requestParameters.issueContainerProviderId;
     }
 
     if (requestParameters.type !== undefined) {
@@ -180,11 +172,6 @@ export class CustomAttributesApi extends runtime.BaseAPI {
 
     if (requestParameters.providerId !== undefined) {
       queryParameters["provider_id"] = requestParameters.providerId;
-    }
-
-    if (requestParameters.issueContainerProviderId !== undefined) {
-      queryParameters["issue_container_provider_id"] =
-        requestParameters.issueContainerProviderId;
     }
 
     if (requestParameters.type !== undefined) {
@@ -296,11 +283,6 @@ export class CustomAttributesApi extends runtime.BaseAPI {
 
     if (requestParameters.providerId !== undefined) {
       queryParameters["provider_id"] = requestParameters.providerId;
-    }
-
-    if (requestParameters.issueContainerProviderId !== undefined) {
-      queryParameters["issue_container_provider_id"] =
-        requestParameters.issueContainerProviderId;
     }
 
     if (requestParameters.type !== undefined) {

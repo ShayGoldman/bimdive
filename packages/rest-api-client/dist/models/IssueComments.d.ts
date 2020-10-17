@@ -51,12 +51,6 @@ export interface IssueComments {
    * @type {string}
    * @memberof IssueComments
    */
-  value?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof IssueComments
-   */
   createdAt: string;
   /**
    *

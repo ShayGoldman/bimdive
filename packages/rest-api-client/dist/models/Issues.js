@@ -26,7 +26,7 @@ function IssuesFromJSONTyped(json, ignoreDiscriminator) {
     return {
         'id': json['id'],
         'providerId': json['provider_id'],
-        'issueContainerProviderId': json['issue_container_provider_id'],
+        'projectProviderId': json['project_provider_id'],
         'title': json['title'],
         'status': json['status'],
         'type': !runtime_1.exists(json, 'type') ? undefined : json['type'],
@@ -49,7 +49,7 @@ function IssuesToJSON(value) {
     return {
         'id': value.id,
         'provider_id': value.providerId,
-        'issue_container_provider_id': value.issueContainerProviderId,
+        'project_provider_id': value.projectProviderId,
         'title': value.title,
         'status': value.status,
         'type': value.type,

@@ -25,6 +25,8 @@ function ScansFromJSONTyped(json, ignoreDiscriminator) {
     return {
         'id': json['id'],
         'initiatingUserId': json['initiating_user_id'],
+        'projectProviderId': json['project_provider_id'],
+        'projectName': json['project_name'],
         'createdAt': json['created_at'],
     };
 }
@@ -39,6 +41,8 @@ function ScansToJSON(value) {
     return {
         'id': value.id,
         'initiating_user_id': value.initiatingUserId,
+        'project_provider_id': value.projectProviderId,
+        'project_name': value.projectName,
         'created_at': value.createdAt,
     };
 }

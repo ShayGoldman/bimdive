@@ -68,9 +68,6 @@ class IssueCommentsApi extends runtime.BaseAPI {
             if (requestParameters.body !== undefined) {
                 queryParameters['body'] = requestParameters.body;
             }
-            if (requestParameters.value !== undefined) {
-                queryParameters['value'] = requestParameters.value;
-            }
             if (requestParameters.createdAt !== undefined) {
                 queryParameters['created_at'] = requestParameters.createdAt;
             }
@@ -119,9 +116,6 @@ class IssueCommentsApi extends runtime.BaseAPI {
             }
             if (requestParameters.body !== undefined) {
                 queryParameters['body'] = requestParameters.body;
-            }
-            if (requestParameters.value !== undefined) {
-                queryParameters['value'] = requestParameters.value;
             }
             if (requestParameters.createdAt !== undefined) {
                 queryParameters['created_at'] = requestParameters.createdAt;
@@ -190,9 +184,6 @@ class IssueCommentsApi extends runtime.BaseAPI {
             }
             if (requestParameters.body !== undefined) {
                 queryParameters['body'] = requestParameters.body;
-            }
-            if (requestParameters.value !== undefined) {
-                queryParameters['value'] = requestParameters.value;
             }
             if (requestParameters.createdAt !== undefined) {
                 queryParameters['created_at'] = requestParameters.createdAt;

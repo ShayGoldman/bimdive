@@ -40,7 +40,7 @@ function $GetTokenFromScanId({
       limit: "1",
     });
 
-    logger.debug({
+    logger.trace({
       msg: "found scan for token",
       ...scan,
     });
@@ -50,7 +50,7 @@ function $GetTokenFromScanId({
       limit: "1",
     });
 
-    logger.debug({
+    logger.trace({
       msg: "found user for token",
       ...user,
     });
@@ -59,7 +59,7 @@ function $GetTokenFromScanId({
       userProviderId: restApiUtils.operators.equals(user.providerId),
     });
 
-    logger.debug({
+    logger.trace({
       msg: "token for scan",
       scanId,
       token: Boolean(accessToken),

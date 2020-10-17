@@ -112,12 +112,7 @@ export const $IssueDiscoveredHandler = ({
     }
   }
 
-  async function persistIssue({
-    issue,
-    types,
-    subTypes,
-    issueContainerProviderId,
-  }) {
+  async function persistIssue({ issue, types, subTypes, projectId }) {
     const { logger } = context;
     const { restApiUtils } = services;
     const issues = new IssuesApi(restApiUtils.configuration);
@@ -134,13 +129,27 @@ export const $IssueDiscoveredHandler = ({
     });
 
     const issueId = existing?.id || restApiUtils.generateUUID();
+    console.log(/* LOG */ "---", "", {
+      id: issueId,
+      providerId: issue.id,
+      type,
+      subType,
+      projectProviderId: projectId,
+      status: issue.attributes.status,
+      title: issue.attributes.title,
+      dueDate: issue.attributes.due_date,
+      ownedBy: issue.attributes.owner,
+      assignedTo: issue.attributes.assigned_to,
+      assignedToType: issue.attributes.assigned_to_type,
+      scannedAt: restApiUtils.now(),
+    });
     await issues.issuesPost({
       issues: {
         id: issueId,
         providerId: issue.id,
         type,
         subType,
-        issueContainerProviderId,
+        projectProviderId: projectId,
         status: issue.attributes.status,
         title: issue.attributes.title,
         dueDate: issue.attributes.due_date,
@@ -161,7 +170,10 @@ export const $IssueDiscoveredHandler = ({
   async function persistIssueComments(comments) {
     const { logger } = context;
 
-    logger.debug(comments);
+    logger.debug({
+      msg: "comments",
+      comments,
+    });
   }
 
   async function emitUserDiscoveredEvent({
@@ -205,6 +217,7 @@ export const $IssueDiscoveredHandler = ({
 
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");
+    const projectId = getAttributeFromMessage(message, "projectId");
     const issueId = getAttributeFromMessage(message, "issueId");
     const issueContainerProviderId = getAttributeFromMessage(
       message,
@@ -234,6 +247,12 @@ export const $IssueDiscoveredHandler = ({
         issueContainerProviderId,
       }),
     ]);
+
+    logger.debug({
+      msg: "issue location description",
+      issueId,
+      location: issue.attributes.location_description,
+    });
 
     await Promise.all(
       compact([
@@ -265,7 +284,7 @@ export const $IssueDiscoveredHandler = ({
       issue,
       types,
       subTypes,
-      issueContainerProviderId,
+      projectId,
     });
   };
 };

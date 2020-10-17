@@ -11,12 +11,12 @@
     es5-ext "^0.10.47"
 
 "@bimdive/rest-api-client@file:../rest-api-client":
-  version "1.0.9"
+  version "1.0.10"
   dependencies:
     node-fetch "^2.6.1"
 
 "@bimdive/rest-api-client@file:./../rest-api-client":
-  version "1.0.9"
+  version "1.0.10"
   dependencies:
     node-fetch "^2.6.1"
 
@@ -379,6 +379,11 @@
   version "8.10.62"
   resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.62.tgz#857de3f73ab503136f2eefe965b1b67e5f397b62"
   integrity sha512-43XhJY5jvyH03U0cRsSqeHWhvmGZNoLzTPSAZ3JAqgG9p20uw+Sx9Auk5OAefJajd9ZcfjDJ/9lJ2BiBxfKJRw==
+
+"@types/bluebird@^3.5.32":
+  version "3.5.32"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.32.tgz#381e7b59e39f010d20bbf7e044e48f5caf1ab620"
+  integrity sha512-dIOxFfI0C+jz89g6lQ+TqhGgPQ0MxSnh/E4xuC0blhFtyW269+mPG5QeLgbdwst/LvdP8o1y0o/Gz5EHXLec/g==
 
 "@types/cacheable-request@^6.0.1":
   version "6.0.1"

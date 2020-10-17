@@ -18,7 +18,7 @@ import { Issues, IssuesFromJSON, IssuesToJSON } from "../models";
 export interface IssuesDeleteRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
+  projectProviderId?: string;
   title?: string;
   status?: string;
   type?: string;
@@ -34,7 +34,7 @@ export interface IssuesDeleteRequest {
 export interface IssuesGetRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
+  projectProviderId?: string;
   title?: string;
   status?: string;
   type?: string;
@@ -56,7 +56,7 @@ export interface IssuesGetRequest {
 export interface IssuesPatchRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
+  projectProviderId?: string;
   title?: string;
   status?: string;
   type?: string;
@@ -95,9 +95,9 @@ export class IssuesApi extends runtime.BaseAPI {
       queryParameters["provider_id"] = requestParameters.providerId;
     }
 
-    if (requestParameters.issueContainerProviderId !== undefined) {
-      queryParameters["issue_container_provider_id"] =
-        requestParameters.issueContainerProviderId;
+    if (requestParameters.projectProviderId !== undefined) {
+      queryParameters["project_provider_id"] =
+        requestParameters.projectProviderId;
     }
 
     if (requestParameters.title !== undefined) {
@@ -176,9 +176,9 @@ export class IssuesApi extends runtime.BaseAPI {
       queryParameters["provider_id"] = requestParameters.providerId;
     }
 
-    if (requestParameters.issueContainerProviderId !== undefined) {
-      queryParameters["issue_container_provider_id"] =
-        requestParameters.issueContainerProviderId;
+    if (requestParameters.projectProviderId !== undefined) {
+      queryParameters["project_provider_id"] =
+        requestParameters.projectProviderId;
     }
 
     if (requestParameters.title !== undefined) {
@@ -290,9 +290,9 @@ export class IssuesApi extends runtime.BaseAPI {
       queryParameters["provider_id"] = requestParameters.providerId;
     }
 
-    if (requestParameters.issueContainerProviderId !== undefined) {
-      queryParameters["issue_container_provider_id"] =
-        requestParameters.issueContainerProviderId;
+    if (requestParameters.projectProviderId !== undefined) {
+      queryParameters["project_provider_id"] =
+        requestParameters.projectProviderId;
     }
 
     if (requestParameters.title !== undefined) {

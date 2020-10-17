@@ -55,12 +55,6 @@ export interface IssueComments {
    * @type {string}
    * @memberof IssueComments
    */
-  value?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof IssueComments
-   */
   createdAt: string;
   /**
    *
@@ -93,7 +87,6 @@ export function IssueCommentsFromJSONTyped(
     commentProviderId: json["comment_provider_id"],
     createdBy: !exists(json, "created_by") ? undefined : json["created_by"],
     body: !exists(json, "body") ? undefined : json["body"],
-    value: !exists(json, "value") ? undefined : json["value"],
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
     scannedAt: json["scanned_at"],
@@ -113,7 +106,6 @@ export function IssueCommentsToJSON(value?: IssueComments | null): any {
     comment_provider_id: value.commentProviderId,
     created_by: value.createdBy,
     body: value.body,
-    value: value.value,
     created_at: value.createdAt,
     updated_at: value.updatedAt,
     scanned_at: value.scannedAt,

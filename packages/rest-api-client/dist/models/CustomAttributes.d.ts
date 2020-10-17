@@ -33,12 +33,6 @@ export interface CustomAttributes {
    * @type {string}
    * @memberof CustomAttributes
    */
-  issueContainerProviderId: string;
-  /**
-   *
-   * @type {string}
-   * @memberof CustomAttributes
-   */
   type: string;
   /**
    *

@@ -26,7 +26,6 @@ function CustomAttributesFromJSONTyped(json, ignoreDiscriminator) {
     return {
         'id': json['id'],
         'providerId': json['provider_id'],
-        'issueContainerProviderId': json['issue_container_provider_id'],
         'type': json['type'],
         'title': json['title'],
         'description': !runtime_1.exists(json, 'description') ? undefined : json['description'],
@@ -49,7 +48,6 @@ function CustomAttributesToJSON(value) {
     return {
         'id': value.id,
         'provider_id': value.providerId,
-        'issue_container_provider_id': value.issueContainerProviderId,
         'type': value.type,
         'title': value.title,
         'description': value.description,

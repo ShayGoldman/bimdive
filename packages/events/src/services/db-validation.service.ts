@@ -30,7 +30,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
         await eventsSchema().createTable("issues", (issues) => {
           issues.uuid("id").primary();
           issues.string("provider_id", 64).notNullable().unique();
-          issues.uuid("issue_container_provider_id").notNullable();
+          issues.string("project_provider_id", 64).notNullable();
           issues.string("title", 255).notNullable();
           issues.string("status", 127).notNullable();
           issues.string("type", 255);
@@ -50,7 +50,6 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
         await eventsSchema().createTable("custom_attributes", (attributes) => {
           attributes.uuid("id").primary();
           attributes.string("provider_id", 64).notNullable().index();
-          attributes.uuid("issue_container_provider_id").notNullable();
           attributes.string("type", 16).notNullable();
           attributes.string("title", 128).notNullable();
           attributes.string("description", 512);
@@ -153,6 +152,8 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
         await eventsSchema().createTable("scans", (scans) => {
           scans.uuid("id").primary().defaultTo(uuid());
           scans.uuid("initiating_user_id").notNullable();
+          scans.string("project_provider_id", 64).notNullable();
+          scans.string("project_name", 255).notNullable();
           scans
             .timestamp("created_at", { precision: 3, useTz: true })
             .notNullable()

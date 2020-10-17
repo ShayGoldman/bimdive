@@ -59,6 +59,12 @@ class ScansApi extends runtime.BaseAPI {
             if (requestParameters.initiatingUserId !== undefined) {
                 queryParameters['initiating_user_id'] = requestParameters.initiatingUserId;
             }
+            if (requestParameters.projectProviderId !== undefined) {
+                queryParameters['project_provider_id'] = requestParameters.projectProviderId;
+            }
+            if (requestParameters.projectName !== undefined) {
+                queryParameters['project_name'] = requestParameters.projectName;
+            }
             if (requestParameters.createdAt !== undefined) {
                 queryParameters['created_at'] = requestParameters.createdAt;
             }
@@ -92,6 +98,12 @@ class ScansApi extends runtime.BaseAPI {
             }
             if (requestParameters.initiatingUserId !== undefined) {
                 queryParameters['initiating_user_id'] = requestParameters.initiatingUserId;
+            }
+            if (requestParameters.projectProviderId !== undefined) {
+                queryParameters['project_provider_id'] = requestParameters.projectProviderId;
+            }
+            if (requestParameters.projectName !== undefined) {
+                queryParameters['project_name'] = requestParameters.projectName;
             }
             if (requestParameters.createdAt !== undefined) {
                 queryParameters['created_at'] = requestParameters.createdAt;
@@ -145,6 +157,12 @@ class ScansApi extends runtime.BaseAPI {
             }
             if (requestParameters.initiatingUserId !== undefined) {
                 queryParameters['initiating_user_id'] = requestParameters.initiatingUserId;
+            }
+            if (requestParameters.projectProviderId !== undefined) {
+                queryParameters['project_provider_id'] = requestParameters.projectProviderId;
+            }
+            if (requestParameters.projectName !== undefined) {
+                queryParameters['project_name'] = requestParameters.projectName;
             }
             if (requestParameters.createdAt !== undefined) {
                 queryParameters['created_at'] = requestParameters.createdAt;

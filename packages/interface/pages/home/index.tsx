@@ -61,7 +61,7 @@ const ScanButton = ({ email }) => {
       disabled={!email}
       onClick={scan}
     >
-      Scan
+      Scan for projects
     </button>
   );
 };

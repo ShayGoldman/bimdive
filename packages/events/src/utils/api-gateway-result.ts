@@ -29,7 +29,7 @@ function redirect(url: string): APIGatewayProxyResult {
 
 function error(error: Error | string): APIGatewayProxyResult {
   return {
-    statusCode: 200,
+    statusCode: 500,
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials": true,

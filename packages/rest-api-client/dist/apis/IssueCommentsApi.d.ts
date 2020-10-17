@@ -17,7 +17,6 @@ export interface IssueCommentsDeleteRequest {
   commentProviderId?: string;
   createdBy?: string;
   body?: string;
-  value?: string;
   createdAt?: string;
   updatedAt?: string;
   scannedAt?: string;
@@ -29,7 +28,6 @@ export interface IssueCommentsGetRequest {
   commentProviderId?: string;
   createdBy?: string;
   body?: string;
-  value?: string;
   createdAt?: string;
   updatedAt?: string;
   scannedAt?: string;
@@ -47,7 +45,6 @@ export interface IssueCommentsPatchRequest {
   commentProviderId?: string;
   createdBy?: string;
   body?: string;
-  value?: string;
   createdAt?: string;
   updatedAt?: string;
   scannedAt?: string;

@@ -14,7 +14,6 @@ import { CustomAttributes } from "../models";
 export interface CustomAttributesDeleteRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
   type?: string;
   title?: string;
   description?: string;
@@ -29,7 +28,6 @@ export interface CustomAttributesDeleteRequest {
 export interface CustomAttributesGetRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
   type?: string;
   title?: string;
   description?: string;
@@ -50,7 +48,6 @@ export interface CustomAttributesGetRequest {
 export interface CustomAttributesPatchRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
   type?: string;
   title?: string;
   description?: string;

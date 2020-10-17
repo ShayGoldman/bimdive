@@ -37,6 +37,18 @@ export interface Scans {
    * @type {string}
    * @memberof Scans
    */
+  projectProviderId: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Scans
+   */
+  projectName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Scans
+   */
   createdAt: string;
 }
 
@@ -54,6 +66,8 @@ export function ScansFromJSONTyped(
   return {
     id: json["id"],
     initiatingUserId: json["initiating_user_id"],
+    projectProviderId: json["project_provider_id"],
+    projectName: json["project_name"],
     createdAt: json["created_at"],
   };
 }
@@ -68,6 +82,8 @@ export function ScansToJSON(value?: Scans | null): any {
   return {
     id: value.id,
     initiating_user_id: value.initiatingUserId,
+    project_provider_id: value.projectProviderId,
+    project_name: value.projectName,
     created_at: value.createdAt,
   };
 }

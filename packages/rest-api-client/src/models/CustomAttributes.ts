@@ -37,12 +37,6 @@ export interface CustomAttributes {
    * @type {string}
    * @memberof CustomAttributes
    */
-  issueContainerProviderId: string;
-  /**
-   *
-   * @type {string}
-   * @memberof CustomAttributes
-   */
   type: string;
   /**
    *
@@ -108,7 +102,6 @@ export function CustomAttributesFromJSONTyped(
   return {
     id: json["id"],
     providerId: json["provider_id"],
-    issueContainerProviderId: json["issue_container_provider_id"],
     type: json["type"],
     title: json["title"],
     description: !exists(json, "description") ? undefined : json["description"],
@@ -131,7 +124,6 @@ export function CustomAttributesToJSON(value?: CustomAttributes | null): any {
   return {
     id: value.id,
     provider_id: value.providerId,
-    issue_container_provider_id: value.issueContainerProviderId,
     type: value.type,
     title: value.title,
     description: value.description,

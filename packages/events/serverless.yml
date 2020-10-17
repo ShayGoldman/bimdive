@@ -100,7 +100,7 @@ functions:
           method: post
 
   CreateScan:
-    handler: src/lambdas/api/scan.lambda.createScan
+    handler: src/lambdas/api/scan.lambda.createProjectScans
     memorySize: 128
     disableLogs: true
     reservedConcurrency: 2
@@ -173,9 +173,9 @@ functions:
   IssueDiscovered:
     handler: src/lambdas/events/issue-discovered.lambda.handle
     memorySize: 128
-    reservedConcurrency: 5
+    reservedConcurrency: 10
     disableLogs: true
-    timeout: 20
+    timeout: 30
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}

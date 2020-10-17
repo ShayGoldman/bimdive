@@ -1,9 +1,7 @@
 import { SQSRecord } from "aws-lambda";
 import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
-
-type DataManagementAPI_GetHubs = any;
-type BIM360API_GetProjects = any;
+import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
 export const $ScanCreatedHandler = ({
   context,
@@ -48,10 +46,9 @@ export const $ScanCreatedHandler = ({
     return fetchIssuesPage(0);
   }
 
-  async function processProject({ api, project, scanId, hubId }) {
+  async function processIssueContainer({ issueContainerId, scanId }) {
     const { logger } = context;
     const { sqs } = services;
-    const issueContainerId = project.relationships.issues.data.id;
 
     logger.info({
       msg: "issue container discovered",
@@ -65,12 +62,20 @@ export const $ScanCreatedHandler = ({
           type: "IssueContainerDiscovered",
           scanId,
           issueContainerId,
-          projectId: project.id,
-          hubId,
         },
       });
     }
+  }
 
+  async function processIssues({
+    api,
+    project,
+    scanId,
+    issueContainerId,
+    hubId,
+  }) {
+    const { logger } = context;
+    const { sqs } = services;
     try {
       const issues = await fetchAllIssues({
         api,
@@ -95,6 +100,7 @@ export const $ScanCreatedHandler = ({
             type: "IssueDiscovered",
             scanId,
             issueId: issue.id,
+            projectId: project.id,
             issueContainerId,
             hubId,
           })),
@@ -104,7 +110,7 @@ export const $ScanCreatedHandler = ({
       logger.info({
         issuesDiscovered: issues.length,
         hubId,
-        projectID: project.id,
+        projectId: project.id,
       });
     } catch (e) {
       logger.error({
@@ -119,49 +125,31 @@ export const $ScanCreatedHandler = ({
   }: {
     message: SQSRecord;
   }) {
-    const { logger } = context;
     const { bimApiFactory, getTokenFromScanId } = services;
 
-    const { stringValue: scanId = "" } = message.messageAttributes.scanId;
+    const scanId = getAttributeFromMessage(message, "scanId");
+    const hubId = getAttributeFromMessage(message, "hubId");
+    const projectId = getAttributeFromMessage(message, "projectId");
 
     const token = await getTokenFromScanId(scanId);
 
     const api = bimApiFactory({ token });
 
-    const hubs = await api.get<
-      DataManagementAPI_GetHubs,
-      DataManagementAPI_GetHubs
-    >("/project/v1/hubs");
+    const { data: project } = await api.get<any, any>(
+      `/project/v1/hubs/${hubId}/projects/${projectId}`
+    );
 
-    for (const hub of hubs.data) {
-      try {
-        logger.info({
-          msg: "processing hub",
-          hubId: hub.id,
-        });
-        const projects = await api.get<
-          BIM360API_GetProjects,
-          BIM360API_GetProjects
-        >(`/project/v1/hubs/${hub.id}/projects`);
+    const issueContainerId = project.relationships.issues.data.id;
 
-        for (const project of projects.data) {
-          try {
-            await processProject({ project, api, scanId, hubId: hub.id });
-          } catch (e) {
-            logger.error({
-              msg: "failed to process project",
-              id: project.id,
-              ...e,
-            });
-          }
-        }
-      } catch (e) {
-        logger.error({
-          msg: "failed to process hub",
-          id: hub.id,
-          ...e,
-        });
-      }
-    }
+    await Promise.all([
+      processIssueContainer({ issueContainerId, scanId }),
+      processIssues({
+        api,
+        hubId,
+        issueContainerId,
+        project,
+        scanId,
+      }),
+    ]);
   };
 };

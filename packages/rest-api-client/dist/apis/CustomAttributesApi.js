@@ -59,9 +59,6 @@ class CustomAttributesApi extends runtime.BaseAPI {
             if (requestParameters.providerId !== undefined) {
                 queryParameters['provider_id'] = requestParameters.providerId;
             }
-            if (requestParameters.issueContainerProviderId !== undefined) {
-                queryParameters['issue_container_provider_id'] = requestParameters.issueContainerProviderId;
-            }
             if (requestParameters.type !== undefined) {
                 queryParameters['type'] = requestParameters.type;
             }
@@ -119,9 +116,6 @@ class CustomAttributesApi extends runtime.BaseAPI {
             }
             if (requestParameters.providerId !== undefined) {
                 queryParameters['provider_id'] = requestParameters.providerId;
-            }
-            if (requestParameters.issueContainerProviderId !== undefined) {
-                queryParameters['issue_container_provider_id'] = requestParameters.issueContainerProviderId;
             }
             if (requestParameters.type !== undefined) {
                 queryParameters['type'] = requestParameters.type;
@@ -199,9 +193,6 @@ class CustomAttributesApi extends runtime.BaseAPI {
             }
             if (requestParameters.providerId !== undefined) {
                 queryParameters['provider_id'] = requestParameters.providerId;
-            }
-            if (requestParameters.issueContainerProviderId !== undefined) {
-                queryParameters['issue_container_provider_id'] = requestParameters.issueContainerProviderId;
             }
             if (requestParameters.type !== undefined) {
                 queryParameters['type'] = requestParameters.type;

@@ -14,7 +14,7 @@ import { Issues } from "../models";
 export interface IssuesDeleteRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
+  projectProviderId?: string;
   title?: string;
   status?: string;
   type?: string;
@@ -29,7 +29,7 @@ export interface IssuesDeleteRequest {
 export interface IssuesGetRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
+  projectProviderId?: string;
   title?: string;
   status?: string;
   type?: string;
@@ -50,7 +50,7 @@ export interface IssuesGetRequest {
 export interface IssuesPatchRequest {
   id?: string;
   providerId?: string;
-  issueContainerProviderId?: string;
+  projectProviderId?: string;
   title?: string;
   status?: string;
   type?: string;

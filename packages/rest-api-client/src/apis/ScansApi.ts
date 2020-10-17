@@ -18,6 +18,8 @@ import { Scans, ScansFromJSON, ScansToJSON } from "../models";
 export interface ScansDeleteRequest {
   id?: string;
   initiatingUserId?: string;
+  projectProviderId?: string;
+  projectName?: string;
   createdAt?: string;
   prefer?: ScansDeletePreferEnum;
 }
@@ -25,6 +27,8 @@ export interface ScansDeleteRequest {
 export interface ScansGetRequest {
   id?: string;
   initiatingUserId?: string;
+  projectProviderId?: string;
+  projectName?: string;
   createdAt?: string;
   select?: string;
   order?: string;
@@ -38,6 +42,8 @@ export interface ScansGetRequest {
 export interface ScansPatchRequest {
   id?: string;
   initiatingUserId?: string;
+  projectProviderId?: string;
+  projectName?: string;
   createdAt?: string;
   prefer?: ScansPatchPreferEnum;
   scans?: Scans;
@@ -67,6 +73,15 @@ export class ScansApi extends runtime.BaseAPI {
     if (requestParameters.initiatingUserId !== undefined) {
       queryParameters["initiating_user_id"] =
         requestParameters.initiatingUserId;
+    }
+
+    if (requestParameters.projectProviderId !== undefined) {
+      queryParameters["project_provider_id"] =
+        requestParameters.projectProviderId;
+    }
+
+    if (requestParameters.projectName !== undefined) {
+      queryParameters["project_name"] = requestParameters.projectName;
     }
 
     if (requestParameters.createdAt !== undefined) {
@@ -112,6 +127,15 @@ export class ScansApi extends runtime.BaseAPI {
     if (requestParameters.initiatingUserId !== undefined) {
       queryParameters["initiating_user_id"] =
         requestParameters.initiatingUserId;
+    }
+
+    if (requestParameters.projectProviderId !== undefined) {
+      queryParameters["project_provider_id"] =
+        requestParameters.projectProviderId;
+    }
+
+    if (requestParameters.projectName !== undefined) {
+      queryParameters["project_name"] = requestParameters.projectName;
     }
 
     if (requestParameters.createdAt !== undefined) {
@@ -190,6 +214,15 @@ export class ScansApi extends runtime.BaseAPI {
     if (requestParameters.initiatingUserId !== undefined) {
       queryParameters["initiating_user_id"] =
         requestParameters.initiatingUserId;
+    }
+
+    if (requestParameters.projectProviderId !== undefined) {
+      queryParameters["project_provider_id"] =
+        requestParameters.projectProviderId;
+    }
+
+    if (requestParameters.projectName !== undefined) {
+      queryParameters["project_name"] = requestParameters.projectName;
     }
 
     if (requestParameters.createdAt !== undefined) {

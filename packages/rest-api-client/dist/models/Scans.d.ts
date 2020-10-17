@@ -33,6 +33,18 @@ export interface Scans {
    * @type {string}
    * @memberof Scans
    */
+  projectProviderId: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Scans
+   */
+  projectName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Scans
+   */
   createdAt: string;
 }
 export declare function ScansFromJSON(json: any): Scans;

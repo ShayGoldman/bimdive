@@ -14,12 +14,16 @@ import { Scans } from "../models";
 export interface ScansDeleteRequest {
   id?: string;
   initiatingUserId?: string;
+  projectProviderId?: string;
+  projectName?: string;
   createdAt?: string;
   prefer?: ScansDeletePreferEnum;
 }
 export interface ScansGetRequest {
   id?: string;
   initiatingUserId?: string;
+  projectProviderId?: string;
+  projectName?: string;
   createdAt?: string;
   select?: string;
   order?: string;
@@ -32,6 +36,8 @@ export interface ScansGetRequest {
 export interface ScansPatchRequest {
   id?: string;
   initiatingUserId?: string;
+  projectProviderId?: string;
+  projectName?: string;
   createdAt?: string;
   prefer?: ScansPatchPreferEnum;
   scans?: Scans;

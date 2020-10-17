@@ -21,7 +21,6 @@ export const $IssueContainerDiscoveredHandler = ({
 
     for (const {
       id,
-      containerId,
       title,
       dataType,
       metadata,
@@ -45,7 +44,6 @@ export const $IssueContainerDiscoveredHandler = ({
           customAttributes: {
             id: existingAttribute?.id || restApiUtils.generateUUID(),
             providerId: id,
-            issueContainerProviderId: containerId,
             type: dataType,
             title,
             description,

@@ -25,7 +25,6 @@ export interface IssueCommentsDeleteRequest {
   commentProviderId?: string;
   createdBy?: string;
   body?: string;
-  value?: string;
   createdAt?: string;
   updatedAt?: string;
   scannedAt?: string;
@@ -38,7 +37,6 @@ export interface IssueCommentsGetRequest {
   commentProviderId?: string;
   createdBy?: string;
   body?: string;
-  value?: string;
   createdAt?: string;
   updatedAt?: string;
   scannedAt?: string;
@@ -57,7 +55,6 @@ export interface IssueCommentsPatchRequest {
   commentProviderId?: string;
   createdBy?: string;
   body?: string;
-  value?: string;
   createdAt?: string;
   updatedAt?: string;
   scannedAt?: string;
@@ -101,10 +98,6 @@ export class IssueCommentsApi extends runtime.BaseAPI {
 
     if (requestParameters.body !== undefined) {
       queryParameters["body"] = requestParameters.body;
-    }
-
-    if (requestParameters.value !== undefined) {
-      queryParameters["value"] = requestParameters.value;
     }
 
     if (requestParameters.createdAt !== undefined) {
@@ -172,10 +165,6 @@ export class IssueCommentsApi extends runtime.BaseAPI {
 
     if (requestParameters.body !== undefined) {
       queryParameters["body"] = requestParameters.body;
-    }
-
-    if (requestParameters.value !== undefined) {
-      queryParameters["value"] = requestParameters.value;
     }
 
     if (requestParameters.createdAt !== undefined) {
@@ -276,10 +265,6 @@ export class IssueCommentsApi extends runtime.BaseAPI {
 
     if (requestParameters.body !== undefined) {
       queryParameters["body"] = requestParameters.body;
-    }
-
-    if (requestParameters.value !== undefined) {
-      queryParameters["value"] = requestParameters.value;
     }
 
     if (requestParameters.createdAt !== undefined) {
