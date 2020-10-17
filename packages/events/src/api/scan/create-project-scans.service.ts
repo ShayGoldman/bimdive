@@ -75,7 +75,7 @@ export const $CreateProjectScans = ({
       return { error: "scan not possible" };
     }
 
-    const accessToken = await tokens.getTokenForUser(userId);
+    const accessToken = await tokens.getTokenForUser(initiatingUser.providerId);
 
     const api = bimApiFactory({
       token: accessToken,

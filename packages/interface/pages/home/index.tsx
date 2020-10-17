@@ -58,7 +58,11 @@ const ScanButton = ({ email }) => {
     }
   }, [email]);
 
-  return <button onClick={scan}>Scan for projects</button>;
+  return (
+    <button style={{ cursor: "pointer" }} onClick={scan}>
+      Scan for projects
+    </button>
+  );
 };
 
 export default function HomePage({ query }) {
