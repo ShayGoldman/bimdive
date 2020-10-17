@@ -50,17 +50,19 @@ const Demo2 = () => {
 
 const ScanButton = ({ email }) => {
   const [cookie] = useCookie("_bimdive");
-  console.log(/* LOG */ "---", "cookie", cookie);
+
+  
   const scan = useCallback(async () => {
-    if (email) {
-      await axios.post(apiUrl + "/scan", { email });
+    const {id} = JSON.parse(cookie);
+    if (id) {
+      await axios.post(apiUrl + "/scan", { userId:id });
     }
   }, [email]);
 
   return (
     <button
-      style={{ cursor: email ? "pointer" : "not-allowed" }}
-      disabled={!email}
+      style={{ cursor: cookie ? "pointer" : "not-allowed" }}
+      disabled={!cookie}
       onClick={scan}
     >
       Scan for projects

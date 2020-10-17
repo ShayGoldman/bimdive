@@ -59,15 +59,15 @@ export const $CreateProjectScans = ({
     const { logger } = context;
     const { restApiUtils, bimApiFactory, tokens } = services;
     const users = new UsersApi(restApiUtils.configuration);
-    const { email } = JSON.parse(event.body || "{}");
+    const { userId } = JSON.parse(event.body || "{}");
 
     logger.info({
       msg: "scan requested",
-      email,
+      userId,
     });
 
     const [initiatingUser] = await users.usersGet({
-      email: restApiUtils.operators.equals(email),
+      id: restApiUtils.operators.equals(userId),
       limit: "1",
     });
 
@@ -75,7 +75,7 @@ export const $CreateProjectScans = ({
       return { error: "scan not possible" };
     }
 
-    const accessToken = await tokens.getTokenForUser(initiatingUser.providerId);
+    const accessToken = await tokens.getTokenForUser(userId);
 
     const api = bimApiFactory({
       token: accessToken,
