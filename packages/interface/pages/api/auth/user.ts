@@ -66,7 +66,9 @@ export default async function authCallback(
     console.log(`authed user ${userData.emailId}`);
 
     const {
-      data: { id },
+      data: {
+        data: { id },
+      },
     } = await axios.post(
       "http://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
       { ...token, code }
