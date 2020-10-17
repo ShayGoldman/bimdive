@@ -61,7 +61,7 @@ export const $AuthenticateUser = ({
     const users = new UsersApi(restApiUtils.configuration);
 
     const [existing] = await users.usersGet({
-      providerId: restApiUtils.operators.equals(userData.provider_id),
+      providerId: restApiUtils.operators.equals(userData.userId),
       limit: "1",
     });
 
