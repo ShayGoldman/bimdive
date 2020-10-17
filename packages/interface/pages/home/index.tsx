@@ -51,23 +51,14 @@ const Demo2 = () => {
 const ScanButton = ({ email }) => {
   const [cookie] = useCookie("_bimdive");
 
-  
   const scan = useCallback(async () => {
-    const {id} = JSON.parse(cookie);
+    const { id } = JSON.parse(cookie);
     if (id) {
-      await axios.post(apiUrl + "/scan", { userId:id });
+      await axios.post(apiUrl + "/scan", { userId: id });
     }
   }, [email]);
 
-  return (
-    <button
-      style={{ cursor: cookie ? "pointer" : "not-allowed" }}
-      disabled={!cookie}
-      onClick={scan}
-    >
-      Scan for projects
-    </button>
-  );
+  return <button onClick={scan}>Scan for projects</button>;
 };
 
 export default function HomePage({ query }) {

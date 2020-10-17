@@ -129,20 +129,7 @@ export const $IssueDiscoveredHandler = ({
     });
 
     const issueId = existing?.id || restApiUtils.generateUUID();
-    console.log(/* LOG */ "---", "", {
-      id: issueId,
-      providerId: issue.id,
-      type,
-      subType,
-      projectProviderId: projectId,
-      status: issue.attributes.status,
-      title: issue.attributes.title,
-      dueDate: issue.attributes.due_date,
-      ownedBy: issue.attributes.owner,
-      assignedTo: issue.attributes.assigned_to,
-      assignedToType: issue.attributes.assigned_to_type,
-      scannedAt: restApiUtils.now(),
-    });
+
     await issues.issuesPost({
       issues: {
         id: issueId,
