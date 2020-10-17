@@ -2,6 +2,7 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
 import { serialize } from "cookie";
+import dayjs from "dayjs";
 
 const clientId = process.env.FORGE_CLIENT_ID;
 const clientSecret = process.env.FORGE_CLIENT_SECRET;
@@ -65,13 +66,20 @@ export default async function authCallback(
     console.log(`authed user ${userData.emailId}`);
 
     const {
-      data: { id },
+      data: {
+        data: { id },
+      },
     } = await axios.post(
       "http://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
       { ...token, code }
     );
 
-    res.setHeader("Set-Cookie", serialize("_bimdive", JSON.stringify({ id })));
+    res.setHeader(
+      "Set-Cookie",
+      serialize("_bimdive", JSON.stringify({ id }), {
+        expires: dayjs().add(1, "year").toDate(),
+      })
+    );
     res.redirect(`/home`);
   } catch (e) {
     console.log(e);

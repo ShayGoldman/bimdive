@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useCallback } from "react";
-import { useAsync } from "react-use";
+import { useAsync, useCookie } from "react-use";
 
 const apiUrl = `https://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod`;
 
@@ -49,6 +49,8 @@ const Demo2 = () => {
 };
 
 const ScanButton = ({ email }) => {
+  const [cookie] = useCookie("_bimdive");
+  console.log(/* LOG */ "---", "cookie", cookie);
   const scan = useCallback(async () => {
     if (email) {
       await axios.post(apiUrl + "/scan", { email });
