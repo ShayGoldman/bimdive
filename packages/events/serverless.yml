@@ -135,7 +135,7 @@ functions:
     memorySize: 128
     disableLogs: true
     timeout: 30
-    reservedConcurrency: 2
+    reservedConcurrency: 1
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
@@ -182,7 +182,7 @@ functions:
   IssueDiscovered:
     handler: src/lambdas/events/issue-discovered.lambda.handle
     memorySize: 128
-    reservedConcurrency: 10
+    reservedConcurrency: 5
     disableLogs: true
     timeout: 30
     environment:
@@ -207,7 +207,7 @@ functions:
   IssueContainerDiscovered:
     handler: src/lambdas/events/issue-container-discovered.lambda.handle
     memorySize: 128
-    reservedConcurrency: 10
+    reservedConcurrency: 3
     disableLogs: true
     timeout: 10
     environment:
@@ -229,7 +229,8 @@ functions:
   UserDiscovered:
     handler: src/lambdas/events/user-discovered.lambda.handle
     memorySize: 128
-    reservedConcurrency: 10
+    reservedConcurrency: 3
+    timeout: 15
     disableLogs: true
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
@@ -239,6 +240,7 @@ functions:
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
+      USER_DISCOVERED_FRESHNESS_IN_MINUTES: ${env:USER_DISCOVERED_FRESHNESS_IN_MINUTES, param:USER_DISCOVERED_FRESHNESS_IN_MINUTES}
       AWS_SQS_REGION: eu-west-2
     events:
       - sqs:
