@@ -125,15 +125,13 @@ export const $ScanCreatedHandler = ({
   }: {
     message: SQSRecord;
   }) {
-    const { bimApiFactory, getTokenFromScanId } = services;
+    const { bimApiFactory } = services;
 
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");
     const projectId = getAttributeFromMessage(message, "projectId");
 
-    const token = await getTokenFromScanId(scanId);
-
-    const api = bimApiFactory({ token });
+    const api = await bimApiFactory({ scanId });
 
     const { data: project } = await api.get<any, any>(
       `/project/v1/hubs/${hubId}/projects/${projectId}`

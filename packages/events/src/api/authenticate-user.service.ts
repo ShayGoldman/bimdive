@@ -12,9 +12,9 @@ export const $AuthenticateUser = ({
   services: Services;
 }) => {
   const { bimApiFactory } = services;
-  const api = bimApiFactory({});
 
   async function getUserData(token: string): Promise<any> {
+    const api = await bimApiFactory({ token });
     const response = await api.get("/userprofile/v1/users/@me", {
       headers: {
         Authorization: `Bearer ${token}`,

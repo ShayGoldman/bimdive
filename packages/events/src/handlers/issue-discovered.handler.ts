@@ -200,7 +200,7 @@ export const $IssueDiscoveredHandler = ({
     message: SQSRecord;
   }) {
     const { logger } = context;
-    const { bimApiFactory, getTokenFromScanId } = services;
+    const { bimApiFactory } = services;
 
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");
@@ -218,7 +218,9 @@ export const $IssueDiscoveredHandler = ({
       issueContainerProviderId,
     });
 
-    const api = bimApiFactory({ token: await getTokenFromScanId(scanId) });
+    const api = await bimApiFactory({
+      scanId,
+    });
 
     const [{ data: issue }, { types, subTypes }] = await Promise.all([
       await api.get(

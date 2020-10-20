@@ -1,13 +1,14 @@
-import { Logger } from "./logger.service";
-import axios from "axios";
-import querystring from "querystring";
-import dayjs from "dayjs";
-import { RESTApiUtils } from "./rest-api-utils";
 import { AccessTokensApi } from "@bimdive/rest-api-client";
+import axios from "axios";
+import dayjs from "dayjs";
+import querystring from "querystring";
+import { Logger } from "./logger.service";
+import { RESTApiUtils } from "./rest-api-utils";
 
 export type BIMAccessTokensService = {
   refreshToken: (userProviderId: string) => Promise<void>;
   getTokenForUser: (userProviderId: string) => Promise<string>;
+  generateTemporaryAPIToken: () => Promise<string>;
 };
 
 type Deps = {
@@ -24,6 +25,27 @@ export const $BIMAccessTokensService = ({
   forgeClientSecret,
 }: Deps): BIMAccessTokensService => {
   const tokens = new AccessTokensApi(restApiUtils.configuration);
+
+  // 2-legged-token
+  // https://forge.autodesk.com/en/docs/oauth/v2/tutorials/get-2-legged-token/
+  async function generateTemporaryAPIToken(): Promise<string> {
+    const { data } = await axios.post(
+      "https://developer.api.autodesk.com/authentication/v1/authenticate",
+      querystring.stringify({
+        client_id: forgeClientId,
+        client_secret: forgeClientSecret,
+        grant_type: "client_credentials",
+        scope: "data:read account:read",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    return data.access_token;
+  }
 
   async function refreshToken(userProviderId: string) {
     logger.info({
@@ -98,5 +120,6 @@ export const $BIMAccessTokensService = ({
   return {
     refreshToken,
     getTokenForUser,
+    generateTemporaryAPIToken,
   };
 };

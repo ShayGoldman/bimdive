@@ -1,35 +1,80 @@
+import { AccessTokensApi, ScansApi, UsersApi } from "@bimdive/rest-api-client";
 import axios, { AxiosInstance } from "axios";
 import { Logger } from "./logger.service";
+import { RESTApiUtils } from "./rest-api-utils";
 
 type Deps = {
   logger: Logger;
+  restApiUtils: RESTApiUtils;
 };
 
-type Params = {
-  token?: string;
-};
+type Params =
+  | { token: string }
+  | {
+      scanId: string;
+    };
 
 export type BIMApi = AxiosInstance;
 
-export type BIMApiFactory = (parms: Params) => BIMApi;
+export type BIMApiFactory = (parms: Params) => Promise<BIMApi>;
 
-/*
-    const token = await getTokenFromScanId(scanId);
-    const api = bimApiFactory({ token });
-*/
-// todo moving token fetching here
-export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
-  return function $BimApi({ token }: { token?: string }): BIMApi {
+export function $BIMApiFactory({ logger, restApiUtils }: Deps): BIMApiFactory {
+  // part of 3-legged-token flow
+  // https://forge.autodesk.com/en/docs/oauth/v2/tutorials/get-3-legged-token/
+  async function getTokenFromScanId(scanId: string): Promise<string> {
+    const users = new UsersApi(restApiUtils.configuration);
+    const scans = new ScansApi(restApiUtils.configuration);
+    const tokens = new AccessTokensApi(restApiUtils.configuration);
+
+    const [scan] = await scans.scansGet({
+      id: restApiUtils.operators.equals(scanId),
+      limit: "1",
+    });
+
+    logger.trace({
+      msg: "found scan for token",
+      ...scan,
+    });
+
+    const [user] = await users.usersGet({
+      id: restApiUtils.operators.equals(scan.initiatingUserId),
+      limit: "1",
+    });
+
+    logger.trace({
+      msg: "found user for token",
+      ...user,
+    });
+
+    const [{ accessToken }] = await tokens.accessTokensGet({
+      userProviderId: restApiUtils.operators.equals(user.providerId),
+    });
+
+    logger.trace({
+      msg: "token for scan",
+      scanId,
+      token: Boolean(accessToken),
+      success: Boolean(accessToken),
+      ...user,
+    });
+
+    return accessToken;
+  }
+
+  return async function $BimApi({
+    scanId,
+    token,
+  }: {
+    scanId: string;
+    token: string;
+  }): Promise<BIMApi> {
+    const authToken = token || (await getTokenFromScanId(scanId));
+
     const instance = axios.create({
       baseURL: "https://developer.api.autodesk.com",
-      headers: Object.assign(
-        {},
-        token
-          ? {
-              Authorization: `Bearer ${token}`,
-            }
-          : {}
-      ),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
 
     instance.interceptors.request.use(

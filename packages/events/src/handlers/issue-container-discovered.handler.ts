@@ -98,7 +98,7 @@ export const $IssueContainerDiscoveredHandler = ({
     message: SQSRecord;
   }) {
     const { logger } = context;
-    const { bimApiFactory, getTokenFromScanId } = services;
+    const { bimApiFactory } = services;
     const scanId = getAttributeFromMessage(message, "scanId");
     const issueContainerId = getAttributeFromMessage(
       message,
@@ -111,15 +111,7 @@ export const $IssueContainerDiscoveredHandler = ({
       issueContainerId,
     });
 
-    const token = await getTokenFromScanId(scanId);
-
-    logger.debug({
-      msg: "token found",
-      token,
-      scanId,
-    });
-
-    const api = bimApiFactory({ token });
+    const api = await bimApiFactory({ scanId });
 
     const customAttributes = await fetchAllCustomAttributes({
       api,
