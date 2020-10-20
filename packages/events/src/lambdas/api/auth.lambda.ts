@@ -3,7 +3,7 @@ import {
   APIGatewayProxyHandler,
   Context as APIGatewayContext,
 } from "aws-lambda";
-import { $AuthenticateUser } from "../../api/auth/authenticate-user.service";
+import { $AuthenticateUser } from "../../api/authenticate-user.service";
 import { $APIEnvironment } from "../environments";
 
 const { context, runtimeFactory, services } = $APIEnvironment();

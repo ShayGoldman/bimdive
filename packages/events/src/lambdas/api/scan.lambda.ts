@@ -3,7 +3,7 @@ import {
   APIGatewayProxyHandler,
   Context as APIGatewayContext,
 } from "aws-lambda";
-import { $CreateProjectScans } from "../../api/scan/create-project-scans.service";
+import { $CreateProjectScans } from "../../api/create-project-scans.service";
 import { getFromEnv } from "../../utils/getFromEnv";
 import { $APIEnvironment } from "../environments";
 

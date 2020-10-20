@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { Context } from "../../services/context.service";
+import { Context } from "../services/context.service";
 import jsonwebtoken from "jsonwebtoken";
 
 export const $MetabaseEmbedding = ({

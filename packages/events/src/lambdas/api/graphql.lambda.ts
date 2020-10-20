@@ -3,7 +3,7 @@ import {
   APIGatewayProxyHandler,
   Context as APIGatewayContext,
 } from "aws-lambda";
-import { $GraphQL } from "../../api/graphql/graphql.service";
+import { $GraphQL } from "../../api/graphql.service";
 import { $APIEnvironment } from "../environments";
 
 const { context, runtimeFactory } = $APIEnvironment();

@@ -1,7 +1,7 @@
 import { ScansApi, UsersApi } from "@bimdive/rest-api-client";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { Context } from "../../services/context.service";
-import { Services } from "../../services/service-provider";
+import { Context } from "../services/context.service";
+import { Services } from "../services/service-provider";
 import BBPromise from "bluebird";
 
 export const $CreateProjectScans = ({

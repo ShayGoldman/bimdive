@@ -3,7 +3,7 @@ import {
   APIGatewayProxyHandler,
   Context as APIGatewayContext,
 } from "aws-lambda";
-import { $MetabaseEmbedding } from "../../api/metabase/metabase-embedding.service";
+import { $MetabaseEmbedding } from "../../api/metabase-embedding.service";
 import { $Context } from "../../services/context.service";
 import { getFromEnv } from "../../utils/getFromEnv";
 import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";

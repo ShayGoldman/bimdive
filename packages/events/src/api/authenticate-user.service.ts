@@ -1,8 +1,8 @@
 import { AccessTokensApi, UsersApi } from "@bimdive/rest-api-client";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import dayjs from "dayjs";
-import { Context } from "../../services/context.service";
-import { Services } from "../../services/service-provider";
+import { Context } from "../services/context.service";
+import { Services } from "../services/service-provider";
 
 export const $AuthenticateUser = ({
   context,
