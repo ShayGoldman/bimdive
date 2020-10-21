@@ -48,6 +48,25 @@ const Demo2 = () => {
   );
 };
 
+const Demo3 = () => {
+  const { loading, value, error } = useAsync(async () => {
+    const { data } = await axios.post(apiUrl + "/metabase/embed", {
+      questionId: 20,
+    });
+    return data;
+  }, []);
+
+  return (
+    <div>
+      {loading && <Spinner />}
+      {!loading && error && <Error />}
+      {!loading && !error && value?.data?.url && (
+        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
+      )}
+    </div>
+  );
+};
+
 const ScanButton = ({ email }) => {
   const [cookie] = useCookie("_bimdive");
 
@@ -82,6 +101,7 @@ export default function HomePage({ query }) {
       >
         <Demo1 />
         <Demo2 />
+        <Demo3 />
       </div>
     </div>
   );

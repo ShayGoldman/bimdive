@@ -35,7 +35,7 @@ function error(error: Error | string): APIGatewayProxyResult {
       "Access-Control-Allow-Credentials": true,
     },
     body: JSON.stringify({
-      success: true,
+      success: false,
       errorCode: -1,
       error: error instanceof Error ? error.message : error,
       data: null,

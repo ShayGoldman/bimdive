@@ -1,4 +1,4 @@
-import { AccessTokensApi } from "@bimdive/rest-api-client";
+import { AccessTokensApi, ScansApi, UsersApi } from "@bimdive/rest-api-client";
 import axios from "axios";
 import dayjs from "dayjs";
 import querystring from "querystring";
@@ -8,6 +8,7 @@ import { RESTApiUtils } from "./rest-api-utils";
 export type BIMAccessTokensService = {
   refreshToken: (userProviderId: string) => Promise<void>;
   getTokenForUser: (userProviderId: string) => Promise<string>;
+  getTokenFromScanId: (scanId: string) => Promise<string>;
   generateTemporaryAPIToken: () => Promise<string>;
 };
 
@@ -25,6 +26,48 @@ export const $BIMAccessTokensService = ({
   forgeClientSecret,
 }: Deps): BIMAccessTokensService => {
   const tokens = new AccessTokensApi(restApiUtils.configuration);
+
+  // part of 3-legged-token flow
+  // https://forge.autodesk.com/en/docs/oauth/v2/tutorials/get-3-legged-token/
+  async function getTokenFromScanId(scanId: string): Promise<string> {
+    const users = new UsersApi(restApiUtils.configuration);
+    const scans = new ScansApi(restApiUtils.configuration);
+    const tokens = new AccessTokensApi(restApiUtils.configuration);
+
+    const [scan] = await scans.scansGet({
+      id: restApiUtils.operators.equals(scanId),
+      limit: "1",
+    });
+
+    logger.trace({
+      msg: "found scan for token",
+      ...scan,
+    });
+
+    const [user] = await users.usersGet({
+      id: restApiUtils.operators.equals(scan.initiatingUserId),
+      limit: "1",
+    });
+
+    logger.trace({
+      msg: "found user for token",
+      ...user,
+    });
+
+    const [{ accessToken }] = await tokens.accessTokensGet({
+      userProviderId: restApiUtils.operators.equals(user.providerId),
+    });
+
+    logger.trace({
+      msg: "token for scan",
+      scanId,
+      token: Boolean(accessToken),
+      success: Boolean(accessToken),
+      ...user,
+    });
+
+    return accessToken;
+  }
 
   // 2-legged-token
   // https://forge.autodesk.com/en/docs/oauth/v2/tutorials/get-2-legged-token/
@@ -120,6 +163,7 @@ export const $BIMAccessTokensService = ({
   return {
     refreshToken,
     getTokenForUser,
+    getTokenFromScanId,
     generateTemporaryAPIToken,
   };
 };

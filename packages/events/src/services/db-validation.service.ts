@@ -192,7 +192,7 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
       issue.provider_id
       `);
 
-      logger.info("database validation passed");
+      logger.info({ msg: "database validation passed" });
     } catch (error) {
       logger.fatal({
         msg: "error validating database",

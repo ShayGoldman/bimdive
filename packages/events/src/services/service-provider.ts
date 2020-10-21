@@ -1,3 +1,7 @@
+import {
+  $ProxyADAPIClient,
+  ProxyADAPIClient,
+} from "../api/proxy-ad-api.service";
 import { getFromEnv } from "../utils/getFromEnv";
 import {
   $BIMAccessTokensService,
@@ -11,6 +15,7 @@ import { $SQS, SQS } from "./sqs.service";
 export type Services = {
   restApiUtils: RESTApiUtils;
   bimApiFactory: BIMApiFactory;
+  cachedBimApi: ProxyADAPIClient;
   sqs: SQS;
   tokens: BIMAccessTokensService;
 };
@@ -37,8 +42,6 @@ export const $ServiceProvider = ({
 
   const restApiUtils = $RESTApiUtils({ context });
 
-  const bimApiFactory = $BIMApiFactory({ logger, restApiUtils });
-
   const tokens = $BIMAccessTokensService({
     forgeClientId: clientId,
     forgeClientSecret: clientSecret,
@@ -46,8 +49,18 @@ export const $ServiceProvider = ({
     restApiUtils,
   });
 
+  const bimApiFactory = $BIMApiFactory({ logger, tokens });
+  const cachedBimApi = $ProxyADAPIClient({
+    context,
+    proxyPath: getFromEnv({
+      name: "AD_API_PROXY_URI",
+      fatal: true,
+    }),
+  });
+
   return {
     bimApiFactory,
+    cachedBimApi,
     sqs,
     restApiUtils,
     tokens,

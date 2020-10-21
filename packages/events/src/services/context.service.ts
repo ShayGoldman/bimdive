@@ -4,6 +4,7 @@ import { $Logger, Logger } from "./logger.service";
 export type Context = {
   logger: Logger;
   environment: string;
+  // todo utils - utils thay require logging should be exposed from context, like extracting message attributes
 };
 
 export const $Context = (): Context => {

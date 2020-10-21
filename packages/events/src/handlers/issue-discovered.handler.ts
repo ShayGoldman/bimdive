@@ -4,7 +4,6 @@ import compact from "lodash/compact";
 import flatten from "lodash/flatten";
 import omit from "lodash/omit";
 import uniqBy from "lodash/uniqBy";
-import { BIMApi } from "../services/bim-api-factory.service";
 import { Context } from "../services/context.service";
 import { Services } from "../services/service-provider";
 import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
@@ -19,25 +18,29 @@ export const $IssueDiscoveredHandler = ({
   services,
 }: {
   context: Context;
-  userDiscoveredQueue: string;
   services: Services;
+  userDiscoveredQueue: string;
 }): IssueDiscoveredHandler => {
   async function getAllIssuesTypes({
-    api,
     issueContainerProviderId,
+    scanId,
   }: {
-    api: BIMApi;
     issueContainerProviderId: string;
+    scanId: string;
   }): Promise<{ types: any[]; subTypes: any[] }> {
     const { logger } = context;
-    const { results: allIssueTypes } = await api.get<any, any>(
-      `/issues/v1/containers/${issueContainerProviderId}/ng-issue-types`,
-      {
-        params: {
-          include: "subtypes",
-        },
-      }
-    );
+    const { cachedBimApi } = services;
+
+    const { data } = await cachedBimApi({
+      scanId,
+      method: "get",
+      url: `/issues/v1/containers/${issueContainerProviderId}/ng-issue-types`,
+      params: {
+        include: "subtypes",
+      },
+    });
+
+    const allIssueTypes = data?.results;
 
     const types = allIssueTypes.map((i) => omit(i, "subtypes"));
     const subTypes = uniqBy(
@@ -211,11 +214,16 @@ export const $IssueDiscoveredHandler = ({
       "issueContainerId"
     );
 
-    logger.info({
-      msg: "issue discovered",
+    logger.context({
       scanId,
+      hubId,
+      projectId,
       issueId,
       issueContainerProviderId,
+    });
+
+    logger.info({
+      msg: "issue discovered",
     });
 
     const api = await bimApiFactory({
@@ -232,8 +240,8 @@ export const $IssueDiscoveredHandler = ({
         }
       ),
       await getAllIssuesTypes({
-        api,
         issueContainerProviderId,
+        scanId,
       }),
     ]);
 

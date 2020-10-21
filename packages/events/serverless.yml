@@ -64,6 +64,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
     events:
@@ -82,6 +83,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       METABASE_SECRET: ${env:METABASE_SECRET, param:METABASE_SECRET}
@@ -100,6 +102,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
@@ -118,6 +121,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
@@ -127,6 +131,29 @@ functions:
     events:
       - http:
           path: scan
+          method: post
+          cors: true
+
+  ProxyADAPI:
+    handler: src/lambdas/api/proxy.lambda.proxyADAPI
+    memorySize: 128
+    disableLogs: true
+    reservedConcurrency: 3
+    timeout:
+    environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
+      AWS_SQS_REGION: eu-west-2
+      API_PROXY_CACHE_SIZE: ${env:API_PROXY_CACHE_SIZE, param:API_PROXY_CACHE_SIZE}
+    events:
+      - http:
+          path: ad-api-proxy
           method: post
           cors: true
 
@@ -141,6 +168,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
@@ -163,6 +191,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
@@ -182,7 +211,7 @@ functions:
   IssueDiscovered:
     handler: src/lambdas/events/issue-discovered.lambda.handle
     memorySize: 128
-    reservedConcurrency: 5
+    reservedConcurrency: 10
     disableLogs: true
     timeout: 30
     environment:
@@ -190,6 +219,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
@@ -198,7 +228,7 @@ functions:
         Ref: UserDiscoveredQueue
     events:
       - sqs:
-          batchSize: 10
+          batchSize: 1
           arn:
             Fn::GetAtt:
               - IssueDiscoveredQueue
@@ -215,6 +245,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
@@ -237,6 +268,7 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
@@ -287,7 +319,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-IssueDiscovered
         RedrivePolicy:
-          maxReceiveCount: 3
+          maxReceiveCount: 5
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue

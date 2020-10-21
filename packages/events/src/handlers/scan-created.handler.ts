@@ -125,11 +125,14 @@ export const $ScanCreatedHandler = ({
   }: {
     message: SQSRecord;
   }) {
+    const { logger } = context;
     const { bimApiFactory } = services;
 
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");
     const projectId = getAttributeFromMessage(message, "projectId");
+
+    logger.context({ scanId, hubId, projectId });
 
     const api = await bimApiFactory({ scanId });
 
@@ -138,6 +141,7 @@ export const $ScanCreatedHandler = ({
     );
 
     const issueContainerId = project.relationships.issues.data.id;
+    logger.context({ issueContainerId });
 
     await Promise.all([
       processIssueContainer({ issueContainerId, scanId }),

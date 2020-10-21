@@ -41,17 +41,23 @@ export const $UserDiscoveredHandler = ({
   }: {
     message: SQSRecord;
   }) {
-    const { bimApiFactory, generateTemporaryAPIToken } = services;
+    const { bimApiFactory, tokens } = services;
     const { logger } = context;
 
     const userProviderId = getAttributeFromMessage(message, "userProviderId");
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");
 
-    logger.info("generating temporary token");
+    logger.context({
+      userProviderId,
+      scanId,
+      hubId,
+    });
 
-    const token = await generateTemporaryAPIToken();
-    const api = bimApiFactory({ token });
+    logger.info({ msg: "generating temporary token" });
+
+    const token = await tokens.generateTemporaryAPIToken();
+    const api = await bimApiFactory({ token });
 
     const accountId = last(hubId.split("b."));
 
@@ -80,12 +86,12 @@ export const $UserDiscoveredHandler = ({
       `/hq/v1/accounts/${accountId}/users/${userProviderId}`
     );
 
-    await persistUserDetails(existing?.id || restApiUtils.generateUUID(), user);
+    const userId = existing?.id || restApiUtils.generateUUID();
 
-    logger.info({
-      msg: "user details saved",
-      userProviderId,
-      scanId,
-    });
+    logger.context({ userId });
+
+    logger.info({ msg: "saving user details" });
+
+    await persistUserDetails(userId, user);
   };
 };

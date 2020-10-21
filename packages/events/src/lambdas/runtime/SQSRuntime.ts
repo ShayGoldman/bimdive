@@ -28,34 +28,33 @@ export const $SQSRuntimeFactory = (): SQSRuntimeFactory => {
 
       return async function sqsRuntime({ event }: { event: SQSEvent }) {
         const messages = event.Records.map((m) => m.messageId);
-
-        logger.info({
-          msg: "event recieved",
-          messages,
+        logger.context({
+          messagesIds: messages,
           requestId: apiContext.awsRequestId,
           environment,
         });
 
         try {
           for (const message of event.Records) {
-            logger.info({
-              msg: "message found",
+            logger.context({
               messageId: message.messageId,
               source: message.eventSource,
+            });
+            logger.info({
+              msg: "message found",
             });
             await handler({ message });
             logger.info({
               msg: "message handled",
-              messageId: message.messageId,
             });
+            logger.contextPurge(["messageId", "source"]);
           }
           logger.info({
             msg: "event handled",
-            requestId: apiContext.awsRequestId,
-            messages,
           });
         } catch (e) {
           logger.error(e);
+          throw e;
         } finally {
           // nasty serverless bug that causes local invocations to hang
           if (process.env.IS_LOCAL) {

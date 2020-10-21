@@ -44,8 +44,7 @@ const $Runtime = ({
       multiValueQueryStringParameters,
     } = event;
 
-    logger.info({
-      msg: "request recieved",
+    logger.context({
       path,
       requestId,
       method,
@@ -60,10 +59,13 @@ const $Runtime = ({
       });
       logger.info({
         msg: "request handled",
-        requestId,
       });
 
       if (redirectUrl) {
+        logger.info({
+          msg: "redirecting",
+          redirectUrl,
+        });
         return redirect(redirectUrl);
       }
 
@@ -71,7 +73,6 @@ const $Runtime = ({
     } catch (err) {
       logger.error({
         msg: "error encountered",
-        requestId,
         ...err,
       });
       return error(err.message || "Unknown error");

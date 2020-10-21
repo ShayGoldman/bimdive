@@ -105,13 +105,17 @@ export const $IssueContainerDiscoveredHandler = ({
       "issueContainerId"
     );
 
+    logger.context({ scanId, issueContainerId });
+
     logger.info({
       msg: "issue container discovered",
-      scanId,
-      issueContainerId,
     });
 
     const api = await bimApiFactory({ scanId });
+
+    logger.info({
+      msg: "fetching custom attributes",
+    });
 
     const customAttributes = await fetchAllCustomAttributes({
       api,
