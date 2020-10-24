@@ -11,13 +11,6 @@ const issueContainerDiscoveredQueue = getFromEnv({
   name: "QUEUE_ISSUE_CONTAINER_DISCOVERED",
   fatal: true,
 });
-const shouldEmitMessages = Boolean(
-  parseInt(
-    getFromEnv({
-      name: "EMIT_MESSAGES",
-    }) || "1"
-  )
-);
 
 const { context, runtimeFactory, services } = $SQSEnvironment();
 
@@ -33,7 +26,6 @@ export const handle: SQSHandler = async (
         services,
         issueDiscoveredQueue,
         issueContainerDiscoveredQueue,
-        shouldEmitMessages,
       }),
   });
 

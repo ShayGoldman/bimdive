@@ -6,7 +6,10 @@ import { Logger } from "./logger.service";
 import { RESTApiUtils } from "./rest-api-utils";
 
 export type BIMAccessTokensService = {
-  refreshToken: (userProviderId: string) => Promise<void>;
+  refreshToken: (
+    userProviderId: string,
+    minimalTokenAge?: number
+  ) => Promise<string>;
   getTokenForUser: (userProviderId: string) => Promise<string>;
   getTokenFromScanId: (scanId: string) => Promise<string>;
   generateTemporaryAPIToken: () => Promise<string>;
@@ -90,11 +93,19 @@ export const $BIMAccessTokensService = ({
     return data.access_token;
   }
 
-  async function refreshToken(userProviderId: string) {
+  async function refreshToken(
+    userProviderId: string,
+    minimalTokenAge: number = 0
+  ) {
     logger.info({
       msg: "refreshing token",
       userProviderId,
     });
+
+    const minimalTokenIssueTime = dayjs(Date.now()).subtract(
+      minimalTokenAge,
+      "minute"
+    );
 
     const [token] = await tokens.accessTokensGet({
       userProviderId: restApiUtils.operators.equals(userProviderId),
@@ -102,53 +113,59 @@ export const $BIMAccessTokensService = ({
 
     if (!token) {
       throw new Error(`Token for user [${userProviderId}] not found`);
-    }
+    } else if (minimalTokenIssueTime.isBefore(token.issuedAt)) {
+      logger.debug({
+        msg: "reusing existing token",
+      });
+      return token.accessToken;
+    } else {
+      const { data: newToken } = await axios.post(
+        "https://developer.api.autodesk.com/authentication/v1/refreshtoken",
+        querystring.stringify({
+          client_id: forgeClientId,
+          client_secret: forgeClientSecret,
+          refresh_token: token.refreshToken,
+          grant_type: "refresh_token",
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
 
-    const { data: newToken } = await axios.post(
-      "https://developer.api.autodesk.com/authentication/v1/refreshtoken",
-      querystring.stringify({
-        client_id: forgeClientId,
-        client_secret: forgeClientSecret,
-        refresh_token: token.refreshToken,
-        grant_type: "refresh_token",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
-
-    logger.info({
-      msg: "new token generated",
-      userProviderId: token.userProviderId,
-    });
-
-    const issuedAt = restApiUtils.now();
-    const expiresAt = dayjs(issuedAt)
-      .add(newToken.expires_in - 60, "second") // minus 60 for safety, doesn't really matter
-      .toDate()
-      .toUTCString();
-
-    await tokens.accessTokensPost({
-      accessTokens: {
-        accessToken: newToken.access_token,
-        expiresAt,
-        issuedAt,
-        refreshToken: newToken.refresh_token,
+      logger.debug({
+        msg: "new token generated",
         userProviderId: token.userProviderId,
-      },
-    });
+      });
 
-    logger.info({
-      msg: "new token saved",
-      expiresAt,
-      userProviderId: token.userProviderId,
-    });
+      const issuedAt = restApiUtils.now();
+      const expiresAt = dayjs(issuedAt)
+        .add(newToken.expires_in - 60, "second") // minus 60 for safety, doesn't really matter
+        .toDate()
+        .toUTCString();
+
+      await tokens.accessTokensPost({
+        accessTokens: {
+          accessToken: newToken.access_token,
+          expiresAt,
+          issuedAt,
+          refreshToken: newToken.refresh_token,
+          userProviderId: token.userProviderId,
+        },
+      });
+
+      logger.debug({
+        msg: "new token saved",
+        expiresAt,
+        userProviderId: token.userProviderId,
+      });
+
+      return newToken.access_token;
+    }
   }
 
   async function getTokenForUser(userProviderId: string) {
-    await refreshToken(userProviderId);
     const [token] = await tokens.accessTokensGet({
       userProviderId: restApiUtils.operators.equals(userProviderId),
     });

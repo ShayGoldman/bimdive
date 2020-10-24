@@ -28,6 +28,12 @@ export type SQS = {
 };
 
 export const $SQS = ({ logger }: Deps): SQS => {
+  const shouldEmitMessages = parseInt(
+    getFromEnv({
+      name: "EMIT_MESSAGES",
+    }) || "1"
+  );
+
   const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
   function messageToMessageAttributesAdapter({
     type,
@@ -59,12 +65,14 @@ export const $SQS = ({ logger }: Deps): SQS => {
       QueueUrl: queue,
     };
 
-    const { MessageId } = await sqs.sendMessage(params).promise();
-    logger.debug({
-      msg: "message sent to queue",
-      messageId: MessageId,
-      queue,
-    });
+    if (shouldEmitMessages) {
+      const { MessageId } = await sqs.sendMessage(params).promise();
+      logger.debug({
+        msg: "message sent to queue",
+        messageId: MessageId,
+        queue,
+      });
+    }
   }
 
   async function sendMessagesBatch({
@@ -87,22 +95,24 @@ export const $SQS = ({ logger }: Deps): SQS => {
         Entries: batch,
         QueueUrl: queue,
       };
-      const { Successful, Failed } = await sqs
-        .sendMessageBatch(params)
-        .promise();
+      if (shouldEmitMessages) {
+        const { Successful, Failed } = await sqs
+          .sendMessageBatch(params)
+          .promise();
 
-      if (!isEmpty(Successful)) {
-        logger.info({
-          msg: "messages sent to queue",
-          messages: Successful.map(({ MessageId }) => MessageId),
-        });
-      }
+        if (!isEmpty(Successful)) {
+          logger.info({
+            msg: "messages sent to queue",
+            messages: Successful.map(({ MessageId }) => MessageId),
+          });
+        }
 
-      if (!isEmpty(Failed)) {
-        logger.error({
-          msg: "messages sent to queue",
-          failed: Failed,
-        });
+        if (!isEmpty(Failed)) {
+          logger.error({
+            msg: "messages sent to queue",
+            failed: Failed,
+          });
+        }
       }
     }
   }

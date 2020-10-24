@@ -75,7 +75,10 @@ export const $CreateProjectScans = ({
       throw new Error("Scan creation failed {MissingInitiatingUser}");
     }
 
-    const accessToken = await tokens.getTokenForUser(initiatingUser.providerId);
+    const accessToken = await tokens.refreshToken(
+      initiatingUser.providerId,
+      15
+    );
 
     const api = await bimApiFactory({
       token: accessToken,

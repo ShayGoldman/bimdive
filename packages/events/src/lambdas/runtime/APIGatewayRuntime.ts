@@ -73,7 +73,7 @@ const $Runtime = ({
     } catch (err) {
       logger.error({
         msg: "error encountered",
-        ...err,
+        err,
       });
       return error(err.message || "Unknown error");
     }

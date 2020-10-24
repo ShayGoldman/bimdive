@@ -7,7 +7,6 @@ export const $ScanCreatedHandler = ({
   context,
   issueDiscoveredQueue,
   issueContainerDiscoveredQueue,
-  shouldEmitMessages,
   services,
 }: {
   context: Context;
@@ -15,7 +14,6 @@ export const $ScanCreatedHandler = ({
 
   issueDiscoveredQueue: string;
   issueContainerDiscoveredQueue: string;
-  shouldEmitMessages: boolean;
 }) => {
   async function fetchAllIssues({ api, issueContainerId, logger }) {
     async function fetchIssuesPage(page: number, limit: number = 50) {
@@ -55,16 +53,14 @@ export const $ScanCreatedHandler = ({
       issueContainerId,
     });
 
-    if (shouldEmitMessages) {
-      await sqs.sendMessage({
-        queue: issueContainerDiscoveredQueue,
-        message: {
-          type: "IssueContainerDiscovered",
-          scanId,
-          issueContainerId,
-        },
-      });
-    }
+    await sqs.sendMessage({
+      queue: issueContainerDiscoveredQueue,
+      message: {
+        type: "IssueContainerDiscovered",
+        scanId,
+        issueContainerId,
+      },
+    });
   }
 
   async function processIssues({
