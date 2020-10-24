@@ -89,19 +89,17 @@ export const $ScanCreatedHandler = ({
         });
       }
 
-      if (shouldEmitMessages) {
-        await sqs.sendMessagesBatch({
-          queue: issueDiscoveredQueue,
-          messages: issues.map((issue) => ({
-            type: "IssueDiscovered",
-            scanId,
-            issueId: issue.id,
-            projectId: project.id,
-            issueContainerId,
-            hubId,
-          })),
-        });
-      }
+      await sqs.sendMessagesBatch({
+        queue: issueDiscoveredQueue,
+        messages: issues.map((issue) => ({
+          type: "IssueDiscovered",
+          scanId,
+          issueId: issue.id,
+          projectId: project.id,
+          issueContainerId,
+          hubId,
+        })),
+      });
 
       logger.info({
         issuesDiscovered: issues.length,
