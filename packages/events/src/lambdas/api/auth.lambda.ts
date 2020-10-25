@@ -3,18 +3,18 @@ import {
   APIGatewayProxyHandler,
   Context as APIGatewayContext,
 } from "aws-lambda";
-import { $AuthenticateUser } from "../../api/auth/authenticate-user.service";
-import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";
+import { $AuthenticateUser } from "../../api/authenticate-user.service";
+import { $APIEnvironment } from "../environments";
 
-const runtimeFactory = $APIGatewayRuntimeFactory();
+const { context, runtimeFactory, services } = $APIEnvironment();
 
 export const authenticateUser: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await runtimeFactory.create({
+  const runtime = runtimeFactory.create({
     apiContext,
-    factory: ({ context }) => $AuthenticateUser({ context }),
+    factory: () => $AuthenticateUser({ context, services }),
   });
 
   return await runtime({ event });

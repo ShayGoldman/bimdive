@@ -6,13 +6,9 @@ app: bimdive
 org: shaygoldmanz
 frameworkVersion: "2"
 
-custom:
-  webpack:
-    webpackConfig: ./webpack.config.js
-    includeModules: true
-
 plugins:
   - serverless-plugin-typescript
+#  - serverless-domain-manager
 
 provider:
   name: aws
@@ -49,16 +45,26 @@ provider:
           - UserDiscoveredQueue
           - Arn
 
+custom:
+  customDomain:
+    api:
+      domainName: api.bimdive.com
+      certificateName: "*.bimdive.com"
+      stage: ${self:provider.stage}
+      createRoute53Record: true
+
 functions:
   GraphQL:
     handler: src/lambdas/api/graphql.lambda.graphql
     memorySize: 128
     disableLogs: true
+    reservedConcurrency: 2
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
     events:
@@ -71,11 +77,13 @@ functions:
     handler: src/lambdas/api/metabase.lambda.embed
     memorySize: 128
     disableLogs: true
+    reservedConcurrency: 10
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
       METABASE_SECRET: ${env:METABASE_SECRET, param:METABASE_SECRET}
@@ -94,6 +102,8 @@ functions:
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
     events:
@@ -102,16 +112,19 @@ functions:
           method: post
 
   CreateScan:
-    handler: src/lambdas/api/scan.lambda.createScan
+    handler: src/lambdas/api/scan.lambda.createProjectScans
     memorySize: 128
     disableLogs: true
+    reservedConcurrency: 10
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       AWS_SQS_REGION: eu-west-2
       QUEUE_SCAN_CREATED:
         Ref: ScanCreatedQueue
@@ -121,20 +134,67 @@ functions:
           method: post
           cors: true
 
-  ScanCreated:
-    handler: src/lambdas/events/scan-created.lambda.handle
-    maximumRetryAttempts: 0
+  ProxyADAPI:
+    handler: src/lambdas/api/proxy.lambda.proxyADAPI
     memorySize: 128
-    batchSize: 1
-    reservedConcurrency: 1
     disableLogs: true
+    reservedConcurrency: 3
+    timeout:
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
+      AWS_SQS_REGION: eu-west-2
+      API_PROXY_CACHE_SIZE: ${env:API_PROXY_CACHE_SIZE, param:API_PROXY_CACHE_SIZE}
+    events:
+      - http:
+          path: ad-api-proxy
+          method: post
+          cors: true
+
+  RefreshAuthTokens:
+    handler: src/lambdas/events/refresh-auth-tokens.lambda.handle
+    memorySize: 128
+    disableLogs: true
+    timeout: 30
+    reservedConcurrency: 1
+    environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
+      LOOK_AHEAD_IN_MINUTES: ${env:LOOK_AHEAD_IN_MINUTES, param:LOOK_AHEAD_IN_MINUTES}
+    events:
+      - schedule:
+          name: refresh-auth-tokens
+          description: refreshes all access tokens for authenticated users (keeps tokens valid)
+          rate: rate(6 hours)
+          enabled: true
+
+  ScanCreated:
+    handler: src/lambdas/events/scan-created.lambda.handle
+    memorySize: 128
+    reservedConcurrency: 10
+    disableLogs: true
+    timeout: 20
+    environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       AWS_SQS_REGION: eu-west-2
       QUEUE_ISSUE_DISCOVERED:
         Ref: IssueDiscoveredQueue
@@ -142,6 +202,7 @@ functions:
         Ref: IssueContainerDiscoveredQueue
     events:
       - sqs:
+          batchSize: 10
           arn:
             Fn::GetAtt:
               - ScanCreatedQueue
@@ -149,45 +210,73 @@ functions:
 
   IssueDiscovered:
     handler: src/lambdas/events/issue-discovered.lambda.handle
-    maximumRetryAttempts: 0
     memorySize: 128
-    batchSize: 1
-    reservedConcurrency: 1
+    reservedConcurrency: 30
     disableLogs: true
+    timeout: 30
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
       AWS_SQS_REGION: eu-west-2
       QUEUE_USER_DISCOVERED:
         Ref: UserDiscoveredQueue
     events:
       - sqs:
+          batchSize: 1
           arn:
             Fn::GetAtt:
               - IssueDiscoveredQueue
               - Arn
 
+  IssueContainerDiscovered:
+    handler: src/lambdas/events/issue-container-discovered.lambda.handle
+    memorySize: 128
+    reservedConcurrency: 10
+    disableLogs: true
+    timeout: 10
+    environment:
+      FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
+      FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
+      NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
+      DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
+      LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
+      LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
+    events:
+      - sqs:
+          batchSize: 10
+          arn:
+            Fn::GetAtt:
+              - IssueContainerDiscoveredQueue
+              - Arn
+
   UserDiscovered:
     handler: src/lambdas/events/user-discovered.lambda.handle
-    maximumRetryAttempts: 0
     memorySize: 128
-    batchSize: 1
-    reservedConcurrency: 1
+    reservedConcurrency: 3
+    timeout: 15
     disableLogs: true
     environment:
       FORGE_CLIENT_ID: ${env:FORGE_CLIENT_ID, param:FORGE_CLIENT_ID}
       FORGE_CLIENT_SECRET: ${env:FORGE_CLIENT_SECRET, param:FORGE_CLIENT_SECRET}
       NODE_ENV: ${env:NODE_ENV, param:NODE_ENV}
       DB_CONNECTION_URI: ${env:DB_CONNECTION_URI, param:DB_CONNECTION_URI}
+      AD_API_PROXY_URI: ${env:AD_API_PROXY_URI, param:AD_API_PROXY_URI}
       LOGGER_LEVEL: ${env:LOGGER_LEVEL, param:LOGGER_LEVEL}
       LOGGER_PRETTY_PRINT: ${env:LOGGER_PRETTY_PRINT, param:LOGGER_PRETTY_PRINT}
+      REST_API_URI: ${env:REST_API_URI, param:REST_API_URI}
+      USER_DISCOVERED_FRESHNESS_IN_MINUTES: ${env:USER_DISCOVERED_FRESHNESS_IN_MINUTES, param:USER_DISCOVERED_FRESHNESS_IN_MINUTES}
       AWS_SQS_REGION: eu-west-2
     events:
       - sqs:
+          batchSize: 10
           arn:
             Fn::GetAtt:
               - UserDiscoveredQueue
@@ -200,7 +289,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-ScanCreated
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 2
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue
@@ -210,7 +299,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-UserDiscoveredQueue
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 3
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue
@@ -220,7 +309,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-IssueContainerDiscovered
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 3
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue
@@ -230,7 +319,7 @@ resources:
       Properties:
         QueueName: ${self:service}-${self:provider.stage}-IssueDiscovered
         RedrivePolicy:
-          maxReceiveCount: 1
+          maxReceiveCount: 5
           deadLetterTargetArn:
             Fn::GetAtt:
               - DeadLetterQueue

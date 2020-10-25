@@ -3,7 +3,8 @@ import {
   APIGatewayProxyHandler,
   Context as APIGatewayContext,
 } from "aws-lambda";
-import { $MetabaseEmbedding } from "../../api/metabase/metabase-embedding.service";
+import { $MetabaseEmbedding } from "../../api/metabase-embedding.service";
+import { $Context } from "../../services/context.service";
 import { getFromEnv } from "../../utils/getFromEnv";
 import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";
 
@@ -12,16 +13,16 @@ const metabaseSecret = getFromEnv({
   fatal: true,
 });
 
+const context = $Context();
 const runtimeFactory = $APIGatewayRuntimeFactory();
 
 export const embed: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await runtimeFactory.create({
+  const runtime = runtimeFactory.create({
     apiContext,
-    factory: ({ context }) =>
-      $MetabaseEmbedding({ context, secret: metabaseSecret }),
+    factory: () => $MetabaseEmbedding({ context, secret: metabaseSecret }),
   });
 
   return await runtime({ event });

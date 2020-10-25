@@ -3,24 +3,29 @@ import {
   APIGatewayProxyHandler,
   Context as APIGatewayContext,
 } from "aws-lambda";
-import { $CreateScan } from "../../api/scan/create-scan.service";
+import { $CreateProjectScans } from "../../api/create-project-scans.service";
 import { getFromEnv } from "../../utils/getFromEnv";
-import { $APIGatewayRuntimeFactory } from "../runtime/APIGatewayRuntime";
-
-const runtimeFactory = $APIGatewayRuntimeFactory();
+import { $APIEnvironment } from "../environments";
 
 const scanCreatedQueue = getFromEnv({
   name: "QUEUE_SCAN_CREATED",
   fatal: true,
 });
 
-export const createScan: APIGatewayProxyHandler = async (
+const { context, services, runtimeFactory } = $APIEnvironment();
+
+export const createProjectScans: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   apiContext: APIGatewayContext
 ) => {
-  const runtime = await runtimeFactory.create({
+  const runtime = runtimeFactory.create({
     apiContext,
-    factory: ({ context }) => $CreateScan({ context, scanCreatedQueue }),
+    factory: () =>
+      $CreateProjectScans({
+        context,
+        services,
+        scanCreatedQueue,
+      }),
   });
 
   return await runtime({ event });

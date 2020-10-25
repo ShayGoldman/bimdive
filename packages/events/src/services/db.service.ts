@@ -19,8 +19,6 @@ export async function $DB({ logger, db_connection_string }: Deps): Promise<DB> {
     pool: {
       min: 1,
       max: 1,
-      idleTimeoutMillis: 500,
-      reapIntervalMillis: 200,
     },
   });
 

@@ -29,9 +29,13 @@ function redirect(url: string): APIGatewayProxyResult {
 
 function error(error: Error | string): APIGatewayProxyResult {
   return {
-    statusCode: 200,
+    statusCode: 500,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true,
+    },
     body: JSON.stringify({
-      success: true,
+      success: false,
       errorCode: -1,
       error: error instanceof Error ? error.message : error,
       data: null,
