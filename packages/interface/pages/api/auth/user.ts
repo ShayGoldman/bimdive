@@ -4,7 +4,7 @@ import querystring from "querystring";
 import { serialize } from "cookie";
 import dayjs from "dayjs";
 
-const clientId = process.env.FORGE_CLIENT_ID;
+const clientId = process.env.NEXT_PUBLIC_FORGE_CLIENT_ID;
 const clientSecret = process.env.FORGE_CLIENT_SECRET;
 const redirectUrl = `https://app.bimdive.com/api/auth/user`;
 

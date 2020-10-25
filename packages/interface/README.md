@@ -10,7 +10,11 @@ npm run dev
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment variables
+
+Environment variables are picked up automatically from an `.env` file if found, this should be used for deverlopment only as production and preview builds are defined in vercel
+
+Open [http://localhost:4000](http://localhost:4000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
