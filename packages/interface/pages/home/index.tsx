@@ -39,29 +39,21 @@ const Demo2 = () => {
 
   return (
     <div>
-      {loading && <Spinner />}
-      {!loading && error && <Error />}
-      {!loading && !error && value?.data?.url && (
-        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
+      <h1>Home Page Depo</h1>
+      {value?.data?.url && (
+        <iframe
+          src={value.data.url}
+          allowTransparency
+          frameBorder="0"
+          width="800"
+          height="600"
+        />
       )}
-    </div>
-  );
-};
-
-const Demo3 = () => {
-  const { loading, value, error } = useAsync(async () => {
-    const { data } = await axios.post(apiUrl + "/metabase/embed", {
-      questionId: 20,
-    });
-    return data;
-  }, []);
-
-  return (
-    <div>
-      {loading && <Spinner />}
-      {!loading && error && <Error />}
-      {!loading && !error && value?.data?.url && (
-        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
+      {error && (
+        <section>
+          <h2>Error</h2>
+          <pre>{error}</pre>
+        </section>
       )}
     </div>
   );
@@ -101,7 +93,6 @@ export default function HomePage({ query }) {
       >
         <Demo1 />
         <Demo2 />
-        <Demo3 />
       </div>
     </div>
   );
