@@ -1,12 +1,26 @@
-import { SQSEvent, SQSHandler } from "aws-lambda";
+import { Context, SQSEvent, SQSHandler } from "aws-lambda";
 import { $UserDiscoveredHandler } from "../../handlers/user-discovered.handler";
-import { $SQSRuntimeFactory } from "../runtime/SQSRuntime";
+import { getFromEnv } from "../../utils/getFromEnv";
+import { $SQSEnvironment } from "../environments";
 
-const runtimeFactory = $SQSRuntimeFactory();
+const { context, runtimeFactory, services } = $SQSEnvironment();
 
-export const handle: SQSHandler = async (event: SQSEvent) => {
+const userDiscoveredFreshness = getFromEnv({
+  name: "USER_DISCOVERED_FRESHNESS_IN_MINUTES",
+});
+
+export const handle: SQSHandler = async (
+  event: SQSEvent,
+  apiContext: Context
+) => {
   const runtime = await runtimeFactory.create({
-    factory: ({ context }) => $UserDiscoveredHandler({ context }),
+    apiContext,
+    factory: () =>
+      $UserDiscoveredHandler({
+        context,
+        services,
+        userDiscoveredFreshness: parseInt(userDiscoveredFreshness || "60"),
+      }),
   });
 
   await runtime({ event });

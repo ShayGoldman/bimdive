@@ -1,110 +1,151 @@
 import { SQSRecord } from "aws-lambda";
 import { Context } from "../services/context.service";
-
-type DataManagementAPI_GetHubs = any;
-type BIM360API_GetProjects = any;
-type BIM360API_GetIssues = any;
+import { Services } from "../services/service-provider";
+import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
 export const $ScanCreatedHandler = ({
   context,
   issueDiscoveredQueue,
   issueContainerDiscoveredQueue,
-  shouldEmitMessages,
+  services,
 }: {
   context: Context;
+  services: Services;
+
   issueDiscoveredQueue: string;
   issueContainerDiscoveredQueue: string;
-  shouldEmitMessages: boolean;
 }) => {
+  async function fetchAllIssues({ api, issueContainerId, logger }) {
+    async function fetchIssuesPage(page: number, limit: number = 50) {
+      logger.info({
+        msg: "fetching issues",
+        page,
+        limit,
+      });
+      const issues = await api.get(
+        `/issues/v1/containers/${issueContainerId}/quality-issues`,
+        {
+          params: {
+            "page[limit]": limit,
+            "page[offset]": page * limit,
+          },
+        }
+      );
+
+      const issueCount = issues.meta.record_count;
+
+      if ((page + 1) * limit < issueCount) {
+        return issues.data.concat(await fetchIssuesPage(page + 1));
+      } else {
+        return issues.data;
+      }
+    }
+
+    return fetchIssuesPage(0);
+  }
+
+  async function processIssueContainer({ issueContainerId, scanId }) {
+    const { logger } = context;
+    const { sqs } = services;
+
+    logger.info({
+      msg: "issue container discovered",
+      issueContainerId,
+    });
+
+    await sqs.sendMessage({
+      queue: issueContainerDiscoveredQueue,
+      message: {
+        type: "IssueContainerDiscovered",
+        scanId,
+        issueContainerId,
+      },
+    });
+  }
+
+  async function processIssues({
+    api,
+    project,
+    scanId,
+    issueContainerId,
+    hubId,
+  }) {
+    const { logger } = context;
+    const { sqs } = services;
+    try {
+      const issues = await fetchAllIssues({
+        api,
+        issueContainerId,
+        logger,
+      });
+
+      for (const issue of issues) {
+        logger.info({
+          msg: "issue discovered",
+          issueId: issue.id,
+          scanId,
+          issueContainerId,
+          hubId,
+        });
+      }
+
+      await sqs.sendMessagesBatch({
+        queue: issueDiscoveredQueue,
+        messages: issues.map((issue) => ({
+          type: "IssueDiscovered",
+          scanId,
+          issueId: issue.id,
+          projectId: project.id,
+          issueContainerId,
+          hubId,
+        })),
+      });
+
+      logger.info({
+        issuesDiscovered: issues.length,
+        hubId,
+        projectId: project.id,
+      });
+    } catch (e) {
+      logger.error({
+        ...e,
+        msg: "failed discovering all issues",
+      });
+    }
+  }
+
   return async function scanCreatedHandler({
     message,
   }: {
     message: SQSRecord;
   }) {
-    const { logger, sqs, bimApiFactory, getTokenFromScanId } = context;
+    const { logger } = context;
+    const { bimApiFactory } = services;
 
-    const { stringValue: scanId = "" } = message.messageAttributes.scanId;
+    const scanId = getAttributeFromMessage(message, "scanId");
+    const hubId = getAttributeFromMessage(message, "hubId");
+    const projectId = getAttributeFromMessage(message, "projectId");
 
-    const token = await getTokenFromScanId(scanId);
+    logger.context({ scanId, hubId, projectId });
 
-    const api = bimApiFactory({ token });
+    const api = await bimApiFactory({ scanId });
 
-    const issueLimit = 100;
+    const { data: project } = await api.get<any, any>(
+      `/project/v1/hubs/${hubId}/projects/${projectId}`
+    );
 
-    const hubs = await api.get<
-      DataManagementAPI_GetHubs,
-      DataManagementAPI_GetHubs
-    >("/project/v1/hubs");
+    const issueContainerId = project.relationships.issues.data.id;
+    logger.context({ issueContainerId });
 
-    for (const hub of hubs.data) {
-      const projects = await api.get<
-        BIM360API_GetProjects,
-        BIM360API_GetProjects
-      >(`/project/v1/hubs/${hub.id}/projects`);
-
-      for (const project of projects.data) {
-        const issueContainerId = project.relationships.issues.data.id;
-
-        logger.info({
-          msg: "issue container discovered",
-          issueContainerId,
-        });
-
-        if (shouldEmitMessages) {
-          await sqs.sendMessage({
-            queue: issueContainerDiscoveredQueue,
-            message: {
-              type: "IssueContainerDiscovered",
-              scanId,
-              issueContainerId,
-              projectId: project.id,
-              hubId: hub.id,
-            },
-          });
-        }
-
-        const issues = await api.get<BIM360API_GetIssues, BIM360API_GetIssues>(
-          `/issues/v1/containers/${issueContainerId}/quality-issues`,
-          {
-            params: {
-              "page[limit]": issueLimit,
-            },
-          }
-        );
-
-        const issueCount = issues.meta.record_count;
-
-        if (issueCount > issueLimit) {
-          logger.warn(
-            `found ${issueCount} issues, but only fetch the first ${issueLimit}`
-          );
-        }
-
-        for (const issue of issues.data) {
-          logger.info({
-            msg: "issue discovered",
-            issueId: issue.id,
-            scanId,
-            issueContainerId,
-            hubId: hub.id,
-          });
-
-          if (shouldEmitMessages) {
-            await sqs.sendMessage({
-              queue: issueDiscoveredQueue,
-              message: {
-                type: "IssueDiscovered",
-                scanId,
-                issueId: issue.id,
-                issueContainerId,
-                hubId: hub.id,
-              },
-            });
-          }
-        }
-      }
-
-      logger.info("scan complete");
-    }
+    await Promise.all([
+      processIssueContainer({ issueContainerId, scanId }),
+      processIssues({
+        api,
+        hubId,
+        issueContainerId,
+        project,
+        scanId,
+      }),
+    ]);
   };
 };

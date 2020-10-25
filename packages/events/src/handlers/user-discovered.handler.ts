@@ -1,42 +1,39 @@
+import { UsersApi } from "@bimdive/rest-api-client";
 import { SQSRecord } from "aws-lambda";
-import { Context } from "../services/context.service";
-import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 import last from "lodash/last";
-import isEmpty from "lodash/isEmpty";
+import dayjs from "dayjs";
+import { Context } from "../services/context.service";
+import { Services } from "../services/service-provider";
+import { getAttributeFromMessage } from "../utils/getAttributeFromMessage";
 
 type BIM360API_GetUser = any;
 
-export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
-  const { db } = context;
-  async function updateUserDetails(userData: any) {
-    // autodesk's user id
-    const userId = userData.uid;
+export const $UserDiscoveredHandler = ({
+  context,
+  services,
+  userDiscoveredFreshness,
+}: {
+  context: Context;
+  services: Services;
+  userDiscoveredFreshness: number;
+}) => {
+  const { restApiUtils } = services;
+  const users = new UsersApi(restApiUtils.configuration);
 
-    const user = await db("events.users")
-      .select()
-      .where({ provider_id: userId });
-
-    if (isEmpty(user)) {
-      await db("events.users").insert({
-        provider_id: userId,
+  async function persistUserDetails(userId: string, userData: any) {
+    await users.usersPost({
+      users: {
+        id: userId,
+        providerId: userData.uid,
         email: userData.email,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        profile_img_url: userData.image_url,
-        scanned_at: db.fn.now(),
-      });
-    } else {
-      await db("events.users")
-        .update({
-          email: userData.email,
-          first_name: userData.first_name,
-          last_name: userData.last_name,
-          profile_img_url: userData.image_url,
-          scanned_at: db.fn.now(),
-          modified_at: db.fn.now(),
-        })
-        .where({ provider_id: userId });
-    }
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        profileImgUrl: userData.image_url,
+        scannedAt: restApiUtils.now(),
+        modifiedAt: restApiUtils.now(),
+        createdAt: restApiUtils.now(),
+      },
+    });
   }
 
   return async function userDiscoveredHandler({
@@ -44,32 +41,57 @@ export const $UserDiscoveredHandler = ({ context }: { context: Context }) => {
   }: {
     message: SQSRecord;
   }) {
-    const { logger, bimApiFactory, generateTemporaryAPIToken } = context;
-    logger.debug(message);
+    const { bimApiFactory, tokens } = services;
+    const { logger } = context;
+
     const userProviderId = getAttributeFromMessage(message, "userProviderId");
     const scanId = getAttributeFromMessage(message, "scanId");
     const hubId = getAttributeFromMessage(message, "hubId");
 
-    logger.info("generating temporary token");
+    logger.context({
+      userProviderId,
+      scanId,
+      hubId,
+    });
 
-    const token = await generateTemporaryAPIToken();
-    const api = bimApiFactory({ token });
+    logger.info({ msg: "generating temporary token" });
+
+    const token = await tokens.generateTemporaryAPIToken();
+    const api = await bimApiFactory({ token });
 
     const accountId = last(hubId.split("b."));
 
     logger.info({ msg: "fetching user details", userProviderId });
 
+    const [existing] = await users.usersGet({
+      providerId: restApiUtils.operators.equals(userProviderId),
+    });
+
+    const wasScannedLately =
+      existing &&
+      existing.scannedAt &&
+      dayjs(Date.now())
+        .subtract(userDiscoveredFreshness, "minute")
+        .isBefore(existing.scannedAt);
+
+    if (wasScannedLately) {
+      logger.info({
+        msg: "user was recently scanned, terminating",
+        userProviderId,
+      });
+      return;
+    }
+
     const user = await api.get<BIM360API_GetUser, BIM360API_GetUser>(
       `/hq/v1/accounts/${accountId}/users/${userProviderId}`
     );
 
-    logger.debug(user);
-    await updateUserDetails(user);
+    const userId = existing?.id || restApiUtils.generateUUID();
 
-    logger.info({
-      msg: "user details fetched",
-      userProviderId,
-      scanId,
-    });
+    logger.context({ userId });
+
+    logger.info({ msg: "saving user details" });
+
+    await persistUserDetails(userId, user);
   };
 };

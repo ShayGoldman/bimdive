@@ -1,79 +1,41 @@
 import axios, { AxiosInstance } from "axios";
+import { instrumentAxiosInstance } from "../utils/axios-logging";
+import { BIMAccessTokensService } from "./bim-access-tokens.service";
 import { Logger } from "./logger.service";
 
 type Deps = {
   logger: Logger;
+  tokens: BIMAccessTokensService;
 };
 
-type Params = {
-  token?: string;
-};
+type Params =
+  | { token: string }
+  | {
+      scanId: string;
+    };
 
-export type BIMApiFactory = (parms: Params) => AxiosInstance;
+export type BIMApi = AxiosInstance;
 
-export function $BIMApiFactory({ logger }: Deps): BIMApiFactory {
-  return function $BimApi({ token }: { token?: string }): AxiosInstance {
+export type BIMApiFactory = (parms: Params) => Promise<BIMApi>;
+
+export function $BIMApiFactory({ logger, tokens }: Deps): BIMApiFactory {
+  return async function $BimApi({
+    scanId,
+    token,
+  }: {
+    scanId: string;
+    token: string;
+  }): Promise<BIMApi> {
+    const authToken = token || (await tokens.getTokenFromScanId(scanId));
+
     const instance = axios.create({
       baseURL: "https://developer.api.autodesk.com",
-      headers: Object.assign(
-        {},
-        token
-          ? {
-              Authorization: `Bearer ${token}`,
-            }
-          : {}
-      ),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
 
-    instance.interceptors.request.use(
-      (request) => {
-        const { baseURL, url, method, params } = request;
-        logger.debug({ msg: "bim-api request", baseURL, url, method, params });
-        return request;
-      },
-      (error) => {
-        logger.error("bim-api request error", error);
-      }
-    );
-
-    instance.interceptors.response.use(
-      (response) => {
-        const {
-          status,
-          request,
-          config: { baseURL, url, method, params },
-          data,
-        } = response;
-
-        logger.debug({
-          msg: "bim-api response",
-          baseURL,
-          url,
-          status,
-          method,
-          params,
-        });
-
-        if (data?.meta?.warnings) {
-          const { baseURL, method, params } = request;
-          for (const warning of data.meta.warnings) {
-            logger.warn({
-              baseURL,
-              url,
-              status,
-              method,
-              params,
-              ...warning,
-              msg: "bim-api response warning",
-            });
-          }
-        }
-        return response.data;
-      },
-      (error) => {
-        logger.error({ msg: "bim-api request error", error });
-      }
-    );
+    instrumentAxiosInstance({ logger, instance });
 
     return instance;
   };

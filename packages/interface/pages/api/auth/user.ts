@@ -1,10 +1,25 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
+import { serialize } from "cookie";
+import dayjs from "dayjs";
 
-const clientId = "WGwl4crnohsIPbs6CkTHP17VAM0k2oE9";
-const clientSecret = "bZlhmL4PMG3Bwym1";
+const clientId = process.env.FORGE_CLIENT_ID;
+const clientSecret = process.env.FORGE_CLIENT_SECRET;
 const redirectUrl = `https://app.bimdive.com/api/auth/user`;
+
+async function getUserData(token: string): Promise<any> {
+  const response = await axios.get(
+    "https://developer.api.autodesk.com/userprofile/v1/users/@me",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
 
 async function generateAuthToken(code: string): Promise<any> {
   const response = await axios.post(
@@ -47,11 +62,25 @@ export default async function authCallback(
       res.redirect("/error");
     }
 
-    await axios.post(
-      "http://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
+    const userData = await getUserData(token.access_token);
+    console.log(`authed user ${userData.emailId}`);
+
+    const {
+      data: {
+        data: { id },
+      },
+    } = await axios.post(
+      "http://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod/auth/user",
       { ...token, code }
     );
 
+    res.setHeader(
+      "Set-Cookie",
+      serialize("_bimdive", JSON.stringify({ id }), {
+        expires: dayjs().add(1, "year").toDate(),
+        path: "/",
+      })
+    );
     res.redirect(`/home`);
   } catch (e) {
     console.log(e);

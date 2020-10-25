@@ -1,9 +1,7 @@
-import { SQSEvent, SQSHandler } from "aws-lambda";
+import { Context, SQSEvent, SQSHandler } from "aws-lambda";
 import { $ScanCreatedHandler } from "../../handlers/scan-created.handler";
 import { getFromEnv } from "../../utils/getFromEnv";
-import { $SQSRuntimeFactory } from "../runtime/SQSRuntime";
-
-const runtimeFactory = $SQSRuntimeFactory();
+import { $SQSEnvironment } from "../environments";
 
 const issueDiscoveredQueue = getFromEnv({
   name: "QUEUE_ISSUE_DISCOVERED",
@@ -13,22 +11,21 @@ const issueContainerDiscoveredQueue = getFromEnv({
   name: "QUEUE_ISSUE_CONTAINER_DISCOVERED",
   fatal: true,
 });
-const shouldEmitMessages = Boolean(
-  parseInt(
-    getFromEnv({
-      name: "EMIT_MESSAGES",
-    }) || "1"
-  )
-);
 
-export const handle: SQSHandler = async (event: SQSEvent) => {
+const { context, runtimeFactory, services } = $SQSEnvironment();
+
+export const handle: SQSHandler = async (
+  event: SQSEvent,
+  apiContext: Context
+) => {
   const runtime = await runtimeFactory.create({
-    factory: ({ context }) =>
+    apiContext,
+    factory: () =>
       $ScanCreatedHandler({
         context,
+        services,
         issueDiscoveredQueue,
         issueContainerDiscoveredQueue,
-        shouldEmitMessages,
       }),
   });
 

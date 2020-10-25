@@ -1,0 +1,26 @@
+version: "3"
+services:
+  api:
+    container_name: api
+    image: postgrest/postgrest
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+
+    environment:
+      PGRST_DB_URI: ${PGRST_DB_URI}
+      PGRST_DB_ANON_ROLE: ${PGRST_DB_ANON_ROLE}
+      PGRST_DB_SCHEMA: ${PGRST_DB_SCHEMA}
+
+  swagger-ui:
+    container_name: api-swagger-ui
+    image: swaggerapi/swagger-ui
+    depends_on:
+      - api
+    ports:
+      - "3001:8080"
+    expose:
+      - "3001"
+    environment:
+      API_URL: http://localhost:3000/

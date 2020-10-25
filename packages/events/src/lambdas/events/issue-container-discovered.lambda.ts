@@ -1,12 +1,16 @@
-import { SQSEvent, SQSHandler } from "aws-lambda";
+import { Context, SQSEvent, SQSHandler } from "aws-lambda";
 import { $IssueContainerDiscoveredHandler } from "../../handlers/issue-container-discovered.handler";
-import { $SQSRuntimeFactory } from "../runtime/SQSRuntime";
+import { $SQSEnvironment } from "../environments";
 
-const runtimeFactory = $SQSRuntimeFactory();
+const { context, runtimeFactory, services } = $SQSEnvironment();
 
-export const handle: SQSHandler = async (event: SQSEvent) => {
+export const handle: SQSHandler = async (
+  event: SQSEvent,
+  apiContext: Context
+) => {
   const runtime = await runtimeFactory.create({
-    factory: ({ context }) => $IssueContainerDiscoveredHandler({ context }),
+    apiContext,
+    factory: () => $IssueContainerDiscoveredHandler({ context, services }),
   });
 
   await runtime({ event });

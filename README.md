@@ -1,9 +1,13 @@
 # BimDive
 
-## Serverless functions
-
-### Creating a new function
+## Ports
 
 ```
-serverless create --template aws-nodejs-typescript --path [path]
+| Component  	| Port 	|
+|-------------	|------	|
+| API        	| 3000 	|
+|           	|    	|
+| Swagger-UI 	| 3001 	|
+|           	|    	|
+| App        	| 4000 	|
 ```

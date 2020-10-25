@@ -1,37 +1,112 @@
 import axios from "axios";
-import { useSearchParam, useAsync } from "react-use";
+import { useCallback } from "react";
+import { useAsync, useCookie } from "react-use";
 
-export default function HomePage() {
-  const email = useSearchParam("emailz");
-  const error = useSearchParam("error");
-  const { loading, value } = useAsync(async () => {
-    const {
-      data,
-    } = await axios.post(
-      "https://ft92wl46ie.execute-api.eu-west-2.amazonaws.com/prod/metabase/embed",
-      { questionId: 17 }
-    );
+const apiUrl = `https://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod`;
+
+const Spinner = () => (
+  <img src="https://i.imgflip.com/4hkjrq.jpg" width="200" />
+);
+
+const Error = () => <img src="https://i.imgflip.com/4hkjzg.jpg" width="200" />;
+
+const Demo1 = () => {
+  const { loading, value, error } = useAsync(async () => {
+    const { data } = await axios.post(apiUrl + "/metabase/embed", {
+      questionId: 17,
+    });
     return data;
   }, []);
 
   return (
     <div>
-      <h1>Home Page Depo</h1>
-      {value?.data?.url && (
-        <iframe
-          src={value.data.url}
-          allowTransparency
-          frameBorder="0"
-          width="800"
-          height="600"
-        />
-      )}
-      {error && (
-        <section>
-          <h2>Error</h2>
-          <pre>{error}</pre>
-        </section>
+      {loading && <Spinner />}
+      {!loading && error && <Error />}
+      {!loading && !error && value?.data?.url && (
+        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
       )}
     </div>
   );
+};
+
+const Demo2 = () => {
+  const { loading, value, error } = useAsync(async () => {
+    const { data } = await axios.post(apiUrl + "/metabase/embed", {
+      questionId: 19,
+    });
+    return data;
+  }, []);
+
+  return (
+    <div>
+      {loading && <Spinner />}
+      {!loading && error && <Error />}
+      {!loading && !error && value?.data?.url && (
+        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
+      )}
+    </div>
+  );
+};
+
+const Demo3 = () => {
+  const { loading, value, error } = useAsync(async () => {
+    const { data } = await axios.post(apiUrl + "/metabase/embed", {
+      questionId: 20,
+    });
+    return data;
+  }, []);
+
+  return (
+    <div>
+      {loading && <Spinner />}
+      {!loading && error && <Error />}
+      {!loading && !error && value?.data?.url && (
+        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
+      )}
+    </div>
+  );
+};
+
+const ScanButton = ({ email }) => {
+  const [cookie] = useCookie("_bimdive");
+
+  const scan = useCallback(async () => {
+    const { id } = JSON.parse(cookie);
+    if (id) {
+      await axios.post(apiUrl + "/scan", { userId: id });
+    }
+  }, [email]);
+
+  return (
+    <button style={{ cursor: "pointer" }} onClick={scan}>
+      Scan for projects
+    </button>
+  );
+};
+
+export default function HomePage({ query }) {
+  const { email = "" } = query;
+  return (
+    <div>
+      <h1>Henlo {email}</h1>
+      <h2>Clickies</h2>
+      <ScanButton email={email} />
+      <h2>Demoes</h2>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <Demo1 />
+        <Demo2 />
+        <Demo3 />
+      </div>
+    </div>
+  );
 }
+
+HomePage.getInitialProps = ({ query }) => {
+  return { query };
+};
