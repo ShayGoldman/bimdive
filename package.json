@@ -5,6 +5,9 @@
   "author": "shay.goldmanz@gmail.com",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "bootstrap": "./bootstrap.sh"
+  },
   "devDependencies": {
     "husky": "^4.2.5",
     "lerna": "^3.22.1",
