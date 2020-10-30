@@ -51,9 +51,7 @@ const ScanButton = ({ email }) => {
     const [cookie] = useCookie('_bimdive');
 
     const scan = useCallback(async () => {
-        console.log(cookie);
-
-        const { id } = JSON.parse(cookie);
+        const { id } = JSON.parse(cookie) || {};
         if (id) {
             await axios.post(apiUrl + '/scan', { userId: id });
         }
