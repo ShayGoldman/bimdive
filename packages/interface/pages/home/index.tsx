@@ -68,20 +68,7 @@ export default function HomePage({ query }) {
     const { email = '' } = query;
     return (
         <div>
-            <h1>Henlo {email}</h1>
-            <h2>Clickies</h2>
-            <ScanButton email={email} />
-            <h2>Demoes</h2>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                }}
-            >
-                <Demo1 />
-                <Demo2 />
-            </div>
+
         </div>
     );
 }
