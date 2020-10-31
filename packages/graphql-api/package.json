@@ -1,0 +1,13 @@
+{
+  "name": "@bimdive/graphql-api",
+  "version": "1.0.0",
+  "main": "index.sh",
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv-cli": "^4.0.0",
+    "pino-pretty": "^4.3.0"
+  },
+  "scripts": {
+    "dev": "npx dotenv -e .env.dev -- bash index.sh"
+  }
+}
