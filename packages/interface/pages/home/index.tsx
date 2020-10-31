@@ -1,23 +1,24 @@
 import { FunctionComponent } from 'react';
 import Grid from '@material-ui/core/Grid';
+import ProjectSelect from './ProjectSelect/ProjectSelect';
 
 const HomePage: FunctionComponent = () => {
     return (
         <Grid container spacing={3}>
-            <Grid container item xs={12} spacing={3}>
+            <Grid className="grid-row" container item xs={12} spacing={3}>
                 <Grid item xs={4}>
-                    1
+                    <img width={500} src="/images/home/company-logo.png" alt="" />
                 </Grid>
                 <Grid item xs={4}>
-                    2
+                    <ProjectSelect />
                 </Grid>
                 <Grid item xs={4}>
-                    3
+                    <h1>BIMdive</h1>
                 </Grid>
             </Grid>
             <Grid container item>
                 <Grid item xs={12}>
-                    4
+                    <div />
                 </Grid>
             </Grid>
         </Grid>

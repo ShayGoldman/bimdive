@@ -2,7 +2,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -22,4 +22,10 @@ pre {
 .App {
   text-align: center;
   padding: 40px;
+
+  .grid-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 }
