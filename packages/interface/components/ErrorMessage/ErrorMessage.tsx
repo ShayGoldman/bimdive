@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import './ErrorMessage.scss';
+import './ErrorMessage.module.scss';
 
 interface Props {
     error: { message: string };

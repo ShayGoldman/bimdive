@@ -21,3 +21,5 @@ const Demo1: FunctionComponent = () => {
         </div>
     );
 };
+
+export default Demo1;
