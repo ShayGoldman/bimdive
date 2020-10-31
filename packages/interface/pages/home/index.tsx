@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import Grid from '@material-ui/core/Grid';
 import ProjectSelect from './ProjectSelect/ProjectSelect';
+import ScanButton from './ScanButton/ScanButton';
 import CustomTabs from '../../components/CustomTabs/CustomTabs';
 
 const HomePage: FunctionComponent = () => {
@@ -12,9 +13,10 @@ const HomePage: FunctionComponent = () => {
                 </Grid>
                 <Grid item xs={4}>
                     <ProjectSelect />
+                    <ScanButton />
                 </Grid>
                 <Grid item xs={4}>
-                    <h1>BIMdive</h1>
+                    <img height={150} src="/images/home/bimdive-logo.png" alt="" />
                 </Grid>
             </Grid>
             <Grid container item>

@@ -3,11 +3,7 @@ import { FunctionComponent, useCallback } from 'react';
 import axios from 'axios';
 import { apiUrl } from '../../../components/utils/consts';
 
-interface Props {
-    email: string;
-}
-
-const ScanButton: FunctionComponent<Props> = ({ email }) => {
+const ScanButton: FunctionComponent = () => {
     const [cookie] = useCookie('_bimdive');
 
     const scan = useCallback(async () => {
@@ -15,7 +11,7 @@ const ScanButton: FunctionComponent<Props> = ({ email }) => {
         if (id) {
             await axios.post(apiUrl + '/scan', { userId: id });
         }
-    }, [email]);
+    }, []);
 
     return (
         <button style={{ cursor: 'pointer' }} onClick={scan}>
