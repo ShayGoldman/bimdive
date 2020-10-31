@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "update-schema-local": "fetch-schema http://localhost:5000/v1/graphql -f schema/schema.graphql"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -13,6 +14,7 @@
     "classnames": "^2.2.6",
     "cookie": "^0.4.1",
     "dayjs": "^1.9.3",
+    "fetch-schema": "^0.0.14",
     "lodash": "^4.17.20",
     "next": "9.5.3",
     "pg": "^8.4.0",
