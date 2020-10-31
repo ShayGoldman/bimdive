@@ -19,7 +19,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-spinners": "^0.9.0",
-    "react-use": "^15.3.4"
+    "react-use": "^15.3.4",
+    "sass": "^1.28.0"
   },
   "devDependencies": {
     "@types/cookie": "^0.4.0",
