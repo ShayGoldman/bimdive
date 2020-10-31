@@ -5,22 +5,23 @@ import styles from './CustomSelect.module.scss';
 import classNames from 'classnames';
 
 interface Props {
-    values: string[];
+    options: string[];
+    value: any;
     onValueChange: (newValue: string) => void;
 }
 
-const CustomSelect: FunctionComponent<Props & SelectProps> = ({ values, onValueChange, ...restProps }) => {
+const CustomSelect: FunctionComponent<Props & SelectProps> = ({ options, value, onValueChange, ...restProps }) => {
     return (
         <Select
             {...restProps}
+            value={value}
             onChange={event => onValueChange(event.target.value as string)}
-            defaultValue={values[0]}
             variant="outlined"
             className={classNames(restProps.className, styles.customSelect)}
         >
-            {values.map(value => (
-                <MenuItem key={value} value={value}>
-                    {value}
+            {options.map(option => (
+                <MenuItem key={option} value={option}>
+                    {option}
                 </MenuItem>
             ))}
         </Select>
