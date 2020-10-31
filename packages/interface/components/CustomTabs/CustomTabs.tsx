@@ -17,7 +17,7 @@ const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
     return (
         <div className={styles.customTabs}>
             <AppBar position="static">
-                <Tabs value={value} onChange={(event, newValue) => setValue(newValue)}>
+                <Tabs value={value} onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
                     {tabs.map(({ title }) => (
                         <Tab key={title} label={title} />
                     ))}
