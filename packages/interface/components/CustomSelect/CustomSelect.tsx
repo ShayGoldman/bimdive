@@ -5,7 +5,7 @@ import styles from './CustomSelect.module.scss';
 import classNames from 'classnames';
 
 interface Props {
-    options: string[];
+    options: { key: string; label: string }[];
     value: any;
     onValueChange: (newValue: string) => void;
 }
@@ -19,9 +19,9 @@ const CustomSelect: FunctionComponent<Props & SelectProps> = ({ options, value, 
             variant="outlined"
             className={classNames(restProps.className, styles.customSelect)}
         >
-            {options.map(option => (
-                <MenuItem key={option} value={option}>
-                    {option}
+            {options.map(({ key, label }) => (
+                <MenuItem key={key} value={key}>
+                    {label}
                 </MenuItem>
             ))}
         </Select>

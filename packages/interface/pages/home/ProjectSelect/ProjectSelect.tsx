@@ -12,11 +12,19 @@ const ProjectSelect: FunctionComponent<Props> = props => {
 
     if (error) return <ErrorMessage error={error} />;
 
-    const values =  !data ? [] : data.events_scans.map(event_scan => event_scan.project_name);
+    const options = !data
+        ? []
+        : data.events_scans.map(({ project_provider_id, project_name }) => ({ key: project_provider_id, label: project_name }));
+
     return (
         <>
             <h2>Project Name</h2>
-            <CustomSelect className={styles.projectSelect} options={values} value={values[0] || ''} onValueChange={newValue => console.log(newValue)} />
+            <CustomSelect
+                className={styles.projectSelect}
+                options={options}
+                value={options[0]?.key || ''}
+                onValueChange={newValue => console.log(newValue)}
+            />
         </>
     );
 };

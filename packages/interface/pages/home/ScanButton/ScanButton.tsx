@@ -1,7 +1,8 @@
 import { useCookie } from 'react-use';
-import { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import axios from 'axios';
 import { apiUrl } from '../../../components/utils/consts';
+import CustomButton from '../../../components/CustomButton/CustomButton';
 
 const ScanButton: FunctionComponent = () => {
     const [cookie] = useCookie('_bimdive');
@@ -14,9 +15,9 @@ const ScanButton: FunctionComponent = () => {
     }, []);
 
     return (
-        <button style={{ cursor: 'pointer' }} onClick={scan}>
+        <CustomButton onClick={scan}>
             Scan for projects
-        </button>
+        </CustomButton>
     );
 };
 

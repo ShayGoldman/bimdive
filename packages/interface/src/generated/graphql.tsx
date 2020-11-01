@@ -2703,7 +2703,7 @@ export type EventsScansQuery = (
   { __typename?: 'query_root' }
   & { events_scans: Array<(
     { __typename?: 'events_scans' }
-    & Pick<Events_Scans, 'id' | 'project_name'>
+    & Pick<Events_Scans, 'id' | 'project_name' | 'project_provider_id'>
   )> }
 );
 
@@ -2713,6 +2713,7 @@ export const EventsScansDocument = gql`
   events_scans(distinct_on: project_provider_id) {
     id
     project_name
+    project_provider_id
   }
 }
     `;
