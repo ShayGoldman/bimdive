@@ -15,8 +15,8 @@
     "next": "9.5.3",
     "pg": "^8.4.0",
     "querystring": "^0.2.0",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
     "react-use": "^15.3.4"
   },
   "devDependencies": {
