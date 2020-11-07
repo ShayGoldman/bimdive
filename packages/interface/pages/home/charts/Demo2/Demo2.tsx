@@ -1,6 +1,6 @@
 import { useAsync } from 'react-use';
 import axios from 'axios';
-import { apiUrl } from '../../../../components/utils/consts';
+import { apiUrl } from '../../../../utils/consts';
 import ErrorMessage from '../../../../components/ErrorMessage/ErrorMessage';
 
 const Demo2 = () => {

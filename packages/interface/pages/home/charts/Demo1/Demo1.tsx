@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { useAsync } from 'react-use';
 import axios from 'axios';
 import ProgressBar from '../../../../components/ProgressBar/ProgressBar';
-import { apiUrl } from '../../../../components/utils/consts';
+import { apiUrl } from '../../../../utils/consts';
 import ErrorMessage from '../../../../components/ErrorMessage/ErrorMessage';
 
 const Demo1: FunctionComponent = () => {

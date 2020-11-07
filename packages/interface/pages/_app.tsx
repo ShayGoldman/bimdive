@@ -1,5 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import Head from 'next/head';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import '../styles/globals.scss';
 
 const client = new ApolloClient({
@@ -8,14 +9,28 @@ const client = new ApolloClient({
 });
 
 function MyApp({ Component, pageProps }) {
+    const theme = createMuiTheme({
+        palette: {
+            primary: {
+                main: '#f06623',
+                dark: '#D74D0A',
+            },
+        },
+        typography: {
+            fontFamily: ['Barlow', 'sans-serif'].join(','),
+        },
+    });
+
     return (
         <ApolloProvider client={client}>
-            <div className="App">
-                <Head>
-                    <title>BIMdive</title>
-                </Head>
-                <Component {...pageProps} />
-            </div>
+            <ThemeProvider theme={theme}>
+                <div className="App">
+                    <Head>
+                        <title>BIMdive</title>
+                    </Head>
+                    <Component {...pageProps} />
+                </div>
+            </ThemeProvider>
         </ApolloProvider>
     );
 }
