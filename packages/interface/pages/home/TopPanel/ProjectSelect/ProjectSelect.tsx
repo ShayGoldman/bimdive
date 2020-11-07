@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
-import CustomSelect from '../../../components/CustomSelect/CustomSelect';
+import CustomSelect from '../../../../components/CustomSelect/CustomSelect';
 import styles from './ProjectSelect.module.scss';
-import { useEventsScansQuery } from '../../../src/generated/graphql';
-import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
+import { useEventsScansQuery } from '../../../../schema/generated/graphql';
+import ErrorMessage from '../../../../components/ErrorMessage/ErrorMessage';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
