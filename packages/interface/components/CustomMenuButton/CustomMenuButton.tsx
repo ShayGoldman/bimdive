@@ -14,7 +14,7 @@ const CustomMenuButton: FunctionComponent<Props> = ({ renderButton, options }) =
     const handleClose = () => setAnchorEl(null);
 
     return (
-        <div className="custom-menu">
+        <div className="custom-menu-button">
             {renderButton(handleClick)}
             <Menu
                 anchorEl={anchorEl}
