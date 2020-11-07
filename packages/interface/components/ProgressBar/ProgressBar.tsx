@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { BarLoader } from 'react-spinners';
-import styles from './ProgressBar.scss';
+import './ProgressBar.scss';
 
 interface Props {
     style?: React.CSSProperties;
@@ -15,7 +15,7 @@ const ProgressBar: FunctionComponent<Props> = ({ style }) => {
     }, []);
 
     return (
-        <div className={styles.progressBarContainer} style={style}>
+        <div className="progress-bar-container" style={style}>
             {showLoading && <BarLoader height={4} width={100} />}
         </div>
     );
