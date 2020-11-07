@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import '../styles/globals.scss';
 import Head from 'next/head';
+import '../styles/globals.scss';
 
 const client = new ApolloClient({
     uri: 'http://localhost:5000/v1/graphql',
