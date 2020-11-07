@@ -8,20 +8,23 @@ import './ScanButton.scss';
 
 const ScanButton: FunctionComponent = () => {
     const [cookie] = useCookie('_bimdive');
-    const [lastScannedDateTime, setLastScannedDateTime] = useState<string>('Never');
+    const [lastScannedLabel, setLastScannedLabel] = useState<string>('Last scanned: Never');
 
     const scan = useCallback(async () => {
         const { id } = JSON.parse(cookie) || {};
-        if (!id) return;
+        if (!id) {
+            setLastScannedLabel('Please login to scan');
+            return;
+        }
 
         await axios.post(apiUrl + '/scan', { userId: id });
-        setLastScannedDateTime(nowDateTime());
+        setLastScannedLabel(`Last scanned: ${nowDateTime()}`);
     }, []);
 
     return (
         <div className="scan-button">
             <CustomButton onClick={scan}>Scan for projects</CustomButton>
-            <h5 className="last-scanned-label">Last scanned: {lastScannedDateTime}</h5>
+            <h5 className="last-scanned-label">{lastScannedLabel}</h5>
         </div>
     );
 };
