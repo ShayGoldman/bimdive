@@ -21,6 +21,5 @@ packages/events/.build
 packages/events/.serverless
 packages/events/.webpack
 
-
 # rest-api-client
 !packages/rest-api-client/dist

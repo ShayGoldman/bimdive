@@ -21,7 +21,9 @@ All links between packages which cannot be symlinked using `lerna link` should b
 ```
 | Component  	| Port 	|
 |-------------	|------	|
-| API        	| 3000 	|
+| REST API     	| 3000 	|
+|           	|    	|
+| Graph API  	| 5000 	|
 |           	|    	|
 | Swagger-UI 	| 3001 	|
 |           	|    	|
