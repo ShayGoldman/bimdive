@@ -10,16 +10,20 @@ interface Props {}
 
 const TopPanel: FunctionComponent<Props> = props => {
     return (
-        <Grid className={classNames('grid-row', 'top-panel')} container item xs={12} spacing={3}>
-            <Grid item xs={4}>
-                <img height={150} src="/images/home/bimdive-logo.png" alt="" style={{ height: 'inherit' }} />
+        <Grid className="top-panel" container item xs={12} spacing={3}>
+            <Grid item xs={1}>
+                <img src="/images/home/bimdive-logo.png" alt="" />
             </Grid>
-            <Grid item xs={4}>
-                <img width={500} src="/images/home/company-logo.png" alt="" />
-            </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={2}>
                 <ProjectSelect />
+            </Grid>
+            <Grid item xs={2}>
                 <ScanButton />
+            </Grid>
+            <Grid item xs={3}>
+                <img src="/images/home/company-logo.png" alt="" />
+            </Grid>
+            <Grid item xs={4}>
             </Grid>
         </Grid>
     );

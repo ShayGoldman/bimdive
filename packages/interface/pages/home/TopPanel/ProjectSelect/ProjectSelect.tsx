@@ -17,15 +17,13 @@ const ProjectSelect: FunctionComponent<Props> = props => {
         : data.events_scans.map(({ project_provider_id, project_name }) => ({ key: project_provider_id, label: project_name }));
 
     return (
-        <>
-            <h2>Project Name</h2>
+        <div className="project-select">
             <CustomSelect
-                className="project-select"
                 options={options}
                 value={options[0]?.key || ''}
                 onValueChange={newValue => console.log(newValue)}
             />
-        </>
+        </div>
     );
 };
 
