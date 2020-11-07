@@ -7,7 +7,7 @@ interface Props {
 
 const ErrorMessage: FunctionComponent<Props> = ({ error }) => {
     return (
-        <div className="error">
+        <div className="error-message">
             <h2>Error: {error.message}</h2>
             <pre>{error}</pre>
         </div>

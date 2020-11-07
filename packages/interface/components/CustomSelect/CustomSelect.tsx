@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { MenuItem, Select } from '@material-ui/core';
 import { SelectProps } from '@material-ui/core/Select/Select';
-import styles from './CustomSelect.scss';
 import classNames from 'classnames';
+import './CustomSelect.scss';
 
 interface Props {
     options: { key: string; label: string }[];
@@ -17,7 +17,7 @@ const CustomSelect: FunctionComponent<Props & SelectProps> = ({ options, value, 
             value={value}
             onChange={event => onValueChange(event.target.value as string)}
             variant="outlined"
-            className={classNames(restProps.className, styles.customSelect)}
+            className={classNames('custom-select', restProps.className)}
         >
             {options.map(({ key, label }) => (
                 <MenuItem key={key} value={key}>

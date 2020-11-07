@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import styles from './CustomTabs.scss';
 import { AppBar, Tab, Tabs } from '@material-ui/core';
+import './CustomTabs.scss';
 
 interface TabDetails {
     title: string;
@@ -15,7 +15,7 @@ const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
     const [value, setValue] = React.useState(0);
 
     return (
-        <div className={styles.customTabs}>
+        <div className="custom-tabs">
             <AppBar position="static">
                 <Tabs value={value} onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
                     {tabs.map(({ title }) => (
