@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import CustomSelect from '../../../../components/CustomSelect/CustomSelect';
-import styles from './ProjectSelect.module.scss';
 import { useEventsScansQuery } from '../../../../schema/generated/graphql';
 import ErrorMessage from '../../../../components/ErrorMessage/ErrorMessage';
+import './ProjectSelect.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
@@ -20,7 +20,7 @@ const ProjectSelect: FunctionComponent<Props> = props => {
         <>
             <h2>Project Name</h2>
             <CustomSelect
-                className={styles.projectSelect}
+                className="project-select"
                 options={options}
                 value={options[0]?.key || ''}
                 onValueChange={newValue => console.log(newValue)}

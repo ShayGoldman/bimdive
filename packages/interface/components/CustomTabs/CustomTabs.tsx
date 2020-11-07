@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import styles from './CustomTabs.module.scss';
+import styles from './CustomTabs.scss';
 import { AppBar, Tab, Tabs } from '@material-ui/core';
 
 interface TabDetails {

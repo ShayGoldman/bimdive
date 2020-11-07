@@ -3,14 +3,14 @@ import Grid from '@material-ui/core/Grid';
 import ProjectSelect from './ProjectSelect/ProjectSelect';
 import ScanButton from '../ScanButton/ScanButton';
 import classNames from 'classnames';
-import styles from './TopPanel.module.scss';
+import './TopPanel.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
 
 const TopPanel: FunctionComponent<Props> = props => {
     return (
-        <Grid className={classNames('grid-row', styles.topPanel)} container item xs={12} spacing={3}>
+        <Grid className={classNames('grid-row', 'top-panel')} container item xs={12} spacing={3}>
             <Grid item xs={4}>
                 <img height={150} src="/images/home/bimdive-logo.png" alt="" style={{ height: 'inherit' }} />
             </Grid>

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { BarLoader } from 'react-spinners';
-import styles from './ProgressBar.module.scss';
+import styles from './ProgressBar.scss';
 
 interface Props {
     style?: React.CSSProperties;

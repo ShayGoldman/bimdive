@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Button, ButtonProps } from '@material-ui/core';
-import './CustomButton.module.scss';
+import './CustomButton.scss';
 
 const CustomButton: FunctionComponent<ButtonProps> = ({ children, ...restProps }) => {
     return (

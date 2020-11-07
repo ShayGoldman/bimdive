@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { MenuItem, Select } from '@material-ui/core';
 import { SelectProps } from '@material-ui/core/Select/Select';
-import styles from './CustomSelect.module.scss';
+import styles from './CustomSelect.scss';
 import classNames from 'classnames';
 
 interface Props {
