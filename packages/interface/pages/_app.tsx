@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import Head from 'next/head';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import '../styles/globals.scss';
 
 const client = new ApolloClient({
@@ -9,6 +10,14 @@ const client = new ApolloClient({
 });
 
 function MyApp({ Component, pageProps }) {
+    useEffect(() => {
+        // Remove the server-side injected CSS.
+        const jssStyles = document.querySelector('#jss-server-side');
+        if (jssStyles) {
+            jssStyles.parentElement.removeChild(jssStyles);
+        }
+    }, []);
+
     const theme = createMuiTheme({
         palette: {
             primary: {
@@ -22,16 +31,19 @@ function MyApp({ Component, pageProps }) {
     });
 
     return (
-        <ApolloProvider client={client}>
-            <ThemeProvider theme={theme}>
-                <div className="App">
-                    <Head>
-                        <title>BIMdive</title>
-                    </Head>
-                    <Component {...pageProps} />
-                </div>
-            </ThemeProvider>
-        </ApolloProvider>
+        <>
+            <Head>
+                <title>BIMdive</title>
+            </Head>
+            <ApolloProvider client={client}>
+                <ThemeProvider theme={theme}>
+                    <div className="App">
+                        <CssBaseline />
+                        <Component {...pageProps} />
+                    </div>
+                </ThemeProvider>
+            </ApolloProvider>
+        </>
     );
 }
 
