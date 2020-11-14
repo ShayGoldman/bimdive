@@ -6,6 +6,7 @@
     "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start",
+    "fix-code": "prettier-eslint --write $PWD/'**/*.{ts,tsx,scss}'",
     "update-schema-local": "fetch-schema http://localhost:5000/v1/graphql -f schema/schema.graphql",
     "generate-schema-typescript": "graphql-codegen --config codegen.yml"
   },
@@ -24,6 +25,8 @@
     "moment": "^2.29.1",
     "next": "9.5.3",
     "pg": "^8.4.0",
+    "prettier-eslint": "^11.0.0",
+    "prettier-eslint-cli": "^5.0.0",
     "querystring": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
