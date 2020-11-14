@@ -1,0 +1,28 @@
+@import './colors';
+@import './typography.scss';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+pre {
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

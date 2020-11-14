@@ -1,5 +1,6 @@
 node_modules/
 .vscode/
+.idea/
 .DS_Store
 
 # common
@@ -11,7 +12,6 @@ yarn-error.log
 
 # interface
 packages/interface/.next
-packages/interface/next.config.js
 
 # events
 packages/events/.data-files

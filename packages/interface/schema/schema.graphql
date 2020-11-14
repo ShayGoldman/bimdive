@@ -1,0 +1,2787 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+scalar _text
+
+# expression to compare columns of type _text. All fields are combined with logical 'AND'.
+input _text_comparison_exp {
+  _eq: _text
+  _gt: _text
+  _gte: _text
+  _in: [_text!]
+  _is_null: Boolean
+  _lt: _text
+  _lte: _text
+  _neq: _text
+  _nin: [_text!]
+}
+
+# columns and relationships of "events.access_tokens"
+type events_access_tokens {
+  access_token: String!
+  expires_at: timestamptz!
+  issued_at: timestamptz!
+  refresh_token: String!
+  user_provider_id: String!
+}
+
+# aggregated selection of "events.access_tokens"
+type events_access_tokens_aggregate {
+  aggregate: events_access_tokens_aggregate_fields
+  nodes: [events_access_tokens!]!
+}
+
+# aggregate fields of "events.access_tokens"
+type events_access_tokens_aggregate_fields {
+  count(columns: [events_access_tokens_select_column!], distinct: Boolean): Int
+  max: events_access_tokens_max_fields
+  min: events_access_tokens_min_fields
+}
+
+# order by aggregate values of table "events.access_tokens"
+input events_access_tokens_aggregate_order_by {
+  count: order_by
+  max: events_access_tokens_max_order_by
+  min: events_access_tokens_min_order_by
+}
+
+# input type for inserting array relation for remote table "events.access_tokens"
+input events_access_tokens_arr_rel_insert_input {
+  data: [events_access_tokens_insert_input!]!
+  on_conflict: events_access_tokens_on_conflict
+}
+
+# Boolean expression to filter rows from the table "events.access_tokens". All fields are combined with a logical 'AND'.
+input events_access_tokens_bool_exp {
+  _and: [events_access_tokens_bool_exp]
+  _not: events_access_tokens_bool_exp
+  _or: [events_access_tokens_bool_exp]
+  access_token: String_comparison_exp
+  expires_at: timestamptz_comparison_exp
+  issued_at: timestamptz_comparison_exp
+  refresh_token: String_comparison_exp
+  user_provider_id: String_comparison_exp
+}
+
+# unique or primary key constraints on table "events.access_tokens"
+enum events_access_tokens_constraint {
+  # unique or primary key constraint
+  access_tokens_pkey
+}
+
+# input type for inserting data into table "events.access_tokens"
+input events_access_tokens_insert_input {
+  access_token: String
+  expires_at: timestamptz
+  issued_at: timestamptz
+  refresh_token: String
+  user_provider_id: String
+}
+
+# aggregate max on columns
+type events_access_tokens_max_fields {
+  access_token: String
+  expires_at: timestamptz
+  issued_at: timestamptz
+  refresh_token: String
+  user_provider_id: String
+}
+
+# order by max() on columns of table "events.access_tokens"
+input events_access_tokens_max_order_by {
+  access_token: order_by
+  expires_at: order_by
+  issued_at: order_by
+  refresh_token: order_by
+  user_provider_id: order_by
+}
+
+# aggregate min on columns
+type events_access_tokens_min_fields {
+  access_token: String
+  expires_at: timestamptz
+  issued_at: timestamptz
+  refresh_token: String
+  user_provider_id: String
+}
+
+# order by min() on columns of table "events.access_tokens"
+input events_access_tokens_min_order_by {
+  access_token: order_by
+  expires_at: order_by
+  issued_at: order_by
+  refresh_token: order_by
+  user_provider_id: order_by
+}
+
+# response of any mutation on the table "events.access_tokens"
+type events_access_tokens_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [events_access_tokens!]!
+}
+
+# input type for inserting object relation for remote table "events.access_tokens"
+input events_access_tokens_obj_rel_insert_input {
+  data: events_access_tokens_insert_input!
+  on_conflict: events_access_tokens_on_conflict
+}
+
+# on conflict condition type for table "events.access_tokens"
+input events_access_tokens_on_conflict {
+  constraint: events_access_tokens_constraint!
+  update_columns: [events_access_tokens_update_column!]!
+  where: events_access_tokens_bool_exp
+}
+
+# ordering options when selecting data from "events.access_tokens"
+input events_access_tokens_order_by {
+  access_token: order_by
+  expires_at: order_by
+  issued_at: order_by
+  refresh_token: order_by
+  user_provider_id: order_by
+}
+
+# primary key columns input for table: "events.access_tokens"
+input events_access_tokens_pk_columns_input {
+  user_provider_id: String!
+}
+
+# select columns of table "events.access_tokens"
+enum events_access_tokens_select_column {
+  # column name
+  access_token
+
+  # column name
+  expires_at
+
+  # column name
+  issued_at
+
+  # column name
+  refresh_token
+
+  # column name
+  user_provider_id
+}
+
+# input type for updating data in table "events.access_tokens"
+input events_access_tokens_set_input {
+  access_token: String
+  expires_at: timestamptz
+  issued_at: timestamptz
+  refresh_token: String
+  user_provider_id: String
+}
+
+# update columns of table "events.access_tokens"
+enum events_access_tokens_update_column {
+  # column name
+  access_token
+
+  # column name
+  expires_at
+
+  # column name
+  issued_at
+
+  # column name
+  refresh_token
+
+  # column name
+  user_provider_id
+}
+
+# columns and relationships of "events.custom_attributes"
+type events_custom_attributes {
+  created_at: timestamptz
+  deleted_at: timestamptz
+  description: String
+  id: uuid!
+  provider_id: String!
+  scanned_at: timestamptz!
+  title: String!
+  type: String!
+  updated_at: timestamptz
+  value: String
+  value_id: String
+}
+
+# aggregated selection of "events.custom_attributes"
+type events_custom_attributes_aggregate {
+  aggregate: events_custom_attributes_aggregate_fields
+  nodes: [events_custom_attributes!]!
+}
+
+# aggregate fields of "events.custom_attributes"
+type events_custom_attributes_aggregate_fields {
+  count(columns: [events_custom_attributes_select_column!], distinct: Boolean): Int
+  max: events_custom_attributes_max_fields
+  min: events_custom_attributes_min_fields
+}
+
+# order by aggregate values of table "events.custom_attributes"
+input events_custom_attributes_aggregate_order_by {
+  count: order_by
+  max: events_custom_attributes_max_order_by
+  min: events_custom_attributes_min_order_by
+}
+
+# input type for inserting array relation for remote table "events.custom_attributes"
+input events_custom_attributes_arr_rel_insert_input {
+  data: [events_custom_attributes_insert_input!]!
+  on_conflict: events_custom_attributes_on_conflict
+}
+
+# Boolean expression to filter rows from the table "events.custom_attributes". All fields are combined with a logical 'AND'.
+input events_custom_attributes_bool_exp {
+  _and: [events_custom_attributes_bool_exp]
+  _not: events_custom_attributes_bool_exp
+  _or: [events_custom_attributes_bool_exp]
+  created_at: timestamptz_comparison_exp
+  deleted_at: timestamptz_comparison_exp
+  description: String_comparison_exp
+  id: uuid_comparison_exp
+  provider_id: String_comparison_exp
+  scanned_at: timestamptz_comparison_exp
+  title: String_comparison_exp
+  type: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  value: String_comparison_exp
+  value_id: String_comparison_exp
+}
+
+# unique or primary key constraints on table "events.custom_attributes"
+enum events_custom_attributes_constraint {
+  # unique or primary key constraint
+  custom_attributes_pkey
+
+  # unique or primary key constraint
+  custom_attributes_provider_id
+
+  # unique or primary key constraint
+  custom_attributes_provider_id_value_id
+}
+
+# input type for inserting data into table "events.custom_attributes"
+input events_custom_attributes_insert_input {
+  created_at: timestamptz
+  deleted_at: timestamptz
+  description: String
+  id: uuid
+  provider_id: String
+  scanned_at: timestamptz
+  title: String
+  type: String
+  updated_at: timestamptz
+  value: String
+  value_id: String
+}
+
+# aggregate max on columns
+type events_custom_attributes_max_fields {
+  created_at: timestamptz
+  deleted_at: timestamptz
+  description: String
+  id: uuid
+  provider_id: String
+  scanned_at: timestamptz
+  title: String
+  type: String
+  updated_at: timestamptz
+  value: String
+  value_id: String
+}
+
+# order by max() on columns of table "events.custom_attributes"
+input events_custom_attributes_max_order_by {
+  created_at: order_by
+  deleted_at: order_by
+  description: order_by
+  id: order_by
+  provider_id: order_by
+  scanned_at: order_by
+  title: order_by
+  type: order_by
+  updated_at: order_by
+  value: order_by
+  value_id: order_by
+}
+
+# aggregate min on columns
+type events_custom_attributes_min_fields {
+  created_at: timestamptz
+  deleted_at: timestamptz
+  description: String
+  id: uuid
+  provider_id: String
+  scanned_at: timestamptz
+  title: String
+  type: String
+  updated_at: timestamptz
+  value: String
+  value_id: String
+}
+
+# order by min() on columns of table "events.custom_attributes"
+input events_custom_attributes_min_order_by {
+  created_at: order_by
+  deleted_at: order_by
+  description: order_by
+  id: order_by
+  provider_id: order_by
+  scanned_at: order_by
+  title: order_by
+  type: order_by
+  updated_at: order_by
+  value: order_by
+  value_id: order_by
+}
+
+# response of any mutation on the table "events.custom_attributes"
+type events_custom_attributes_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [events_custom_attributes!]!
+}
+
+# input type for inserting object relation for remote table "events.custom_attributes"
+input events_custom_attributes_obj_rel_insert_input {
+  data: events_custom_attributes_insert_input!
+  on_conflict: events_custom_attributes_on_conflict
+}
+
+# on conflict condition type for table "events.custom_attributes"
+input events_custom_attributes_on_conflict {
+  constraint: events_custom_attributes_constraint!
+  update_columns: [events_custom_attributes_update_column!]!
+  where: events_custom_attributes_bool_exp
+}
+
+# ordering options when selecting data from "events.custom_attributes"
+input events_custom_attributes_order_by {
+  created_at: order_by
+  deleted_at: order_by
+  description: order_by
+  id: order_by
+  provider_id: order_by
+  scanned_at: order_by
+  title: order_by
+  type: order_by
+  updated_at: order_by
+  value: order_by
+  value_id: order_by
+}
+
+# primary key columns input for table: "events.custom_attributes"
+input events_custom_attributes_pk_columns_input {
+  id: uuid!
+}
+
+# select columns of table "events.custom_attributes"
+enum events_custom_attributes_select_column {
+  # column name
+  created_at
+
+  # column name
+  deleted_at
+
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  title
+
+  # column name
+  type
+
+  # column name
+  updated_at
+
+  # column name
+  value
+
+  # column name
+  value_id
+}
+
+# input type for updating data in table "events.custom_attributes"
+input events_custom_attributes_set_input {
+  created_at: timestamptz
+  deleted_at: timestamptz
+  description: String
+  id: uuid
+  provider_id: String
+  scanned_at: timestamptz
+  title: String
+  type: String
+  updated_at: timestamptz
+  value: String
+  value_id: String
+}
+
+# update columns of table "events.custom_attributes"
+enum events_custom_attributes_update_column {
+  # column name
+  created_at
+
+  # column name
+  deleted_at
+
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  title
+
+  # column name
+  type
+
+  # column name
+  updated_at
+
+  # column name
+  value
+
+  # column name
+  value_id
+}
+
+# columns and relationships of "events.issue_comments"
+type events_issue_comments {
+  body: String
+  comment_provider_id: String!
+  created_at: timestamptz!
+  created_by: String
+  id: uuid!
+  issue_provider_id: String!
+  scanned_at: timestamptz!
+  updated_at: timestamptz!
+}
+
+# aggregated selection of "events.issue_comments"
+type events_issue_comments_aggregate {
+  aggregate: events_issue_comments_aggregate_fields
+  nodes: [events_issue_comments!]!
+}
+
+# aggregate fields of "events.issue_comments"
+type events_issue_comments_aggregate_fields {
+  count(columns: [events_issue_comments_select_column!], distinct: Boolean): Int
+  max: events_issue_comments_max_fields
+  min: events_issue_comments_min_fields
+}
+
+# order by aggregate values of table "events.issue_comments"
+input events_issue_comments_aggregate_order_by {
+  count: order_by
+  max: events_issue_comments_max_order_by
+  min: events_issue_comments_min_order_by
+}
+
+# input type for inserting array relation for remote table "events.issue_comments"
+input events_issue_comments_arr_rel_insert_input {
+  data: [events_issue_comments_insert_input!]!
+  on_conflict: events_issue_comments_on_conflict
+}
+
+# Boolean expression to filter rows from the table "events.issue_comments". All fields are combined with a logical 'AND'.
+input events_issue_comments_bool_exp {
+  _and: [events_issue_comments_bool_exp]
+  _not: events_issue_comments_bool_exp
+  _or: [events_issue_comments_bool_exp]
+  body: String_comparison_exp
+  comment_provider_id: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  created_by: String_comparison_exp
+  id: uuid_comparison_exp
+  issue_provider_id: String_comparison_exp
+  scanned_at: timestamptz_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+# unique or primary key constraints on table "events.issue_comments"
+enum events_issue_comments_constraint {
+  # unique or primary key constraint
+  issue_comments_pkey
+}
+
+# input type for inserting data into table "events.issue_comments"
+input events_issue_comments_insert_input {
+  body: String
+  comment_provider_id: String
+  created_at: timestamptz
+  created_by: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  updated_at: timestamptz
+}
+
+# aggregate max on columns
+type events_issue_comments_max_fields {
+  body: String
+  comment_provider_id: String
+  created_at: timestamptz
+  created_by: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  updated_at: timestamptz
+}
+
+# order by max() on columns of table "events.issue_comments"
+input events_issue_comments_max_order_by {
+  body: order_by
+  comment_provider_id: order_by
+  created_at: order_by
+  created_by: order_by
+  id: order_by
+  issue_provider_id: order_by
+  scanned_at: order_by
+  updated_at: order_by
+}
+
+# aggregate min on columns
+type events_issue_comments_min_fields {
+  body: String
+  comment_provider_id: String
+  created_at: timestamptz
+  created_by: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  updated_at: timestamptz
+}
+
+# order by min() on columns of table "events.issue_comments"
+input events_issue_comments_min_order_by {
+  body: order_by
+  comment_provider_id: order_by
+  created_at: order_by
+  created_by: order_by
+  id: order_by
+  issue_provider_id: order_by
+  scanned_at: order_by
+  updated_at: order_by
+}
+
+# response of any mutation on the table "events.issue_comments"
+type events_issue_comments_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [events_issue_comments!]!
+}
+
+# input type for inserting object relation for remote table "events.issue_comments"
+input events_issue_comments_obj_rel_insert_input {
+  data: events_issue_comments_insert_input!
+  on_conflict: events_issue_comments_on_conflict
+}
+
+# on conflict condition type for table "events.issue_comments"
+input events_issue_comments_on_conflict {
+  constraint: events_issue_comments_constraint!
+  update_columns: [events_issue_comments_update_column!]!
+  where: events_issue_comments_bool_exp
+}
+
+# ordering options when selecting data from "events.issue_comments"
+input events_issue_comments_order_by {
+  body: order_by
+  comment_provider_id: order_by
+  created_at: order_by
+  created_by: order_by
+  id: order_by
+  issue_provider_id: order_by
+  scanned_at: order_by
+  updated_at: order_by
+}
+
+# primary key columns input for table: "events.issue_comments"
+input events_issue_comments_pk_columns_input {
+  id: uuid!
+}
+
+# select columns of table "events.issue_comments"
+enum events_issue_comments_select_column {
+  # column name
+  body
+
+  # column name
+  comment_provider_id
+
+  # column name
+  created_at
+
+  # column name
+  created_by
+
+  # column name
+  id
+
+  # column name
+  issue_provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  updated_at
+}
+
+# input type for updating data in table "events.issue_comments"
+input events_issue_comments_set_input {
+  body: String
+  comment_provider_id: String
+  created_at: timestamptz
+  created_by: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  updated_at: timestamptz
+}
+
+# update columns of table "events.issue_comments"
+enum events_issue_comments_update_column {
+  # column name
+  body
+
+  # column name
+  comment_provider_id
+
+  # column name
+  created_at
+
+  # column name
+  created_by
+
+  # column name
+  id
+
+  # column name
+  issue_provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  updated_at
+}
+
+# columns and relationships of "events.issue_custom_attributes"
+type events_issue_custom_attributes {
+  # An object relationship
+  attribute_data: events_custom_attributes
+  custom_attribute_provider_id: String!
+  id: uuid!
+  issue_provider_id: String!
+  scanned_at: timestamptz!
+  type: String!
+  value: String
+}
+
+# aggregated selection of "events.issue_custom_attributes"
+type events_issue_custom_attributes_aggregate {
+  aggregate: events_issue_custom_attributes_aggregate_fields
+  nodes: [events_issue_custom_attributes!]!
+}
+
+# aggregate fields of "events.issue_custom_attributes"
+type events_issue_custom_attributes_aggregate_fields {
+  count(columns: [events_issue_custom_attributes_select_column!], distinct: Boolean): Int
+  max: events_issue_custom_attributes_max_fields
+  min: events_issue_custom_attributes_min_fields
+}
+
+# order by aggregate values of table "events.issue_custom_attributes"
+input events_issue_custom_attributes_aggregate_order_by {
+  count: order_by
+  max: events_issue_custom_attributes_max_order_by
+  min: events_issue_custom_attributes_min_order_by
+}
+
+# input type for inserting array relation for remote table "events.issue_custom_attributes"
+input events_issue_custom_attributes_arr_rel_insert_input {
+  data: [events_issue_custom_attributes_insert_input!]!
+  on_conflict: events_issue_custom_attributes_on_conflict
+}
+
+# Boolean expression to filter rows from the table
+# "events.issue_custom_attributes". All fields are combined with a logical 'AND'.
+input events_issue_custom_attributes_bool_exp {
+  _and: [events_issue_custom_attributes_bool_exp]
+  _not: events_issue_custom_attributes_bool_exp
+  _or: [events_issue_custom_attributes_bool_exp]
+  attribute_data: events_custom_attributes_bool_exp
+  custom_attribute_provider_id: String_comparison_exp
+  id: uuid_comparison_exp
+  issue_provider_id: String_comparison_exp
+  scanned_at: timestamptz_comparison_exp
+  type: String_comparison_exp
+  value: String_comparison_exp
+}
+
+# unique or primary key constraints on table "events.issue_custom_attributes"
+enum events_issue_custom_attributes_constraint {
+  # unique or primary key constraint
+  issue_custom_attributes_issue_provider_id_custom_attribute_prov
+
+  # unique or primary key constraint
+  issue_custom_attributes_pkey
+}
+
+# input type for inserting data into table "events.issue_custom_attributes"
+input events_issue_custom_attributes_insert_input {
+  attribute_data: events_custom_attributes_obj_rel_insert_input
+  custom_attribute_provider_id: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  type: String
+  value: String
+}
+
+# aggregate max on columns
+type events_issue_custom_attributes_max_fields {
+  custom_attribute_provider_id: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  type: String
+  value: String
+}
+
+# order by max() on columns of table "events.issue_custom_attributes"
+input events_issue_custom_attributes_max_order_by {
+  custom_attribute_provider_id: order_by
+  id: order_by
+  issue_provider_id: order_by
+  scanned_at: order_by
+  type: order_by
+  value: order_by
+}
+
+# aggregate min on columns
+type events_issue_custom_attributes_min_fields {
+  custom_attribute_provider_id: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  type: String
+  value: String
+}
+
+# order by min() on columns of table "events.issue_custom_attributes"
+input events_issue_custom_attributes_min_order_by {
+  custom_attribute_provider_id: order_by
+  id: order_by
+  issue_provider_id: order_by
+  scanned_at: order_by
+  type: order_by
+  value: order_by
+}
+
+# response of any mutation on the table "events.issue_custom_attributes"
+type events_issue_custom_attributes_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [events_issue_custom_attributes!]!
+}
+
+# input type for inserting object relation for remote table "events.issue_custom_attributes"
+input events_issue_custom_attributes_obj_rel_insert_input {
+  data: events_issue_custom_attributes_insert_input!
+  on_conflict: events_issue_custom_attributes_on_conflict
+}
+
+# on conflict condition type for table "events.issue_custom_attributes"
+input events_issue_custom_attributes_on_conflict {
+  constraint: events_issue_custom_attributes_constraint!
+  update_columns: [events_issue_custom_attributes_update_column!]!
+  where: events_issue_custom_attributes_bool_exp
+}
+
+# ordering options when selecting data from "events.issue_custom_attributes"
+input events_issue_custom_attributes_order_by {
+  attribute_data: events_custom_attributes_order_by
+  custom_attribute_provider_id: order_by
+  id: order_by
+  issue_provider_id: order_by
+  scanned_at: order_by
+  type: order_by
+  value: order_by
+}
+
+# primary key columns input for table: "events.issue_custom_attributes"
+input events_issue_custom_attributes_pk_columns_input {
+  id: uuid!
+}
+
+# select columns of table "events.issue_custom_attributes"
+enum events_issue_custom_attributes_select_column {
+  # column name
+  custom_attribute_provider_id
+
+  # column name
+  id
+
+  # column name
+  issue_provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  type
+
+  # column name
+  value
+}
+
+# input type for updating data in table "events.issue_custom_attributes"
+input events_issue_custom_attributes_set_input {
+  custom_attribute_provider_id: String
+  id: uuid
+  issue_provider_id: String
+  scanned_at: timestamptz
+  type: String
+  value: String
+}
+
+# update columns of table "events.issue_custom_attributes"
+enum events_issue_custom_attributes_update_column {
+  # column name
+  custom_attribute_provider_id
+
+  # column name
+  id
+
+  # column name
+  issue_provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  type
+
+  # column name
+  value
+}
+
+# columns and relationships of "events.issues"
+type events_issues {
+  assigned_to: String
+  assigned_to_type: String
+
+  # An object relationship
+  assignee: events_users
+  due_date: timestamptz
+  id: uuid!
+
+  # An array relationship
+  issue_custom_attributes(
+    # distinct select on columns
+    distinct_on: [events_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_issue_custom_attributes_bool_exp
+  ): [events_issue_custom_attributes!]!
+
+  # An aggregated array relationship
+  issue_custom_attributes_aggregate(
+    # distinct select on columns
+    distinct_on: [events_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_issue_custom_attributes_bool_exp
+  ): events_issue_custom_attributes_aggregate!
+  owned_by: String
+
+  # An object relationship
+  owner: events_users
+  project_provider_id: String!
+  provider_id: String!
+  scanned_at: timestamptz!
+  status: String!
+  sub_type: String
+  title: String!
+  type: String
+}
+
+# aggregated selection of "events.issues"
+type events_issues_aggregate {
+  aggregate: events_issues_aggregate_fields
+  nodes: [events_issues!]!
+}
+
+# aggregate fields of "events.issues"
+type events_issues_aggregate_fields {
+  count(columns: [events_issues_select_column!], distinct: Boolean): Int
+  max: events_issues_max_fields
+  min: events_issues_min_fields
+}
+
+# order by aggregate values of table "events.issues"
+input events_issues_aggregate_order_by {
+  count: order_by
+  max: events_issues_max_order_by
+  min: events_issues_min_order_by
+}
+
+# input type for inserting array relation for remote table "events.issues"
+input events_issues_arr_rel_insert_input {
+  data: [events_issues_insert_input!]!
+  on_conflict: events_issues_on_conflict
+}
+
+# Boolean expression to filter rows from the table "events.issues". All fields are combined with a logical 'AND'.
+input events_issues_bool_exp {
+  _and: [events_issues_bool_exp]
+  _not: events_issues_bool_exp
+  _or: [events_issues_bool_exp]
+  assigned_to: String_comparison_exp
+  assigned_to_type: String_comparison_exp
+  assignee: events_users_bool_exp
+  due_date: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  issue_custom_attributes: events_issue_custom_attributes_bool_exp
+  owned_by: String_comparison_exp
+  owner: events_users_bool_exp
+  project_provider_id: String_comparison_exp
+  provider_id: String_comparison_exp
+  scanned_at: timestamptz_comparison_exp
+  status: String_comparison_exp
+  sub_type: String_comparison_exp
+  title: String_comparison_exp
+  type: String_comparison_exp
+}
+
+# unique or primary key constraints on table "events.issues"
+enum events_issues_constraint {
+  # unique or primary key constraint
+  issues_pkey
+
+  # unique or primary key constraint
+  issues_provider_id_unique
+}
+
+# input type for inserting data into table "events.issues"
+input events_issues_insert_input {
+  assigned_to: String
+  assigned_to_type: String
+  assignee: events_users_obj_rel_insert_input
+  due_date: timestamptz
+  id: uuid
+  issue_custom_attributes: events_issue_custom_attributes_arr_rel_insert_input
+  owned_by: String
+  owner: events_users_obj_rel_insert_input
+  project_provider_id: String
+  provider_id: String
+  scanned_at: timestamptz
+  status: String
+  sub_type: String
+  title: String
+  type: String
+}
+
+# aggregate max on columns
+type events_issues_max_fields {
+  assigned_to: String
+  assigned_to_type: String
+  due_date: timestamptz
+  id: uuid
+  owned_by: String
+  project_provider_id: String
+  provider_id: String
+  scanned_at: timestamptz
+  status: String
+  sub_type: String
+  title: String
+  type: String
+}
+
+# order by max() on columns of table "events.issues"
+input events_issues_max_order_by {
+  assigned_to: order_by
+  assigned_to_type: order_by
+  due_date: order_by
+  id: order_by
+  owned_by: order_by
+  project_provider_id: order_by
+  provider_id: order_by
+  scanned_at: order_by
+  status: order_by
+  sub_type: order_by
+  title: order_by
+  type: order_by
+}
+
+# aggregate min on columns
+type events_issues_min_fields {
+  assigned_to: String
+  assigned_to_type: String
+  due_date: timestamptz
+  id: uuid
+  owned_by: String
+  project_provider_id: String
+  provider_id: String
+  scanned_at: timestamptz
+  status: String
+  sub_type: String
+  title: String
+  type: String
+}
+
+# order by min() on columns of table "events.issues"
+input events_issues_min_order_by {
+  assigned_to: order_by
+  assigned_to_type: order_by
+  due_date: order_by
+  id: order_by
+  owned_by: order_by
+  project_provider_id: order_by
+  provider_id: order_by
+  scanned_at: order_by
+  status: order_by
+  sub_type: order_by
+  title: order_by
+  type: order_by
+}
+
+# response of any mutation on the table "events.issues"
+type events_issues_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [events_issues!]!
+}
+
+# input type for inserting object relation for remote table "events.issues"
+input events_issues_obj_rel_insert_input {
+  data: events_issues_insert_input!
+  on_conflict: events_issues_on_conflict
+}
+
+# on conflict condition type for table "events.issues"
+input events_issues_on_conflict {
+  constraint: events_issues_constraint!
+  update_columns: [events_issues_update_column!]!
+  where: events_issues_bool_exp
+}
+
+# ordering options when selecting data from "events.issues"
+input events_issues_order_by {
+  assigned_to: order_by
+  assigned_to_type: order_by
+  assignee: events_users_order_by
+  due_date: order_by
+  id: order_by
+  issue_custom_attributes_aggregate: events_issue_custom_attributes_aggregate_order_by
+  owned_by: order_by
+  owner: events_users_order_by
+  project_provider_id: order_by
+  provider_id: order_by
+  scanned_at: order_by
+  status: order_by
+  sub_type: order_by
+  title: order_by
+  type: order_by
+}
+
+# primary key columns input for table: "events.issues"
+input events_issues_pk_columns_input {
+  id: uuid!
+}
+
+# select columns of table "events.issues"
+enum events_issues_select_column {
+  # column name
+  assigned_to
+
+  # column name
+  assigned_to_type
+
+  # column name
+  due_date
+
+  # column name
+  id
+
+  # column name
+  owned_by
+
+  # column name
+  project_provider_id
+
+  # column name
+  provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  status
+
+  # column name
+  sub_type
+
+  # column name
+  title
+
+  # column name
+  type
+}
+
+# input type for updating data in table "events.issues"
+input events_issues_set_input {
+  assigned_to: String
+  assigned_to_type: String
+  due_date: timestamptz
+  id: uuid
+  owned_by: String
+  project_provider_id: String
+  provider_id: String
+  scanned_at: timestamptz
+  status: String
+  sub_type: String
+  title: String
+  type: String
+}
+
+# update columns of table "events.issues"
+enum events_issues_update_column {
+  # column name
+  assigned_to
+
+  # column name
+  assigned_to_type
+
+  # column name
+  due_date
+
+  # column name
+  id
+
+  # column name
+  owned_by
+
+  # column name
+  project_provider_id
+
+  # column name
+  provider_id
+
+  # column name
+  scanned_at
+
+  # column name
+  status
+
+  # column name
+  sub_type
+
+  # column name
+  title
+
+  # column name
+  type
+}
+
+# columns and relationships of "events.scans"
+type events_scans {
+  created_at: timestamptz!
+  id: uuid!
+  initiating_user_id: uuid!
+  project_name: String!
+  project_provider_id: String!
+
+  # An object relationship
+  user: events_users!
+}
+
+# aggregated selection of "events.scans"
+type events_scans_aggregate {
+  aggregate: events_scans_aggregate_fields
+  nodes: [events_scans!]!
+}
+
+# aggregate fields of "events.scans"
+type events_scans_aggregate_fields {
+  count(columns: [events_scans_select_column!], distinct: Boolean): Int
+  max: events_scans_max_fields
+  min: events_scans_min_fields
+}
+
+# order by aggregate values of table "events.scans"
+input events_scans_aggregate_order_by {
+  count: order_by
+  max: events_scans_max_order_by
+  min: events_scans_min_order_by
+}
+
+# input type for inserting array relation for remote table "events.scans"
+input events_scans_arr_rel_insert_input {
+  data: [events_scans_insert_input!]!
+  on_conflict: events_scans_on_conflict
+}
+
+# Boolean expression to filter rows from the table "events.scans". All fields are combined with a logical 'AND'.
+input events_scans_bool_exp {
+  _and: [events_scans_bool_exp]
+  _not: events_scans_bool_exp
+  _or: [events_scans_bool_exp]
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  initiating_user_id: uuid_comparison_exp
+  project_name: String_comparison_exp
+  project_provider_id: String_comparison_exp
+  user: events_users_bool_exp
+}
+
+# unique or primary key constraints on table "events.scans"
+enum events_scans_constraint {
+  # unique or primary key constraint
+  scans_pkey
+}
+
+# input type for inserting data into table "events.scans"
+input events_scans_insert_input {
+  created_at: timestamptz
+  id: uuid
+  initiating_user_id: uuid
+  project_name: String
+  project_provider_id: String
+  user: events_users_obj_rel_insert_input
+}
+
+# aggregate max on columns
+type events_scans_max_fields {
+  created_at: timestamptz
+  id: uuid
+  initiating_user_id: uuid
+  project_name: String
+  project_provider_id: String
+}
+
+# order by max() on columns of table "events.scans"
+input events_scans_max_order_by {
+  created_at: order_by
+  id: order_by
+  initiating_user_id: order_by
+  project_name: order_by
+  project_provider_id: order_by
+}
+
+# aggregate min on columns
+type events_scans_min_fields {
+  created_at: timestamptz
+  id: uuid
+  initiating_user_id: uuid
+  project_name: String
+  project_provider_id: String
+}
+
+# order by min() on columns of table "events.scans"
+input events_scans_min_order_by {
+  created_at: order_by
+  id: order_by
+  initiating_user_id: order_by
+  project_name: order_by
+  project_provider_id: order_by
+}
+
+# response of any mutation on the table "events.scans"
+type events_scans_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [events_scans!]!
+}
+
+# input type for inserting object relation for remote table "events.scans"
+input events_scans_obj_rel_insert_input {
+  data: events_scans_insert_input!
+  on_conflict: events_scans_on_conflict
+}
+
+# on conflict condition type for table "events.scans"
+input events_scans_on_conflict {
+  constraint: events_scans_constraint!
+  update_columns: [events_scans_update_column!]!
+  where: events_scans_bool_exp
+}
+
+# ordering options when selecting data from "events.scans"
+input events_scans_order_by {
+  created_at: order_by
+  id: order_by
+  initiating_user_id: order_by
+  project_name: order_by
+  project_provider_id: order_by
+  user: events_users_order_by
+}
+
+# primary key columns input for table: "events.scans"
+input events_scans_pk_columns_input {
+  id: uuid!
+}
+
+# select columns of table "events.scans"
+enum events_scans_select_column {
+  # column name
+  created_at
+
+  # column name
+  id
+
+  # column name
+  initiating_user_id
+
+  # column name
+  project_name
+
+  # column name
+  project_provider_id
+}
+
+# input type for updating data in table "events.scans"
+input events_scans_set_input {
+  created_at: timestamptz
+  id: uuid
+  initiating_user_id: uuid
+  project_name: String
+  project_provider_id: String
+}
+
+# update columns of table "events.scans"
+enum events_scans_update_column {
+  # column name
+  created_at
+
+  # column name
+  id
+
+  # column name
+  initiating_user_id
+
+  # column name
+  project_name
+
+  # column name
+  project_provider_id
+}
+
+# columns and relationships of "events.users"
+type events_users {
+  created_at: timestamptz!
+  email: String!
+  first_name: String
+  id: uuid!
+  last_name: String
+  modified_at: timestamptz!
+  profile_img_url: String
+  provider_id: String!
+  scanned_at: timestamptz
+
+  # An array relationship
+  scans(
+    # distinct select on columns
+    distinct_on: [events_scans_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_scans_order_by!]
+
+    # filter the rows returned
+    where: events_scans_bool_exp
+  ): [events_scans!]!
+
+  # An aggregated array relationship
+  scans_aggregate(
+    # distinct select on columns
+    distinct_on: [events_scans_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_scans_order_by!]
+
+    # filter the rows returned
+    where: events_scans_bool_exp
+  ): events_scans_aggregate!
+}
+
+# aggregated selection of "events.users"
+type events_users_aggregate {
+  aggregate: events_users_aggregate_fields
+  nodes: [events_users!]!
+}
+
+# aggregate fields of "events.users"
+type events_users_aggregate_fields {
+  count(columns: [events_users_select_column!], distinct: Boolean): Int
+  max: events_users_max_fields
+  min: events_users_min_fields
+}
+
+# order by aggregate values of table "events.users"
+input events_users_aggregate_order_by {
+  count: order_by
+  max: events_users_max_order_by
+  min: events_users_min_order_by
+}
+
+# input type for inserting array relation for remote table "events.users"
+input events_users_arr_rel_insert_input {
+  data: [events_users_insert_input!]!
+  on_conflict: events_users_on_conflict
+}
+
+# Boolean expression to filter rows from the table "events.users". All fields are combined with a logical 'AND'.
+input events_users_bool_exp {
+  _and: [events_users_bool_exp]
+  _not: events_users_bool_exp
+  _or: [events_users_bool_exp]
+  created_at: timestamptz_comparison_exp
+  email: String_comparison_exp
+  first_name: String_comparison_exp
+  id: uuid_comparison_exp
+  last_name: String_comparison_exp
+  modified_at: timestamptz_comparison_exp
+  profile_img_url: String_comparison_exp
+  provider_id: String_comparison_exp
+  scanned_at: timestamptz_comparison_exp
+  scans: events_scans_bool_exp
+}
+
+# unique or primary key constraints on table "events.users"
+enum events_users_constraint {
+  # unique or primary key constraint
+  users_email_unique
+
+  # unique or primary key constraint
+  users_pkey
+
+  # unique or primary key constraint
+  users_provider_id_unique
+}
+
+# input type for inserting data into table "events.users"
+input events_users_insert_input {
+  created_at: timestamptz
+  email: String
+  first_name: String
+  id: uuid
+  last_name: String
+  modified_at: timestamptz
+  profile_img_url: String
+  provider_id: String
+  scanned_at: timestamptz
+  scans: events_scans_arr_rel_insert_input
+}
+
+# aggregate max on columns
+type events_users_max_fields {
+  created_at: timestamptz
+  email: String
+  first_name: String
+  id: uuid
+  last_name: String
+  modified_at: timestamptz
+  profile_img_url: String
+  provider_id: String
+  scanned_at: timestamptz
+}
+
+# order by max() on columns of table "events.users"
+input events_users_max_order_by {
+  created_at: order_by
+  email: order_by
+  first_name: order_by
+  id: order_by
+  last_name: order_by
+  modified_at: order_by
+  profile_img_url: order_by
+  provider_id: order_by
+  scanned_at: order_by
+}
+
+# aggregate min on columns
+type events_users_min_fields {
+  created_at: timestamptz
+  email: String
+  first_name: String
+  id: uuid
+  last_name: String
+  modified_at: timestamptz
+  profile_img_url: String
+  provider_id: String
+  scanned_at: timestamptz
+}
+
+# order by min() on columns of table "events.users"
+input events_users_min_order_by {
+  created_at: order_by
+  email: order_by
+  first_name: order_by
+  id: order_by
+  last_name: order_by
+  modified_at: order_by
+  profile_img_url: order_by
+  provider_id: order_by
+  scanned_at: order_by
+}
+
+# response of any mutation on the table "events.users"
+type events_users_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [events_users!]!
+}
+
+# input type for inserting object relation for remote table "events.users"
+input events_users_obj_rel_insert_input {
+  data: events_users_insert_input!
+  on_conflict: events_users_on_conflict
+}
+
+# on conflict condition type for table "events.users"
+input events_users_on_conflict {
+  constraint: events_users_constraint!
+  update_columns: [events_users_update_column!]!
+  where: events_users_bool_exp
+}
+
+# ordering options when selecting data from "events.users"
+input events_users_order_by {
+  created_at: order_by
+  email: order_by
+  first_name: order_by
+  id: order_by
+  last_name: order_by
+  modified_at: order_by
+  profile_img_url: order_by
+  provider_id: order_by
+  scanned_at: order_by
+  scans_aggregate: events_scans_aggregate_order_by
+}
+
+# primary key columns input for table: "events.users"
+input events_users_pk_columns_input {
+  id: uuid!
+}
+
+# select columns of table "events.users"
+enum events_users_select_column {
+  # column name
+  created_at
+
+  # column name
+  email
+
+  # column name
+  first_name
+
+  # column name
+  id
+
+  # column name
+  last_name
+
+  # column name
+  modified_at
+
+  # column name
+  profile_img_url
+
+  # column name
+  provider_id
+
+  # column name
+  scanned_at
+}
+
+# input type for updating data in table "events.users"
+input events_users_set_input {
+  created_at: timestamptz
+  email: String
+  first_name: String
+  id: uuid
+  last_name: String
+  modified_at: timestamptz
+  profile_img_url: String
+  provider_id: String
+  scanned_at: timestamptz
+}
+
+# update columns of table "events.users"
+enum events_users_update_column {
+  # column name
+  created_at
+
+  # column name
+  email
+
+  # column name
+  first_name
+
+  # column name
+  id
+
+  # column name
+  last_name
+
+  # column name
+  modified_at
+
+  # column name
+  profile_img_url
+
+  # column name
+  provider_id
+
+  # column name
+  scanned_at
+}
+
+# columns and relationships of "events.v_issue_custom_attributes"
+type events_v_issue_custom_attributes {
+  attributes: _text
+  id: uuid
+  provider_id: String
+}
+
+# aggregated selection of "events.v_issue_custom_attributes"
+type events_v_issue_custom_attributes_aggregate {
+  aggregate: events_v_issue_custom_attributes_aggregate_fields
+  nodes: [events_v_issue_custom_attributes!]!
+}
+
+# aggregate fields of "events.v_issue_custom_attributes"
+type events_v_issue_custom_attributes_aggregate_fields {
+  count(columns: [events_v_issue_custom_attributes_select_column!], distinct: Boolean): Int
+  max: events_v_issue_custom_attributes_max_fields
+  min: events_v_issue_custom_attributes_min_fields
+}
+
+# order by aggregate values of table "events.v_issue_custom_attributes"
+input events_v_issue_custom_attributes_aggregate_order_by {
+  count: order_by
+  max: events_v_issue_custom_attributes_max_order_by
+  min: events_v_issue_custom_attributes_min_order_by
+}
+
+# Boolean expression to filter rows from the table
+# "events.v_issue_custom_attributes". All fields are combined with a logical 'AND'.
+input events_v_issue_custom_attributes_bool_exp {
+  _and: [events_v_issue_custom_attributes_bool_exp]
+  _not: events_v_issue_custom_attributes_bool_exp
+  _or: [events_v_issue_custom_attributes_bool_exp]
+  attributes: _text_comparison_exp
+  id: uuid_comparison_exp
+  provider_id: String_comparison_exp
+}
+
+# aggregate max on columns
+type events_v_issue_custom_attributes_max_fields {
+  id: uuid
+  provider_id: String
+}
+
+# order by max() on columns of table "events.v_issue_custom_attributes"
+input events_v_issue_custom_attributes_max_order_by {
+  id: order_by
+  provider_id: order_by
+}
+
+# aggregate min on columns
+type events_v_issue_custom_attributes_min_fields {
+  id: uuid
+  provider_id: String
+}
+
+# order by min() on columns of table "events.v_issue_custom_attributes"
+input events_v_issue_custom_attributes_min_order_by {
+  id: order_by
+  provider_id: order_by
+}
+
+# ordering options when selecting data from "events.v_issue_custom_attributes"
+input events_v_issue_custom_attributes_order_by {
+  attributes: order_by
+  id: order_by
+  provider_id: order_by
+}
+
+# select columns of table "events.v_issue_custom_attributes"
+enum events_v_issue_custom_attributes_select_column {
+  # column name
+  attributes
+
+  # column name
+  id
+
+  # column name
+  provider_id
+}
+
+# mutation root
+type mutation_root {
+  # delete data from the table: "events.access_tokens"
+  delete_events_access_tokens(
+    # filter the rows which have to be deleted
+    where: events_access_tokens_bool_exp!
+  ): events_access_tokens_mutation_response
+
+  # delete single row from the table: "events.access_tokens"
+  delete_events_access_tokens_by_pk(user_provider_id: String!): events_access_tokens
+
+  # delete data from the table: "events.custom_attributes"
+  delete_events_custom_attributes(
+    # filter the rows which have to be deleted
+    where: events_custom_attributes_bool_exp!
+  ): events_custom_attributes_mutation_response
+
+  # delete single row from the table: "events.custom_attributes"
+  delete_events_custom_attributes_by_pk(id: uuid!): events_custom_attributes
+
+  # delete data from the table: "events.issue_comments"
+  delete_events_issue_comments(
+    # filter the rows which have to be deleted
+    where: events_issue_comments_bool_exp!
+  ): events_issue_comments_mutation_response
+
+  # delete single row from the table: "events.issue_comments"
+  delete_events_issue_comments_by_pk(id: uuid!): events_issue_comments
+
+  # delete data from the table: "events.issue_custom_attributes"
+  delete_events_issue_custom_attributes(
+    # filter the rows which have to be deleted
+    where: events_issue_custom_attributes_bool_exp!
+  ): events_issue_custom_attributes_mutation_response
+
+  # delete single row from the table: "events.issue_custom_attributes"
+  delete_events_issue_custom_attributes_by_pk(id: uuid!): events_issue_custom_attributes
+
+  # delete data from the table: "events.issues"
+  delete_events_issues(
+    # filter the rows which have to be deleted
+    where: events_issues_bool_exp!
+  ): events_issues_mutation_response
+
+  # delete single row from the table: "events.issues"
+  delete_events_issues_by_pk(id: uuid!): events_issues
+
+  # delete data from the table: "events.scans"
+  delete_events_scans(
+    # filter the rows which have to be deleted
+    where: events_scans_bool_exp!
+  ): events_scans_mutation_response
+
+  # delete single row from the table: "events.scans"
+  delete_events_scans_by_pk(id: uuid!): events_scans
+
+  # delete data from the table: "events.users"
+  delete_events_users(
+    # filter the rows which have to be deleted
+    where: events_users_bool_exp!
+  ): events_users_mutation_response
+
+  # delete single row from the table: "events.users"
+  delete_events_users_by_pk(id: uuid!): events_users
+
+  # insert data into the table: "events.access_tokens"
+  insert_events_access_tokens(
+    # the rows to be inserted
+    objects: [events_access_tokens_insert_input!]!
+
+    # on conflict condition
+    on_conflict: events_access_tokens_on_conflict
+  ): events_access_tokens_mutation_response
+
+  # insert a single row into the table: "events.access_tokens"
+  insert_events_access_tokens_one(
+    # the row to be inserted
+    object: events_access_tokens_insert_input!
+
+    # on conflict condition
+    on_conflict: events_access_tokens_on_conflict
+  ): events_access_tokens
+
+  # insert data into the table: "events.custom_attributes"
+  insert_events_custom_attributes(
+    # the rows to be inserted
+    objects: [events_custom_attributes_insert_input!]!
+
+    # on conflict condition
+    on_conflict: events_custom_attributes_on_conflict
+  ): events_custom_attributes_mutation_response
+
+  # insert a single row into the table: "events.custom_attributes"
+  insert_events_custom_attributes_one(
+    # the row to be inserted
+    object: events_custom_attributes_insert_input!
+
+    # on conflict condition
+    on_conflict: events_custom_attributes_on_conflict
+  ): events_custom_attributes
+
+  # insert data into the table: "events.issue_comments"
+  insert_events_issue_comments(
+    # the rows to be inserted
+    objects: [events_issue_comments_insert_input!]!
+
+    # on conflict condition
+    on_conflict: events_issue_comments_on_conflict
+  ): events_issue_comments_mutation_response
+
+  # insert a single row into the table: "events.issue_comments"
+  insert_events_issue_comments_one(
+    # the row to be inserted
+    object: events_issue_comments_insert_input!
+
+    # on conflict condition
+    on_conflict: events_issue_comments_on_conflict
+  ): events_issue_comments
+
+  # insert data into the table: "events.issue_custom_attributes"
+  insert_events_issue_custom_attributes(
+    # the rows to be inserted
+    objects: [events_issue_custom_attributes_insert_input!]!
+
+    # on conflict condition
+    on_conflict: events_issue_custom_attributes_on_conflict
+  ): events_issue_custom_attributes_mutation_response
+
+  # insert a single row into the table: "events.issue_custom_attributes"
+  insert_events_issue_custom_attributes_one(
+    # the row to be inserted
+    object: events_issue_custom_attributes_insert_input!
+
+    # on conflict condition
+    on_conflict: events_issue_custom_attributes_on_conflict
+  ): events_issue_custom_attributes
+
+  # insert data into the table: "events.issues"
+  insert_events_issues(
+    # the rows to be inserted
+    objects: [events_issues_insert_input!]!
+
+    # on conflict condition
+    on_conflict: events_issues_on_conflict
+  ): events_issues_mutation_response
+
+  # insert a single row into the table: "events.issues"
+  insert_events_issues_one(
+    # the row to be inserted
+    object: events_issues_insert_input!
+
+    # on conflict condition
+    on_conflict: events_issues_on_conflict
+  ): events_issues
+
+  # insert data into the table: "events.scans"
+  insert_events_scans(
+    # the rows to be inserted
+    objects: [events_scans_insert_input!]!
+
+    # on conflict condition
+    on_conflict: events_scans_on_conflict
+  ): events_scans_mutation_response
+
+  # insert a single row into the table: "events.scans"
+  insert_events_scans_one(
+    # the row to be inserted
+    object: events_scans_insert_input!
+
+    # on conflict condition
+    on_conflict: events_scans_on_conflict
+  ): events_scans
+
+  # insert data into the table: "events.users"
+  insert_events_users(
+    # the rows to be inserted
+    objects: [events_users_insert_input!]!
+
+    # on conflict condition
+    on_conflict: events_users_on_conflict
+  ): events_users_mutation_response
+
+  # insert a single row into the table: "events.users"
+  insert_events_users_one(
+    # the row to be inserted
+    object: events_users_insert_input!
+
+    # on conflict condition
+    on_conflict: events_users_on_conflict
+  ): events_users
+
+  # update data of the table: "events.access_tokens"
+  update_events_access_tokens(
+    # sets the columns of the filtered rows to the given values
+    _set: events_access_tokens_set_input
+
+    # filter the rows which have to be updated
+    where: events_access_tokens_bool_exp!
+  ): events_access_tokens_mutation_response
+
+  # update single row of the table: "events.access_tokens"
+  update_events_access_tokens_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: events_access_tokens_set_input
+    pk_columns: events_access_tokens_pk_columns_input!
+  ): events_access_tokens
+
+  # update data of the table: "events.custom_attributes"
+  update_events_custom_attributes(
+    # sets the columns of the filtered rows to the given values
+    _set: events_custom_attributes_set_input
+
+    # filter the rows which have to be updated
+    where: events_custom_attributes_bool_exp!
+  ): events_custom_attributes_mutation_response
+
+  # update single row of the table: "events.custom_attributes"
+  update_events_custom_attributes_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: events_custom_attributes_set_input
+    pk_columns: events_custom_attributes_pk_columns_input!
+  ): events_custom_attributes
+
+  # update data of the table: "events.issue_comments"
+  update_events_issue_comments(
+    # sets the columns of the filtered rows to the given values
+    _set: events_issue_comments_set_input
+
+    # filter the rows which have to be updated
+    where: events_issue_comments_bool_exp!
+  ): events_issue_comments_mutation_response
+
+  # update single row of the table: "events.issue_comments"
+  update_events_issue_comments_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: events_issue_comments_set_input
+    pk_columns: events_issue_comments_pk_columns_input!
+  ): events_issue_comments
+
+  # update data of the table: "events.issue_custom_attributes"
+  update_events_issue_custom_attributes(
+    # sets the columns of the filtered rows to the given values
+    _set: events_issue_custom_attributes_set_input
+
+    # filter the rows which have to be updated
+    where: events_issue_custom_attributes_bool_exp!
+  ): events_issue_custom_attributes_mutation_response
+
+  # update single row of the table: "events.issue_custom_attributes"
+  update_events_issue_custom_attributes_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: events_issue_custom_attributes_set_input
+    pk_columns: events_issue_custom_attributes_pk_columns_input!
+  ): events_issue_custom_attributes
+
+  # update data of the table: "events.issues"
+  update_events_issues(
+    # sets the columns of the filtered rows to the given values
+    _set: events_issues_set_input
+
+    # filter the rows which have to be updated
+    where: events_issues_bool_exp!
+  ): events_issues_mutation_response
+
+  # update single row of the table: "events.issues"
+  update_events_issues_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: events_issues_set_input
+    pk_columns: events_issues_pk_columns_input!
+  ): events_issues
+
+  # update data of the table: "events.scans"
+  update_events_scans(
+    # sets the columns of the filtered rows to the given values
+    _set: events_scans_set_input
+
+    # filter the rows which have to be updated
+    where: events_scans_bool_exp!
+  ): events_scans_mutation_response
+
+  # update single row of the table: "events.scans"
+  update_events_scans_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: events_scans_set_input
+    pk_columns: events_scans_pk_columns_input!
+  ): events_scans
+
+  # update data of the table: "events.users"
+  update_events_users(
+    # sets the columns of the filtered rows to the given values
+    _set: events_users_set_input
+
+    # filter the rows which have to be updated
+    where: events_users_bool_exp!
+  ): events_users_mutation_response
+
+  # update single row of the table: "events.users"
+  update_events_users_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: events_users_set_input
+    pk_columns: events_users_pk_columns_input!
+  ): events_users
+}
+
+# column ordering options
+enum order_by {
+  # in the ascending order, nulls last
+  asc
+
+  # in the ascending order, nulls first
+  asc_nulls_first
+
+  # in the ascending order, nulls last
+  asc_nulls_last
+
+  # in the descending order, nulls first
+  desc
+
+  # in the descending order, nulls first
+  desc_nulls_first
+
+  # in the descending order, nulls last
+  desc_nulls_last
+}
+
+# query root
+type query_root {
+  # fetch data from the table: "events.access_tokens"
+  events_access_tokens(
+    # distinct select on columns
+    distinct_on: [events_access_tokens_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_access_tokens_order_by!]
+
+    # filter the rows returned
+    where: events_access_tokens_bool_exp
+  ): [events_access_tokens!]!
+
+  # fetch aggregated fields from the table: "events.access_tokens"
+  events_access_tokens_aggregate(
+    # distinct select on columns
+    distinct_on: [events_access_tokens_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_access_tokens_order_by!]
+
+    # filter the rows returned
+    where: events_access_tokens_bool_exp
+  ): events_access_tokens_aggregate!
+
+  # fetch data from the table: "events.access_tokens" using primary key columns
+  events_access_tokens_by_pk(user_provider_id: String!): events_access_tokens
+
+  # fetch data from the table: "events.custom_attributes"
+  events_custom_attributes(
+    # distinct select on columns
+    distinct_on: [events_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_custom_attributes_bool_exp
+  ): [events_custom_attributes!]!
+
+  # fetch aggregated fields from the table: "events.custom_attributes"
+  events_custom_attributes_aggregate(
+    # distinct select on columns
+    distinct_on: [events_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_custom_attributes_bool_exp
+  ): events_custom_attributes_aggregate!
+
+  # fetch data from the table: "events.custom_attributes" using primary key columns
+  events_custom_attributes_by_pk(id: uuid!): events_custom_attributes
+
+  # fetch data from the table: "events.issue_comments"
+  events_issue_comments(
+    # distinct select on columns
+    distinct_on: [events_issue_comments_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_comments_order_by!]
+
+    # filter the rows returned
+    where: events_issue_comments_bool_exp
+  ): [events_issue_comments!]!
+
+  # fetch aggregated fields from the table: "events.issue_comments"
+  events_issue_comments_aggregate(
+    # distinct select on columns
+    distinct_on: [events_issue_comments_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_comments_order_by!]
+
+    # filter the rows returned
+    where: events_issue_comments_bool_exp
+  ): events_issue_comments_aggregate!
+
+  # fetch data from the table: "events.issue_comments" using primary key columns
+  events_issue_comments_by_pk(id: uuid!): events_issue_comments
+
+  # fetch data from the table: "events.issue_custom_attributes"
+  events_issue_custom_attributes(
+    # distinct select on columns
+    distinct_on: [events_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_issue_custom_attributes_bool_exp
+  ): [events_issue_custom_attributes!]!
+
+  # fetch aggregated fields from the table: "events.issue_custom_attributes"
+  events_issue_custom_attributes_aggregate(
+    # distinct select on columns
+    distinct_on: [events_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_issue_custom_attributes_bool_exp
+  ): events_issue_custom_attributes_aggregate!
+
+  # fetch data from the table: "events.issue_custom_attributes" using primary key columns
+  events_issue_custom_attributes_by_pk(id: uuid!): events_issue_custom_attributes
+
+  # fetch data from the table: "events.issues"
+  events_issues(
+    # distinct select on columns
+    distinct_on: [events_issues_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issues_order_by!]
+
+    # filter the rows returned
+    where: events_issues_bool_exp
+  ): [events_issues!]!
+
+  # fetch aggregated fields from the table: "events.issues"
+  events_issues_aggregate(
+    # distinct select on columns
+    distinct_on: [events_issues_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issues_order_by!]
+
+    # filter the rows returned
+    where: events_issues_bool_exp
+  ): events_issues_aggregate!
+
+  # fetch data from the table: "events.issues" using primary key columns
+  events_issues_by_pk(id: uuid!): events_issues
+
+  # fetch data from the table: "events.scans"
+  events_scans(
+    # distinct select on columns
+    distinct_on: [events_scans_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_scans_order_by!]
+
+    # filter the rows returned
+    where: events_scans_bool_exp
+  ): [events_scans!]!
+
+  # fetch aggregated fields from the table: "events.scans"
+  events_scans_aggregate(
+    # distinct select on columns
+    distinct_on: [events_scans_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_scans_order_by!]
+
+    # filter the rows returned
+    where: events_scans_bool_exp
+  ): events_scans_aggregate!
+
+  # fetch data from the table: "events.scans" using primary key columns
+  events_scans_by_pk(id: uuid!): events_scans
+
+  # fetch data from the table: "events.users"
+  events_users(
+    # distinct select on columns
+    distinct_on: [events_users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_users_order_by!]
+
+    # filter the rows returned
+    where: events_users_bool_exp
+  ): [events_users!]!
+
+  # fetch aggregated fields from the table: "events.users"
+  events_users_aggregate(
+    # distinct select on columns
+    distinct_on: [events_users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_users_order_by!]
+
+    # filter the rows returned
+    where: events_users_bool_exp
+  ): events_users_aggregate!
+
+  # fetch data from the table: "events.users" using primary key columns
+  events_users_by_pk(id: uuid!): events_users
+
+  # fetch data from the table: "events.v_issue_custom_attributes"
+  events_v_issue_custom_attributes(
+    # distinct select on columns
+    distinct_on: [events_v_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_v_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_v_issue_custom_attributes_bool_exp
+  ): [events_v_issue_custom_attributes!]!
+
+  # fetch aggregated fields from the table: "events.v_issue_custom_attributes"
+  events_v_issue_custom_attributes_aggregate(
+    # distinct select on columns
+    distinct_on: [events_v_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_v_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_v_issue_custom_attributes_bool_exp
+  ): events_v_issue_custom_attributes_aggregate!
+}
+
+# expression to compare columns of type String. All fields are combined with logical 'AND'.
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+  _ilike: String
+  _in: [String!]
+  _is_null: Boolean
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+  _nilike: String
+  _nin: [String!]
+  _nlike: String
+  _nsimilar: String
+  _similar: String
+}
+
+# subscription root
+type subscription_root {
+  # fetch data from the table: "events.access_tokens"
+  events_access_tokens(
+    # distinct select on columns
+    distinct_on: [events_access_tokens_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_access_tokens_order_by!]
+
+    # filter the rows returned
+    where: events_access_tokens_bool_exp
+  ): [events_access_tokens!]!
+
+  # fetch aggregated fields from the table: "events.access_tokens"
+  events_access_tokens_aggregate(
+    # distinct select on columns
+    distinct_on: [events_access_tokens_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_access_tokens_order_by!]
+
+    # filter the rows returned
+    where: events_access_tokens_bool_exp
+  ): events_access_tokens_aggregate!
+
+  # fetch data from the table: "events.access_tokens" using primary key columns
+  events_access_tokens_by_pk(user_provider_id: String!): events_access_tokens
+
+  # fetch data from the table: "events.custom_attributes"
+  events_custom_attributes(
+    # distinct select on columns
+    distinct_on: [events_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_custom_attributes_bool_exp
+  ): [events_custom_attributes!]!
+
+  # fetch aggregated fields from the table: "events.custom_attributes"
+  events_custom_attributes_aggregate(
+    # distinct select on columns
+    distinct_on: [events_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_custom_attributes_bool_exp
+  ): events_custom_attributes_aggregate!
+
+  # fetch data from the table: "events.custom_attributes" using primary key columns
+  events_custom_attributes_by_pk(id: uuid!): events_custom_attributes
+
+  # fetch data from the table: "events.issue_comments"
+  events_issue_comments(
+    # distinct select on columns
+    distinct_on: [events_issue_comments_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_comments_order_by!]
+
+    # filter the rows returned
+    where: events_issue_comments_bool_exp
+  ): [events_issue_comments!]!
+
+  # fetch aggregated fields from the table: "events.issue_comments"
+  events_issue_comments_aggregate(
+    # distinct select on columns
+    distinct_on: [events_issue_comments_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_comments_order_by!]
+
+    # filter the rows returned
+    where: events_issue_comments_bool_exp
+  ): events_issue_comments_aggregate!
+
+  # fetch data from the table: "events.issue_comments" using primary key columns
+  events_issue_comments_by_pk(id: uuid!): events_issue_comments
+
+  # fetch data from the table: "events.issue_custom_attributes"
+  events_issue_custom_attributes(
+    # distinct select on columns
+    distinct_on: [events_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_issue_custom_attributes_bool_exp
+  ): [events_issue_custom_attributes!]!
+
+  # fetch aggregated fields from the table: "events.issue_custom_attributes"
+  events_issue_custom_attributes_aggregate(
+    # distinct select on columns
+    distinct_on: [events_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_issue_custom_attributes_bool_exp
+  ): events_issue_custom_attributes_aggregate!
+
+  # fetch data from the table: "events.issue_custom_attributes" using primary key columns
+  events_issue_custom_attributes_by_pk(id: uuid!): events_issue_custom_attributes
+
+  # fetch data from the table: "events.issues"
+  events_issues(
+    # distinct select on columns
+    distinct_on: [events_issues_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issues_order_by!]
+
+    # filter the rows returned
+    where: events_issues_bool_exp
+  ): [events_issues!]!
+
+  # fetch aggregated fields from the table: "events.issues"
+  events_issues_aggregate(
+    # distinct select on columns
+    distinct_on: [events_issues_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_issues_order_by!]
+
+    # filter the rows returned
+    where: events_issues_bool_exp
+  ): events_issues_aggregate!
+
+  # fetch data from the table: "events.issues" using primary key columns
+  events_issues_by_pk(id: uuid!): events_issues
+
+  # fetch data from the table: "events.scans"
+  events_scans(
+    # distinct select on columns
+    distinct_on: [events_scans_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_scans_order_by!]
+
+    # filter the rows returned
+    where: events_scans_bool_exp
+  ): [events_scans!]!
+
+  # fetch aggregated fields from the table: "events.scans"
+  events_scans_aggregate(
+    # distinct select on columns
+    distinct_on: [events_scans_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_scans_order_by!]
+
+    # filter the rows returned
+    where: events_scans_bool_exp
+  ): events_scans_aggregate!
+
+  # fetch data from the table: "events.scans" using primary key columns
+  events_scans_by_pk(id: uuid!): events_scans
+
+  # fetch data from the table: "events.users"
+  events_users(
+    # distinct select on columns
+    distinct_on: [events_users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_users_order_by!]
+
+    # filter the rows returned
+    where: events_users_bool_exp
+  ): [events_users!]!
+
+  # fetch aggregated fields from the table: "events.users"
+  events_users_aggregate(
+    # distinct select on columns
+    distinct_on: [events_users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_users_order_by!]
+
+    # filter the rows returned
+    where: events_users_bool_exp
+  ): events_users_aggregate!
+
+  # fetch data from the table: "events.users" using primary key columns
+  events_users_by_pk(id: uuid!): events_users
+
+  # fetch data from the table: "events.v_issue_custom_attributes"
+  events_v_issue_custom_attributes(
+    # distinct select on columns
+    distinct_on: [events_v_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_v_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_v_issue_custom_attributes_bool_exp
+  ): [events_v_issue_custom_attributes!]!
+
+  # fetch aggregated fields from the table: "events.v_issue_custom_attributes"
+  events_v_issue_custom_attributes_aggregate(
+    # distinct select on columns
+    distinct_on: [events_v_issue_custom_attributes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [events_v_issue_custom_attributes_order_by!]
+
+    # filter the rows returned
+    where: events_v_issue_custom_attributes_bool_exp
+  ): events_v_issue_custom_attributes_aggregate!
+}
+
+scalar timestamptz
+
+# expression to compare columns of type timestamptz. All fields are combined with logical 'AND'.
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
+}
+
+scalar uuid
+
+# expression to compare columns of type uuid. All fields are combined with logical 'AND'.
+input uuid_comparison_exp {
+  _eq: uuid
+  _gt: uuid
+  _gte: uuid
+  _in: [uuid!]
+  _is_null: Boolean
+  _lt: uuid
+  _lte: uuid
+  _neq: uuid
+  _nin: [uuid!]
+}

@@ -1,0 +1,14 @@
+.top-panel {
+  height: 150px;
+
+  .MuiGrid-item {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    img {
+      height: 100%;
+    }
+  }
+}

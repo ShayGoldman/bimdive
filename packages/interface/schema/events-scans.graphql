@@ -1,0 +1,7 @@
+query EventsScans {
+  events_scans(distinct_on: project_provider_id) {
+    id
+    project_name
+    project_provider_id
+  }
+}
