@@ -6,7 +6,6 @@ import OpenIssuesOverview from './OpenIssuesOverview/OpenIssuesOverview';
 
 const HomePage: FunctionComponent = () => {
     const topPanelHeight = 150;
-
     return (
         <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
             <div style={{ height: topPanelHeight, width: '100%' }}>

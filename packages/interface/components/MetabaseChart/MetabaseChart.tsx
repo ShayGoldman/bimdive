@@ -6,14 +6,14 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import './MetabaseChart.scss';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {}
+interface Props {
+    questionId: number;
+}
 
-const MetabaseChart: FunctionComponent<Props & ({ questionId: string } | { dashboardId: string })> = ({ questionId, dashboardId }) => {
+const MetabaseChart: FunctionComponent<Props> = ({ questionId }) => {
     const { loading, error, value } = useAsync(async () => {
         const { data } = await axios.post(apiUrl + '/metabase/embed', {
             questionId,
-            dashboardId,
         });
         return data;
     }, []);

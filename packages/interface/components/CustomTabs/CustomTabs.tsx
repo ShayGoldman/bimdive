@@ -16,7 +16,7 @@ const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
     const [value, setValue] = React.useState('1');
 
     return (
-        <TabContext value={value} className="custom-tabs">
+        <TabContext value={value}>
             <AppBar position="static">
                 <TabList onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
                     {tabs.map(({ title }, index) => (
