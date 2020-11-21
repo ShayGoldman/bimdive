@@ -13,6 +13,7 @@ const OpenIssuesOverview: FunctionComponent<Props> = props => {
                 <MetbaseChart questionId={17} />
             </Grid>
             <Grid item xs={4}>
+
             </Grid>
         </Grid>
     );
