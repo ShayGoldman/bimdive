@@ -11,10 +11,10 @@ const HomePage: FunctionComponent = () => {
                 <Grid item xs={12}>
                     <CustomTabs
                         tabs={[
-                            { title: 'Open Issues', content: <div /> },
-                            { title: 'Type', content: <div /> },
-                            { title: 'Assignees', content: <div /> },
-                            { title: 'Owners', content: <div /> },
+                            { title: 'Open Issues', content: <div>Open Issues</div> },
+                            { title: 'Type', content: <div>Type</div> },
+                            { title: 'Assignees', content: <div>Assignees</div> },
+                            { title: 'Owners', content: <div>Owners</div> },
                         ]}
                     />
                 </Grid>
