@@ -7,13 +7,15 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import './MetabaseChart.scss';
 
 interface Props {
-    questionId: number;
+    questionId?: number;
+    dashboardId?: number;
 }
 
-const MetabaseChart: FunctionComponent<Props> = ({ questionId }) => {
+const MetabaseChart: FunctionComponent<Props & ({ questionId: number } | { dashboardId: number })> = ({ questionId, dashboardId }) => {
     const { loading, error, value } = useAsync(async () => {
         const { data } = await axios.post(apiUrl + '/metabase/embed', {
             questionId,
+            dashboardId,
         });
         return data;
     }, []);
