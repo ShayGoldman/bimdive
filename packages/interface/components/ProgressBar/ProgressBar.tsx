@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { BarLoader } from 'react-spinners';
+import { GridLoader } from 'react-spinners';
 import './ProgressBar.scss';
 
 interface Props {
@@ -16,7 +16,7 @@ const ProgressBar: FunctionComponent<Props> = ({ style }) => {
 
     return (
         <div className="progress-bar-container" style={style}>
-            {showLoading && <BarLoader height={4} width={100} />}
+            {showLoading && <GridLoader size={15} margin={2} color="#f06623" />}
         </div>
     );
 };
