@@ -11,7 +11,7 @@ const HomePage: FunctionComponent = () => {
             <div style={{ height: topPanelHeight, width: '100%' }}>
                 <TopPanel />
             </div>
-            <Grid container item style={{ height: `calc(100vh - ${topPanelHeight}px)` }}>
+            <Grid container item style={{ height: `calc(100% - ${topPanelHeight}px)` }}>
                 <Grid item xs={12}>
                     <CustomTabs
                         tabs={[
