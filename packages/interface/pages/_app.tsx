@@ -5,7 +5,7 @@ import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import '../styles/globals.scss';
 
 const client = new ApolloClient({
-    uri: 'http://localhost:5000/v1/graphql',
+    uri: process.env.GRAPHQL_API_URL,
     cache: new InMemoryCache(),
 });
 

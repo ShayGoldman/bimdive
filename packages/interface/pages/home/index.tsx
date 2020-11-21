@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CustomTabs from '../../components/CustomTabs/CustomTabs';
 import TopPanel from './TopPanel/TopPanel';
+import OpenIssuesOverview from './OpenIssuesOverview/OpenIssuesOverview';
 
 const HomePage: FunctionComponent = () => {
     return (
@@ -11,7 +12,7 @@ const HomePage: FunctionComponent = () => {
                 <Grid item xs={12}>
                     <CustomTabs
                         tabs={[
-                            { title: 'Open Issues', content: <div>Open Issues</div> },
+                            { title: 'Open Issues', content: <OpenIssuesOverview /> },
                             { title: 'Type', content: <div>Type</div> },
                             { title: 'Assignees', content: <div>Assignees</div> },
                             { title: 'Owners', content: <div>Owners</div> },
