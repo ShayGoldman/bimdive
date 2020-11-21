@@ -12,9 +12,7 @@ const ProjectSelect: FunctionComponent<Props> = props => {
 
     if (error) return <ErrorMessage error={error} />;
 
-    const options = !data
-        ? []
-        : data.scans.map(({ project_provider_id, project_name }) => ({ key: project_provider_id, label: project_name }));
+    const options = !data ? [] : data.scans.map(({ project_provider_id, project_name }) => ({ key: project_provider_id, label: project_name }));
 
     return (
         <CustomSelect options={options} value={options[0]?.key || ''} onValueChange={newValue => console.log(newValue)} className="project-select" />
