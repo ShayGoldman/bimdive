@@ -12,7 +12,7 @@ const OpenIssuesOverview: FunctionComponent<Props> = props => {
             <Grid item xs={8}>
                 <MetbaseChart questionId={17} />
             </Grid>
-            <Grid item xs={4}>
+            <Grid container item xs={4}>
                 <div className="right-charts-container">
                     <MetbaseChart questionId={17} />
                     <MetbaseChart questionId={17} />
