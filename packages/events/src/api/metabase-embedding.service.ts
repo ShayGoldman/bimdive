@@ -16,15 +16,20 @@ export const $MetabaseEmbedding = ({
   }) {
     const { logger } = context;
 
-    const { questionId, params = {} } = JSON.parse(event.body || "{}");
+    const { questionId, dashboardId, params = {} } = JSON.parse(
+      event.body || "{}"
+    );
 
     logger.info({
       msg: "generating embed link",
       questionId,
+      dashboardId,
     });
 
     const payload = {
-      resource: { question: questionId },
+      resource: dashboardId
+        ? { dashboard: dashboardId }
+        : { question: questionId },
       params,
       exp: Math.round(Date.now() / 1000) + 60 * 60, // one hour
     };
