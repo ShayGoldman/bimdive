@@ -16,22 +16,20 @@ const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
     const [value, setValue] = React.useState('1');
 
     return (
-        <div className="custom-tabs">
-            <TabContext value={value}>
-                <AppBar position="static">
-                    <TabList onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
-                        {tabs.map(({ title }, index) => (
-                            <Tab key={title} label={title} value={(index + 1).toString()} />
-                        ))}
-                    </TabList>
-                </AppBar>
-                {tabs.map(({ title, content }, index) => (
-                    <TabPanel key={title} value={(index + 1).toString()}>
-                        {content}
-                    </TabPanel>
-                ))}
-            </TabContext>
-        </div>
+        <TabContext value={value} className="custom-tabs">
+            <AppBar position="static">
+                <TabList onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
+                    {tabs.map(({ title }, index) => (
+                        <Tab key={title} label={title} value={(index + 1).toString()} />
+                    ))}
+                </TabList>
+            </AppBar>
+            {tabs.map(({ title, content }, index) => (
+                <TabPanel key={title} value={(index + 1).toString()}>
+                    {content}
+                </TabPanel>
+            ))}
+        </TabContext>
     );
 };
 

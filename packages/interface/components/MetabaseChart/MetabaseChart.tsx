@@ -21,11 +21,7 @@ const MetabaseChart: FunctionComponent<Props & ({ questionId: string } | { dashb
     if (loading) return <ProgressBar />;
     if (error) return <ErrorMessage error={error} />;
 
-    return (
-        <div>
-            <iframe src={value?.data?.url} frameBorder="0" width="400" height="400" />
-        </div>
-    );
+    return <iframe src={value?.data?.url} frameBorder="0" width="100%" height="100%" />;
 };
 
 export default MetabaseChart;

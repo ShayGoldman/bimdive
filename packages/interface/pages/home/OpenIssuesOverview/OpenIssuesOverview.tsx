@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import MetbaseChart from '../../../components/MetabaseChart/MetabaseChart';
+import { Grid } from '@material-ui/core';
 import './OpenIssuesOverview.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -7,10 +8,13 @@ interface Props {}
 
 const OpenIssuesOverview: FunctionComponent<Props> = props => {
     return (
-        <div className="open-issues-overview">
-            <MetbaseChart questionId={17} />
-            <MetbaseChart questionId={19} />
-        </div>
+        <Grid container spacing={3} className="open-issues-overview">
+            <Grid item xs={8}>
+                <MetbaseChart questionId={17} />
+            </Grid>
+            <Grid item xs={4}>
+            </Grid>
+        </Grid>
     );
 };
 
