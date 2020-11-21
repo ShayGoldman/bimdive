@@ -5,10 +5,14 @@ import TopPanel from './TopPanel/TopPanel';
 import OpenIssuesOverview from './OpenIssuesOverview/OpenIssuesOverview';
 
 const HomePage: FunctionComponent = () => {
+    const topPanelHeight = 150;
+
     return (
-        <Grid container spacing={3}>
-            <TopPanel />
-            <Grid container item>
+        <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
+            <div style={{ height: topPanelHeight, width: '100%' }}>
+                <TopPanel />
+            </div>
+            <Grid container item style={{ height: `calc(100vh - ${topPanelHeight}px)` }}>
                 <Grid item xs={12}>
                     <CustomTabs
                         tabs={[
