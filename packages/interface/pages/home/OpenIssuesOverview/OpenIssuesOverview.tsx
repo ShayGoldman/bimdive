@@ -8,12 +8,16 @@ interface Props {}
 
 const OpenIssuesOverview: FunctionComponent<Props> = props => {
     return (
-        <Grid container className="open-issues-overview">
+        <Grid container spacing={2} className="open-issues-overview">
             <Grid item xs={8}>
                 <MetbaseChart questionId={17} />
             </Grid>
             <Grid item xs={4}>
-
+                <div className="right-charts-container">
+                    <MetbaseChart questionId={17} />
+                    <MetbaseChart questionId={17} />
+                    <MetbaseChart questionId={17} />
+                </div>
             </Grid>
         </Grid>
     );

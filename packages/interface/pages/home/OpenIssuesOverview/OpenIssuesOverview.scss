@@ -1,3 +1,10 @@
 .open-issues-overview {
   height: 100%;
+
+  .right-charts-container {
+    width: 100%;
+    display: grid;
+    grid-auto-rows: 1fr;
+    gap: 10px;
+  }
 }
