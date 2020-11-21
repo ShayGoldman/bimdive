@@ -5,7 +5,7 @@ import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import '../styles/globals.scss';
 
 const client = new ApolloClient({
-    uri: process.env.GRAPHQL_API_URL,
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
     cache: new InMemoryCache(),
 });
 
@@ -17,6 +17,8 @@ function MyApp({ Component, pageProps }) {
             jssStyles.parentElement.removeChild(jssStyles);
         }
     }, []);
+
+    console.log(process.env.NEXT_PUBLIC_GRAPHQL_API_URL);
 
     const theme = createMuiTheme({
         palette: {
