@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { AppBar, Tab, Tabs } from '@material-ui/core';
+import { AppBar, Tab } from '@material-ui/core';
+import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import './CustomTabs.scss';
 
 interface TabDetails {
@@ -12,26 +13,24 @@ interface Props {
 }
 
 const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState('1');
 
     return (
         <div className="custom-tabs">
-            <AppBar position="static">
-                <Tabs value={value} onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
-                    {tabs.map(({ title }) => (
-                        <Tab key={title} label={title} />
-                    ))}
-                </Tabs>
-            </AppBar>
-            {/*<TabPanel value={value} index={0}>*/}
-            {/*    Item One*/}
-            {/*</TabPanel>*/}
-            {/*<TabPanel value={value} index={1}>*/}
-            {/*    Item Two*/}
-            {/*</TabPanel>*/}
-            {/*<TabPanel value={value} index={2}>*/}
-            {/*    Item Three*/}
-            {/*</TabPanel>*/}
+            <TabContext value={value}>
+                <AppBar position="static">
+                    <TabList onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
+                        {tabs.map(({ title }, index) => (
+                            <Tab key={title} label={title} value={(index + 1).toString()} />
+                        ))}
+                    </TabList>
+                </AppBar>
+                {tabs.map(({ title, content }, index) => (
+                    <TabPanel key={title} value={(index + 1).toString()}>
+                        {content}
+                    </TabPanel>
+                ))}
+            </TabContext>
         </div>
     );
 };
