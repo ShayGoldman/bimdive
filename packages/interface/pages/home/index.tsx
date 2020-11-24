@@ -1,112 +1,30 @@
-import axios from "axios";
-import { useCallback } from "react";
-import { useAsync, useCookie } from "react-use";
+import React, { FunctionComponent } from 'react';
+import Grid from '@material-ui/core/Grid';
+import CustomTabs from '../../components/CustomTabs/CustomTabs';
+import TopPanel from './TopPanel/TopPanel';
+import OpenIssuesOverview from './OpenIssuesOverview/OpenIssuesOverview';
 
-const apiUrl = `https://ip32mnh28g.execute-api.eu-west-2.amazonaws.com/prod`;
-
-const Spinner = () => (
-  <img src="https://i.imgflip.com/4hkjrq.jpg" width="200" />
-);
-
-const Error = () => <img src="https://i.imgflip.com/4hkjzg.jpg" width="200" />;
-
-const Demo1 = () => {
-  const { loading, value, error } = useAsync(async () => {
-    const { data } = await axios.post(apiUrl + "/metabase/embed", {
-      questionId: 17,
-    });
-    return data;
-  }, []);
-
-  return (
-    <div>
-      {loading && <Spinner />}
-      {!loading && error && <Error />}
-      {!loading && !error && value?.data?.url && (
-        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
-      )}
-    </div>
-  );
+const HomePage: FunctionComponent = () => {
+    const topPanelHeight = 150;
+    return (
+        <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
+            <div style={{ height: topPanelHeight, width: '100%' }}>
+                <TopPanel />
+            </div>
+            <Grid container item style={{ height: `calc(100% - ${topPanelHeight}px)` }}>
+                <Grid item xs={12}>
+                    <CustomTabs
+                        tabs={[
+                            { title: 'Open Issues', content: <OpenIssuesOverview /> },
+                            { title: 'Type', content: <div>Type</div> },
+                            { title: 'Assignees', content: <div>Assignees</div> },
+                            { title: 'Owners', content: <div>Owners</div> },
+                        ]}
+                    />
+                </Grid>
+            </Grid>
+        </Grid>
+    );
 };
 
-const Demo2 = () => {
-  const { loading, value, error } = useAsync(async () => {
-    const { data } = await axios.post(apiUrl + "/metabase/embed", {
-      questionId: 19,
-    });
-    return data;
-  }, []);
-
-  return (
-    <div>
-      {loading && <Spinner />}
-      {!loading && error && <Error />}
-      {!loading && !error && value?.data?.url && (
-        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
-      )}
-    </div>
-  );
-};
-
-const Demo3 = () => {
-  const { loading, value, error } = useAsync(async () => {
-    const { data } = await axios.post(apiUrl + "/metabase/embed", {
-      questionId: 20,
-    });
-    return data;
-  }, []);
-
-  return (
-    <div>
-      {loading && <Spinner />}
-      {!loading && error && <Error />}
-      {!loading && !error && value?.data?.url && (
-        <iframe src={value.data.url} frameBorder="0" width="400" height="400" />
-      )}
-    </div>
-  );
-};
-
-const ScanButton = ({ email }) => {
-  const [cookie] = useCookie("_bimdive");
-
-  const scan = useCallback(async () => {
-    const { id } = JSON.parse(cookie);
-    if (id) {
-      await axios.post(apiUrl + "/scan", { userId: id });
-    }
-  }, [email]);
-
-  return (
-    <button style={{ cursor: "pointer" }} onClick={scan}>
-      Scan for projects
-    </button>
-  );
-};
-
-export default function HomePage({ query }) {
-  const { email = "" } = query;
-  return (
-    <div>
-      <h1>Henlo {email}</h1>
-      <h2>Clickies</h2>
-      <ScanButton email={email} />
-      <h2>Demoes</h2>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <Demo1 />
-        <Demo2 />
-        <Demo3 />
-      </div>
-    </div>
-  );
-}
-
-HomePage.getInitialProps = ({ query }) => {
-  return { query };
-};
+export default HomePage;

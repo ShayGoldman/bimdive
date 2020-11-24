@@ -5,24 +5,46 @@
   "scripts": {
     "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "fix-code": "prettier-eslint --write $PWD/'**/*.{ts,tsx,scss}'",
+    "update-schema-local": "fetch-schema http://localhost:5000/v1/graphql -f schema/schema.graphql",
+    "generate-schema-typescript": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.2.5",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@webdeb/next-styles": "^1.1.0",
     "axios": "^0.21.0",
+    "classnames": "^2.2.6",
     "cookie": "^0.4.1",
     "dayjs": "^1.9.4",
+    "fetch-schema": "^0.0.14",
+    "graphql": "^15.4.0",
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "next": "9.5.3",
     "pg": "^8.4.0",
+    "prettier-eslint": "^11.0.0",
+    "prettier-eslint-cli": "^5.0.0",
     "querystring": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-use": "^15.3.4"
+    "react-spinners": "^0.9.0",
+    "react-use": "^15.3.4",
+    "sass": "^1.28.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.19.0",
+    "@graphql-codegen/introspection": "1.18.0",
+    "@graphql-codegen/typescript": "1.17.11",
+    "@graphql-codegen/typescript-operations": "1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "2.0.7",
     "@types/cookie": "^0.4.0",
     "@types/node": "^14.11.2",
     "@types/react": "^16.9.49",
+    "prettier": "2.1.2",
     "typescript": "^4.0.3"
   }
 }
