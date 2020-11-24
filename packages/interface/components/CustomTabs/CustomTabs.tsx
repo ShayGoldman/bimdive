@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { AppBar, Tab } from '@material-ui/core';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import './CustomTabs.scss';
@@ -14,31 +14,12 @@ interface Props {
 }
 
 const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
-    const router = useRouter();
-    const query = router.query;
-    const selectedTab = router.query.tab as string;
-
-    const onTabChanged = useCallback(
-        tab => {
-            const { pathname } = location;
-            router.push({
-                pathname,
-                query: { ...query, tab },
-            });
-        },
-        [query]
-    );
-
-    useEffect(() => {
-        if (!selectedTab) {
-            onTabChanged('1');
-        }
-    }, [selectedTab]);
+    const [selectedTab, setSelectedTab] = useState('1');
 
     return (
         <TabContext value={selectedTab}>
             <AppBar position="static">
-                <TabList onChange={(event, newValue) => onTabChanged(newValue)} variant="fullWidth">
+                <TabList onChange={(event, newValue) => setSelectedTab(newValue)} variant="fullWidth">
                     {tabs.map(({ title }, index) => (
                         <Tab key={title} label={title} value={(index + 1).toString()} />
                     ))}
