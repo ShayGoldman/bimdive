@@ -3,9 +3,14 @@ import Grid from '@material-ui/core/Grid';
 import CustomTabs from '../../components/CustomTabs/CustomTabs';
 import TopPanel from './TopPanel/TopPanel';
 import OpenIssuesOverview from './OpenIssuesOverview/OpenIssuesOverview';
+import TypesOverview from './TypesOverview/TypesOverview';
+import AssigneeOverview from './AssigneeOverview/AssigneeOverview';
+import OwnerOverview from './OwnerOverview/OwnerOverview';
+import { GetServerSideProps } from 'next';
 
 const HomePage: FunctionComponent = () => {
-    const topPanelHeight = 150;
+    const topPanelHeight = 100;
+
     return (
         <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
             <div style={{ height: topPanelHeight, width: '100%' }}>
@@ -16,15 +21,21 @@ const HomePage: FunctionComponent = () => {
                     <CustomTabs
                         tabs={[
                             { title: 'Open Issues', content: <OpenIssuesOverview /> },
-                            { title: 'Type', content: <div>Type</div> },
-                            { title: 'Assignees', content: <div>Assignees</div> },
-                            { title: 'Owners', content: <div>Owners</div> },
+                            { title: 'Type', content: <TypesOverview /> },
+                            { title: 'Assignees', content: <AssigneeOverview /> },
+                            { title: 'Owners', content: <OwnerOverview /> },
                         ]}
                     />
                 </Grid>
             </Grid>
         </Grid>
     );
+};
+
+export const getServerSideProps: GetServerSideProps = async context => {
+    return {
+        props: {},
+    };
 };
 
 export default HomePage;

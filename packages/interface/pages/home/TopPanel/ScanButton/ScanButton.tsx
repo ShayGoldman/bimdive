@@ -1,9 +1,9 @@
 import { useCookie } from 'react-use';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import axios from 'axios';
-import { apiUrl } from '../../../utils/consts';
-import CustomButton from '../../../components/CustomButton/CustomButton';
-import { nowDateTime } from '../../../utils/dateTimeUtils';
+import { apiUrl } from '../../../../utils/consts';
+import CustomButton from '../../../../components/CustomButton/CustomButton';
+import { nowDateTime } from '../../../../utils/dateTimeUtils';
 import './ScanButton.scss';
 
 const ScanButton: FunctionComponent = () => {
