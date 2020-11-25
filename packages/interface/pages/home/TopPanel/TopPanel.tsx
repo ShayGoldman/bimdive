@@ -11,7 +11,7 @@ interface Props {}
 
 const TopPanel: FunctionComponent<Props> = props => {
     return (
-        <Grid container item xs={12} spacing={3} className="top-panel">
+        <Grid container item xs={12} className="top-panel">
             <Grid item xs={1} style={{ justifyContent: 'center' }}>
                 <img src="/images/home/bimdive-logo.png" alt="" />
             </Grid>

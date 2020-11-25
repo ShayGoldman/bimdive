@@ -130,6 +130,11 @@ export function $DBValidation({ logger, db }: Deps): DBValidation {
             .timestamp("created_at", { precision: 3, useTz: true })
             .notNullable()
             .defaultTo(db.fn.now());
+
+          users.specificType(
+            "name",
+            "text GENERATED ALWAYS AS (COALESCE(first_name, '') || ' ', COALESCE(last_name, '')) STORED"
+          );
         });
       }
 
