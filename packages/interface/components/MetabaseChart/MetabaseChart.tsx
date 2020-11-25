@@ -9,13 +9,15 @@ import './MetabaseChart.scss';
 interface Props {
     dashboardId?: number;
     questionId?: number;
+    params?: object;
 }
 
-const MetabaseChart: FunctionComponent<Props & ({ dashboardId: number } | { questionId: number })> = ({ dashboardId, questionId }) => {
+const MetabaseChart: FunctionComponent<Props & ({ dashboardId: number } | { questionId: number })> = ({ dashboardId, questionId, params }) => {
     const { loading, error, value } = useAsync(async () => {
         const { data } = await axios.post(apiUrl + '/metabase/embed', {
             dashboardId,
             questionId,
+            params,
         });
         return data;
     }, []);

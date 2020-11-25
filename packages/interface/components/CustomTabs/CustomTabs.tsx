@@ -1,7 +1,8 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { AppBar, Tab } from '@material-ui/core';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import './CustomTabs.scss';
+import { useRouter } from 'next/router';
 
 interface TabDetails {
     title: string;
@@ -13,12 +14,12 @@ interface Props {
 }
 
 const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
-    const [value, setValue] = React.useState('1');
+    const [selectedTab, setSelectedTab] = useState('1');
 
     return (
-        <TabContext value={value}>
+        <TabContext value={selectedTab}>
             <AppBar position="static">
-                <TabList onChange={(event, newValue) => setValue(newValue)} variant="fullWidth">
+                <TabList onChange={(event, newValue) => setSelectedTab(newValue)} variant="fullWidth">
                     {tabs.map(({ title }, index) => (
                         <Tab key={title} label={title} value={(index + 1).toString()} />
                     ))}

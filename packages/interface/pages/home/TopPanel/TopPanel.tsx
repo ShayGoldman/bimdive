@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import Grid from '@material-ui/core/Grid';
 import ProjectSelect from './ProjectSelect/ProjectSelect';
-import ScanButton from '../ScanButton/ScanButton';
 import VerticalLineSeparator from '../../../components/VerticalLineSeparator/VerticalLineSeparator';
 import MainMenuButton from './MainMenuButton/MainMenuButton';
 import './TopPanel.scss';
+import ScanButton from './ScanButton/ScanButton';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
@@ -22,9 +22,7 @@ const TopPanel: FunctionComponent<Props> = props => {
             <Grid item xs={2}>
                 <ScanButton />
             </Grid>
-            <Grid item xs={4} style={{ justifyContent: 'center' }}>
-                <img src="/images/home/company-logo.png" alt="" />
-            </Grid>
+            <Grid item xs={4} style={{ justifyContent: 'center' }}></Grid>
             <Grid item xs={2}>
                 <MainMenuButton />
             </Grid>
