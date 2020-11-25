@@ -3,28 +3,29 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import axios from 'axios';
 import { apiUrl } from '../../../../utils/consts';
 import CustomButton from '../../../../components/CustomButton/CustomButton';
-import { nowDateTime } from '../../../../utils/dateTimeUtils';
+import { formatDateTime, nowDateTime } from '../../../../utils/dateTimeUtils';
+import first from 'lodash/first';
 import './ScanButton.scss';
+import { useScansQuery } from 'schema/generated/graphql';
 
 const ScanButton: FunctionComponent = () => {
     const [cookie] = useCookie('_bimdive');
-    const [lastScannedLabel, setLastScannedLabel] = useState<string>('Last scanned: Never');
+    const { data, refetch } = useScansQuery();
+
+    const lastScanTime = data?.scans[0]?.created_at;
 
     const scan = useCallback(async () => {
         const { id } = JSON.parse(cookie) || {};
-        if (!id) {
-            setLastScannedLabel('Please login to scan');
-            return;
+        if (id) {
+            await axios.post(apiUrl + '/scan', { userId: id });
+            await refetch();
         }
-
-        await axios.post(apiUrl + '/scan', { userId: id });
-        setLastScannedLabel(`Last scanned: ${nowDateTime()}`);
     }, []);
 
     return (
         <div className="scan-button">
             <CustomButton onClick={scan}>Scan for projects</CustomButton>
-            <h5 className="last-scanned-label">{lastScannedLabel}</h5>
+            <h5 className="last-scanned-label">Last scan: {lastScanTime ? formatDateTime(lastScanTime) : 'Never'}</h5>
         </div>
     );
 };
