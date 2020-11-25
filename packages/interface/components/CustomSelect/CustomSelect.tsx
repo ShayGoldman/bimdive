@@ -15,6 +15,7 @@ const CustomSelect: FunctionComponent<Props & SelectProps> = ({ options, value, 
         <Select
             {...restProps}
             value={value}
+            margin="dense"
             onChange={event => onValueChange(event.target.value as string)}
             variant="outlined"
             className={classNames('custom-select', restProps.className)}
