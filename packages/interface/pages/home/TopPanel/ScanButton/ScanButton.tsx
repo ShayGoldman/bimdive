@@ -1,26 +1,36 @@
-import { useCookie } from 'react-use';
-import React, { FunctionComponent, useCallback, useState } from 'react';
 import axios from 'axios';
-import { apiUrl } from '../../../../utils/consts';
-import CustomButton from '../../../../components/CustomButton/CustomButton';
-import { formatDateTime, nowDateTime } from '../../../../utils/dateTimeUtils';
-import first from 'lodash/first';
-import './ScanButton.scss';
+import React, { FunctionComponent, useCallback, useEffect } from 'react';
+import { useCookie } from 'react-use';
 import { useScansQuery } from 'schema/generated/graphql';
+import CustomButton from '../../../../components/CustomButton/CustomButton';
+import { apiUrl } from '../../../../utils/consts';
+import { formatDateTime } from '../../../../utils/dateTimeUtils';
+import './ScanButton.scss';
 
 const ScanButton: FunctionComponent = () => {
     const [cookie] = useCookie('_bimdive');
+    const { id } = JSON.parse(cookie) || {};
+    const isAbleToScan = Boolean(id);
     const { data, refetch } = useScansQuery();
 
     const lastScanTime = data?.scans[0]?.created_at;
 
     const scan = useCallback(async () => {
-        const { id } = JSON.parse(cookie) || {};
-        if (id) {
+        if (isAbleToScan && id) {
             await axios.post(apiUrl + '/scan', { userId: id });
             await refetch();
         }
     }, []);
+
+    useEffect(() => {
+        if (!lastScanTime) {
+            scan();
+        }
+    }, [lastScanTime]);
+
+    if (!isAbleToScan) {
+        return null;
+    }
 
     return (
         <div className="scan-button">
