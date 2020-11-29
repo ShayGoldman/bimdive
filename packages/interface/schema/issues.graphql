@@ -6,3 +6,18 @@ query IssuesAssignees($projectProviderId: String!) {
         }
     }
 }
+
+query IssuesOwners($projectProviderId: String) {
+    owners: issues(where: { project_provider_id: { _eq: $projectProviderId } }, distinct_on: owned_by) {
+        owner {
+            provider_id
+            name
+        }
+    }
+}
+
+query IssuesTypes($projectProviderId: String) {
+    owners: issues(where: { project_provider_id: { _eq: $projectProviderId } }, distinct_on: type) {
+        type
+    }
+}

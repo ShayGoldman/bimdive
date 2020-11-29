@@ -11,9 +11,7 @@ import './AssigneeOverview.scss';
 interface Props {}
 
 function getAssigneeOptions(data: IssuesAssigneesQuery) {
-    const assignees = Array.isArray(data?.assignees)
-        ? data.assignees.map(({ assignee }) => assignee).map(user => ({ key: user.provider_id, label: user.name }))
-        : [];
+    const assignees = !data ? [] : data.assignees.map(({ assignee }) => assignee).map(user => ({ key: user.provider_id, label: user.name }));
     return naturalSortBy({
         array: assignees,
         sortBy: item => item.label,

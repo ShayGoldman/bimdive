@@ -2719,6 +2719,35 @@ export type IssuesAssigneesQuery = (
   )> }
 );
 
+export type IssuesOwnersQueryVariables = Exact<{
+  projectProviderId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type IssuesOwnersQuery = (
+  { __typename?: 'query_root' }
+  & { owners: Array<(
+    { __typename?: 'events_issues' }
+    & { owner?: Maybe<(
+      { __typename?: 'events_users' }
+      & Pick<Events_Users, 'provider_id' | 'name'>
+    )> }
+  )> }
+);
+
+export type IssuesTypesQueryVariables = Exact<{
+  projectProviderId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type IssuesTypesQuery = (
+  { __typename?: 'query_root' }
+  & { owners: Array<(
+    { __typename?: 'events_issues' }
+    & Pick<Events_Issues, 'type'>
+  )> }
+);
+
 export type UserProjectScansQueryVariables = Exact<{
   initiatingUserId: Scalars['uuid'];
 }>;
@@ -2772,6 +2801,81 @@ export function useIssuesAssigneesLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type IssuesAssigneesQueryHookResult = ReturnType<typeof useIssuesAssigneesQuery>;
 export type IssuesAssigneesLazyQueryHookResult = ReturnType<typeof useIssuesAssigneesLazyQuery>;
 export type IssuesAssigneesQueryResult = Apollo.QueryResult<IssuesAssigneesQuery, IssuesAssigneesQueryVariables>;
+export const IssuesOwnersDocument = gql`
+    query IssuesOwners($projectProviderId: String) {
+  owners: issues(
+    where: {project_provider_id: {_eq: $projectProviderId}}
+    distinct_on: owned_by
+  ) {
+    owner {
+      provider_id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useIssuesOwnersQuery__
+ *
+ * To run a query within a React component, call `useIssuesOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIssuesOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIssuesOwnersQuery({
+ *   variables: {
+ *      projectProviderId: // value for 'projectProviderId'
+ *   },
+ * });
+ */
+export function useIssuesOwnersQuery(baseOptions?: Apollo.QueryHookOptions<IssuesOwnersQuery, IssuesOwnersQueryVariables>) {
+        return Apollo.useQuery<IssuesOwnersQuery, IssuesOwnersQueryVariables>(IssuesOwnersDocument, baseOptions);
+      }
+export function useIssuesOwnersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IssuesOwnersQuery, IssuesOwnersQueryVariables>) {
+          return Apollo.useLazyQuery<IssuesOwnersQuery, IssuesOwnersQueryVariables>(IssuesOwnersDocument, baseOptions);
+        }
+export type IssuesOwnersQueryHookResult = ReturnType<typeof useIssuesOwnersQuery>;
+export type IssuesOwnersLazyQueryHookResult = ReturnType<typeof useIssuesOwnersLazyQuery>;
+export type IssuesOwnersQueryResult = Apollo.QueryResult<IssuesOwnersQuery, IssuesOwnersQueryVariables>;
+export const IssuesTypesDocument = gql`
+    query IssuesTypes($projectProviderId: String) {
+  owners: issues(
+    where: {project_provider_id: {_eq: $projectProviderId}}
+    distinct_on: type
+  ) {
+    type
+  }
+}
+    `;
+
+/**
+ * __useIssuesTypesQuery__
+ *
+ * To run a query within a React component, call `useIssuesTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIssuesTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIssuesTypesQuery({
+ *   variables: {
+ *      projectProviderId: // value for 'projectProviderId'
+ *   },
+ * });
+ */
+export function useIssuesTypesQuery(baseOptions?: Apollo.QueryHookOptions<IssuesTypesQuery, IssuesTypesQueryVariables>) {
+        return Apollo.useQuery<IssuesTypesQuery, IssuesTypesQueryVariables>(IssuesTypesDocument, baseOptions);
+      }
+export function useIssuesTypesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IssuesTypesQuery, IssuesTypesQueryVariables>) {
+          return Apollo.useLazyQuery<IssuesTypesQuery, IssuesTypesQueryVariables>(IssuesTypesDocument, baseOptions);
+        }
+export type IssuesTypesQueryHookResult = ReturnType<typeof useIssuesTypesQuery>;
+export type IssuesTypesLazyQueryHookResult = ReturnType<typeof useIssuesTypesLazyQuery>;
+export type IssuesTypesQueryResult = Apollo.QueryResult<IssuesTypesQuery, IssuesTypesQueryVariables>;
 export const UserProjectScansDocument = gql`
     query UserProjectScans($initiatingUserId: uuid!) {
   scans(
