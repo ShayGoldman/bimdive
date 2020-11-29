@@ -30,5 +30,5 @@ export const useQuery = (key: string) => {
 export const useUser = () => {
     const [cookie] = useCookie('_bimdive');
     const { id } = JSON.parse(cookie) || {};
-    return [{ id }, () => {}] as const;
+    return [{ id: '9a2e8d1b-df81-417b-8485-101ce1da2969' }, () => {}] as const;
 };
