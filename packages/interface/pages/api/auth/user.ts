@@ -72,7 +72,7 @@ export default async function authCallback(req: NextApiRequest, res: NextApiResp
                 path: '/',
             })
         );
-        res.redirect(`/home`);
+        res.redirect(`/`);
     } catch (e) {
         console.log(e);
         res.redirect('/error');

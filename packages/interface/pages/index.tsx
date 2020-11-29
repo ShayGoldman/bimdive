@@ -1,21 +1,36 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
+import Grid from '@material-ui/core/Grid';
+import CustomTabs from '../components/CustomTabs/CustomTabs';
+import TopPanel from './home/TopPanel/TopPanel';
+import OpenIssuesOverview from './home/OpenIssuesOverview/OpenIssuesOverview';
+import TypesOverview from './home/TypesOverview/TypesOverview';
+import AssigneeOverview from './home/AssigneeOverview/AssigneeOverview';
+import OwnerOverview from './home/OwnerOverview/OwnerOverview';
+import { useQuery } from './home/hooks';
 
-const clientId = process.env.NEXT_PUBLIC_FORGE_CLIENT_ID;
+const HomePage: FunctionComponent = () => {
+    const topPanelHeight = 100;
+    const [projectId] = useQuery('ppid');
 
-const redirectUrl = `https://app.bimdive.com/api/auth/user`;
-const authLink = `https://developer.api.autodesk.com/authentication/v1/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUrl}&scope=data:read account:read`;
-
-function App() {
     return (
-        <div>
-            <section>
-                <h2>Authenticate</h2>
-                <a href={authLink}>Here</a>
-                <h2>Logout</h2>
-                <a href="https://accounts.autodesk.com/Authentication/LogOut">Here</a>
-            </section>
-        </div>
+        <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
+            <div style={{ height: topPanelHeight, width: '100%' }}>
+                <TopPanel />
+            </div>
+            <Grid container item style={{ height: `calc(100% - ${topPanelHeight}px)` }}>
+                <Grid item xs={12}>
+                    <CustomTabs
+                        tabs={[
+                            { key: `open-issues-${projectId}`, title: 'Open Issues', content: <OpenIssuesOverview /> },
+                            { key: `types-${projectId}`, title: 'Type', content: <TypesOverview /> },
+                            { key: `asignee-${projectId}`, title: 'Assignees', content: <AssigneeOverview /> },
+                            { key: `owner-${projectId}`, title: 'Owners', content: <OwnerOverview /> },
+                        ]}
+                    />
+                </Grid>
+            </Grid>
+        </Grid>
     );
-}
+};
 
-export default App;
+export default HomePage;

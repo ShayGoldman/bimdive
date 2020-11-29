@@ -20,7 +20,7 @@ const MainMenuButton: FunctionComponent<Props> = props => {
             options={[
                 {
                     label: 'Logout',
-                    onClick: () => router.push('/'),
+                    onClick: () => router.push('https://accounts.autodesk.com/Authentication/LogOut'),
                 },
             ]}
         />
