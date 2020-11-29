@@ -6,10 +6,11 @@ import OpenIssuesOverview from './OpenIssuesOverview/OpenIssuesOverview';
 import TypesOverview from './TypesOverview/TypesOverview';
 import AssigneeOverview from './AssigneeOverview/AssigneeOverview';
 import OwnerOverview from './OwnerOverview/OwnerOverview';
-import { GetServerSideProps } from 'next';
+import { useQuery } from './hooks';
 
 const HomePage: FunctionComponent = () => {
     const topPanelHeight = 100;
+    const [projectId] = useQuery('ppid');
 
     return (
         <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
@@ -20,10 +21,10 @@ const HomePage: FunctionComponent = () => {
                 <Grid item xs={12}>
                     <CustomTabs
                         tabs={[
-                            { title: 'Open Issues', content: <OpenIssuesOverview /> },
-                            { title: 'Type', content: <TypesOverview /> },
-                            { title: 'Assignees', content: <AssigneeOverview /> },
-                            { title: 'Owners', content: <OwnerOverview /> },
+                            { key: `open-issues-${projectId}`, title: 'Open Issues', content: <OpenIssuesOverview /> },
+                            { key: `types-${projectId}`, title: 'Type', content: <TypesOverview /> },
+                            { key: `asignee-${projectId}`, title: 'Assignees', content: <AssigneeOverview /> },
+                            { key: `owner-${projectId}`, title: 'Owners', content: <OwnerOverview /> },
                         ]}
                     />
                 </Grid>

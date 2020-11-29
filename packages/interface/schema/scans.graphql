@@ -1,8 +1,0 @@
-query Scans {
-    scans(distinct_on: project_provider_id, order_by: { project_provider_id: asc, created_at: desc_nulls_last }) {
-        id
-        project_name
-        project_provider_id
-        created_at
-    }
-}

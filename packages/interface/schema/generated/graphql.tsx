@@ -11,7 +11,7 @@ export type Scalars = {
   Float: number;
   _text: any;
   timestamptz: any;
-  uuid: any;
+  uuid: String;
 };
 
 /** expression to compare columns of type String. All fields are combined with logical 'AND'. */
@@ -920,6 +920,8 @@ export type Events_Issues = {
   __typename?: 'events_issues';
   assigned_to?: Maybe<Scalars['String']>;
   assigned_to_type?: Maybe<Scalars['String']>;
+  /** An object relationship */
+  assignee?: Maybe<Events_Users>;
   /** An array relationship */
   custom_attributes: Array<Events_Issue_Custom_Attributes>;
   /** An aggregated array relationship */
@@ -929,6 +931,8 @@ export type Events_Issues = {
   due_date?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
   owned_by?: Maybe<Scalars['String']>;
+  /** An object relationship */
+  owner?: Maybe<Events_Users>;
   project_provider_id: Scalars['String'];
   provider_id: Scalars['String'];
   scanned_at: Scalars['timestamptz'];
@@ -1000,11 +1004,13 @@ export type Events_Issues_Bool_Exp = {
   _or?: Maybe<Array<Maybe<Events_Issues_Bool_Exp>>>;
   assigned_to?: Maybe<String_Comparison_Exp>;
   assigned_to_type?: Maybe<String_Comparison_Exp>;
+  assignee?: Maybe<Events_Users_Bool_Exp>;
   custom_attributes?: Maybe<Events_Issue_Custom_Attributes_Bool_Exp>;
   custom_attributes_aggregated?: Maybe<Events_V_Issue_Custom_Attributes_Bool_Exp>;
   due_date?: Maybe<Timestamptz_Comparison_Exp>;
   id?: Maybe<Uuid_Comparison_Exp>;
   owned_by?: Maybe<String_Comparison_Exp>;
+  owner?: Maybe<Events_Users_Bool_Exp>;
   project_provider_id?: Maybe<String_Comparison_Exp>;
   provider_id?: Maybe<String_Comparison_Exp>;
   scanned_at?: Maybe<Timestamptz_Comparison_Exp>;
@@ -1026,10 +1032,12 @@ export enum Events_Issues_Constraint {
 export type Events_Issues_Insert_Input = {
   assigned_to?: Maybe<Scalars['String']>;
   assigned_to_type?: Maybe<Scalars['String']>;
+  assignee?: Maybe<Events_Users_Obj_Rel_Insert_Input>;
   custom_attributes?: Maybe<Events_Issue_Custom_Attributes_Arr_Rel_Insert_Input>;
   due_date?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   owned_by?: Maybe<Scalars['String']>;
+  owner?: Maybe<Events_Users_Obj_Rel_Insert_Input>;
   project_provider_id?: Maybe<Scalars['String']>;
   provider_id?: Maybe<Scalars['String']>;
   scanned_at?: Maybe<Scalars['timestamptz']>;
@@ -1131,11 +1139,13 @@ export type Events_Issues_On_Conflict = {
 export type Events_Issues_Order_By = {
   assigned_to?: Maybe<Order_By>;
   assigned_to_type?: Maybe<Order_By>;
+  assignee?: Maybe<Events_Users_Order_By>;
   custom_attributes_aggregate?: Maybe<Events_Issue_Custom_Attributes_Aggregate_Order_By>;
   custom_attributes_aggregated?: Maybe<Events_V_Issue_Custom_Attributes_Order_By>;
   due_date?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
   owned_by?: Maybe<Order_By>;
+  owner?: Maybe<Events_Users_Order_By>;
   project_provider_id?: Maybe<Order_By>;
   provider_id?: Maybe<Order_By>;
   scanned_at?: Maybe<Order_By>;
@@ -2693,53 +2703,112 @@ export type Uuid_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['uuid']>>;
 };
 
-export type ScansQueryVariables = Exact<{ [key: string]: never; }>;
+export type IssuesAssigneesQueryVariables = Exact<{
+  projectProviderId: Scalars['String'];
+}>;
 
 
-export type ScansQuery = (
+export type IssuesAssigneesQuery = (
+  { __typename?: 'query_root' }
+  & { assignees: Array<(
+    { __typename?: 'events_issues' }
+    & { assignee?: Maybe<(
+      { __typename?: 'events_users' }
+      & Pick<Events_Users, 'provider_id' | 'name'>
+    )> }
+  )> }
+);
+
+export type UserProjectScansQueryVariables = Exact<{
+  initiatingUserId: Scalars['uuid'];
+}>;
+
+
+export type UserProjectScansQuery = (
   { __typename?: 'query_root' }
   & { scans: Array<(
     { __typename?: 'events_scans' }
-    & Pick<Events_Scans, 'id' | 'project_name' | 'project_provider_id' | 'created_at'>
+    & Pick<Events_Scans, 'id' | 'created_at' | 'project_name' | 'project_provider_id'>
   )> }
 );
 
 
-export const ScansDocument = gql`
-    query Scans {
-  scans(
-    distinct_on: project_provider_id
-    order_by: {project_provider_id: asc, created_at: desc_nulls_last}
+export const IssuesAssigneesDocument = gql`
+    query IssuesAssignees($projectProviderId: String!) {
+  assignees: issues(
+    where: {assigned_to_type: {_eq: "user"}, project_provider_id: {_eq: $projectProviderId}}
+    distinct_on: assigned_to
   ) {
-    id
-    project_name
-    project_provider_id
-    created_at
+    assignee {
+      provider_id
+      name
+    }
   }
 }
     `;
 
 /**
- * __useScansQuery__
+ * __useIssuesAssigneesQuery__
  *
- * To run a query within a React component, call `useScansQuery` and pass it any options that fit your needs.
- * When your component renders, `useScansQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useIssuesAssigneesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIssuesAssigneesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useScansQuery({
+ * const { data, loading, error } = useIssuesAssigneesQuery({
  *   variables: {
+ *      projectProviderId: // value for 'projectProviderId'
  *   },
  * });
  */
-export function useScansQuery(baseOptions?: Apollo.QueryHookOptions<ScansQuery, ScansQueryVariables>) {
-        return Apollo.useQuery<ScansQuery, ScansQueryVariables>(ScansDocument, baseOptions);
+export function useIssuesAssigneesQuery(baseOptions?: Apollo.QueryHookOptions<IssuesAssigneesQuery, IssuesAssigneesQueryVariables>) {
+        return Apollo.useQuery<IssuesAssigneesQuery, IssuesAssigneesQueryVariables>(IssuesAssigneesDocument, baseOptions);
       }
-export function useScansLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ScansQuery, ScansQueryVariables>) {
-          return Apollo.useLazyQuery<ScansQuery, ScansQueryVariables>(ScansDocument, baseOptions);
+export function useIssuesAssigneesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IssuesAssigneesQuery, IssuesAssigneesQueryVariables>) {
+          return Apollo.useLazyQuery<IssuesAssigneesQuery, IssuesAssigneesQueryVariables>(IssuesAssigneesDocument, baseOptions);
         }
-export type ScansQueryHookResult = ReturnType<typeof useScansQuery>;
-export type ScansLazyQueryHookResult = ReturnType<typeof useScansLazyQuery>;
-export type ScansQueryResult = Apollo.QueryResult<ScansQuery, ScansQueryVariables>;
+export type IssuesAssigneesQueryHookResult = ReturnType<typeof useIssuesAssigneesQuery>;
+export type IssuesAssigneesLazyQueryHookResult = ReturnType<typeof useIssuesAssigneesLazyQuery>;
+export type IssuesAssigneesQueryResult = Apollo.QueryResult<IssuesAssigneesQuery, IssuesAssigneesQueryVariables>;
+export const UserProjectScansDocument = gql`
+    query UserProjectScans($initiatingUserId: uuid!) {
+  scans(
+    where: {initiating_user_id: {_eq: $initiatingUserId}}
+    distinct_on: project_provider_id
+    order_by: {project_provider_id: asc, created_at: desc_nulls_last, project_name: asc_nulls_last}
+  ) {
+    id
+    created_at
+    project_name
+    project_provider_id
+  }
+}
+    `;
+
+/**
+ * __useUserProjectScansQuery__
+ *
+ * To run a query within a React component, call `useUserProjectScansQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserProjectScansQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserProjectScansQuery({
+ *   variables: {
+ *      initiatingUserId: // value for 'initiatingUserId'
+ *   },
+ * });
+ */
+export function useUserProjectScansQuery(baseOptions?: Apollo.QueryHookOptions<UserProjectScansQuery, UserProjectScansQueryVariables>) {
+        return Apollo.useQuery<UserProjectScansQuery, UserProjectScansQueryVariables>(UserProjectScansDocument, baseOptions);
+      }
+export function useUserProjectScansLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserProjectScansQuery, UserProjectScansQueryVariables>) {
+          return Apollo.useLazyQuery<UserProjectScansQuery, UserProjectScansQueryVariables>(UserProjectScansDocument, baseOptions);
+        }
+export type UserProjectScansQueryHookResult = ReturnType<typeof useUserProjectScansQuery>;
+export type UserProjectScansLazyQueryHookResult = ReturnType<typeof useUserProjectScansLazyQuery>;
+export type UserProjectScansQueryResult = Apollo.QueryResult<UserProjectScansQuery, UserProjectScansQueryVariables>;

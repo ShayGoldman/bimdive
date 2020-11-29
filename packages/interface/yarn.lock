@@ -2035,6 +2035,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/natural-sort@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@types/natural-sort/-/natural-sort-0.0.20.tgz#8dbb99e5723ec7bc049117f3817799b8fc30a6e9"
+  integrity sha512-+C7MFmC2Kw1nCmQsmll9VETV27OpevSD4yywEfLFrLTuEYlPlHRNQnNOVmDM4x1iiurmGwfbt+jn9lwM0cghLA==
+
 "@types/node@*":
   version "14.14.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.6.tgz#146d3da57b3c636cc0d1769396ce1cfa8991147f"
@@ -7186,6 +7191,11 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
+
+natural-sort@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/natural-sort/-/natural-sort-1.0.0.tgz#eac301fd86c268a771222c62dc7719402aa34380"
+  integrity sha1-6sMB/YbCaKdxIixi3HcZQCqjQ4A=
 
 neo-async@2.6.1:
   version "2.6.1"

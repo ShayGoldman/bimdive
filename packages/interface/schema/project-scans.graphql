@@ -1,0 +1,12 @@
+query UserProjectScans($initiatingUserId: uuid!) {
+    scans(
+        where: { initiating_user_id: { _eq: $initiatingUserId } }
+        distinct_on: project_provider_id
+        order_by: { project_provider_id: asc, created_at: desc_nulls_last, project_name: asc_nulls_last }
+    ) {
+        id
+        created_at
+        project_name
+        project_provider_id
+    }
+}

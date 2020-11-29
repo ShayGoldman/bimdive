@@ -1,0 +1,8 @@
+query IssuesAssignees($projectProviderId: String!) {
+    assignees: issues(where: { assigned_to_type: { _eq: "user" }, project_provider_id: { _eq: $projectProviderId } }, distinct_on: assigned_to) {
+        assignee {
+            provider_id
+            name
+        }
+    }
+}

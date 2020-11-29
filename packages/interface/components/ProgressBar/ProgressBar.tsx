@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { GridLoader } from 'react-spinners';
 import './ProgressBar.scss';
 
@@ -8,11 +8,6 @@ interface Props {
 
 const ProgressBar: FunctionComponent<Props> = ({ style }) => {
     const [showLoading, setShowLoading] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setShowLoading(true), 1000);
-        return () => clearTimeout(timer);
-    }, []);
 
     return (
         <div className="progress-bar-container" style={style}>

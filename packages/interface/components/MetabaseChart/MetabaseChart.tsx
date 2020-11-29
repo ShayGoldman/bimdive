@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { useAsync } from 'react-use';
+import { useAsyncFn, useDeepCompareEffect } from 'react-use';
 import axios from 'axios';
 import { apiUrl } from '../../utils/consts';
 import ProgressBar from '../ProgressBar/ProgressBar';
@@ -13,14 +13,18 @@ interface Props {
 }
 
 const MetabaseChart: FunctionComponent<Props & ({ dashboardId: number } | { questionId: number })> = ({ dashboardId, questionId, params }) => {
-    const { loading, error, value } = useAsync(async () => {
+    const [{ loading, error, value }, fetch] = useAsyncFn(async () => {
         const { data } = await axios.post(apiUrl + '/metabase/embed', {
             dashboardId,
             questionId,
             params,
         });
         return data;
-    }, []);
+    }, [dashboardId, questionId, params]);
+
+    useDeepCompareEffect(() => {
+        fetch();
+    }, [params]);
 
     if (loading) return <ProgressBar />;
     if (error) return <ErrorMessage error={error} />;

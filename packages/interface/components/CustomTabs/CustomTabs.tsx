@@ -5,6 +5,7 @@ import './CustomTabs.scss';
 import { useRouter } from 'next/router';
 
 interface TabDetails {
+    key: string;
     title: string;
     content: React.ReactNode;
 }
@@ -25,8 +26,8 @@ const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
                     ))}
                 </TabList>
             </AppBar>
-            {tabs.map(({ title, content }, index) => (
-                <TabPanel key={title} value={(index + 1).toString()}>
+            {tabs.map(({ key, content }, index) => (
+                <TabPanel key={key} value={(index + 1).toString()}>
                     {content}
                 </TabPanel>
             ))}
