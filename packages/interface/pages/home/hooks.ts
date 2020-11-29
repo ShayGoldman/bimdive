@@ -7,7 +7,7 @@ import last from 'lodash/last';
 // todo type for query param is string | string[]
 export const useQuery = (key: string) => {
     const router = useRouter();
-    const queryParmsString = last(router.asPath.split('?'));
+    const queryParmsString = router.asPath.includes('?') ? last(router.asPath.split('?')) : '';
 
     const { [key]: value = '', ...queryParams } = querystring.parse(queryParmsString);
 
