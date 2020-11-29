@@ -3,9 +3,8 @@ import CustomSelect from 'components/CustomSelect/CustomSelect';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useIssuesTypesQuery, IssuesTypesQuery } from 'schema/generated/graphql';
 import { naturalSortBy } from 'utils/sort-utils';
-
 import MetbaseChart from '../../../components/MetabaseChart/MetabaseChart';
-import { useQuery } from '../hooks';
+import { useQuery } from '../../../hooks/hooks';
 import './TypesOverview.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

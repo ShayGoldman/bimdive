@@ -4,7 +4,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { IssuesAssigneesQuery, useIssuesAssigneesQuery } from 'schema/generated/graphql';
 import { naturalSortBy } from 'utils/sort-utils';
 import MetbaseChart from '../../../components/MetabaseChart/MetabaseChart';
-import { useQuery } from '../hooks';
+import { useQuery } from '../../../hooks/hooks';
 import './AssigneeOverview.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

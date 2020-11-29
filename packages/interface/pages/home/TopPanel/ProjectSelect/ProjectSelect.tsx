@@ -3,7 +3,7 @@ import CustomSelect from '../../../../components/CustomSelect/CustomSelect';
 import ErrorMessage from '../../../../components/ErrorMessage/ErrorMessage';
 import { useUserProjectScansQuery } from '../../../../schema/generated/graphql';
 import './ProjectSelect.scss';
-import { useQuery, useUser } from 'pages/home/hooks';
+import { useQuery, useUser } from '../../../../hooks/hooks';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}

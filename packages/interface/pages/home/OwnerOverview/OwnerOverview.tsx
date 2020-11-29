@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Grid } from '@material-ui/core';
 import MetbaseChart from '../../../components/MetabaseChart/MetabaseChart';
-import { useQuery } from '../hooks';
+import { useQuery } from '../../../hooks/hooks';
 import './OwnerOverview.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

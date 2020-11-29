@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useUser } from 'pages/home/hooks';
+import { useUser } from '../../../../hooks/hooks';
 import React, { FunctionComponent, useCallback, useEffect } from 'react';
 import { useUserProjectScansQuery } from 'schema/generated/graphql';
 import CustomButton from '../../../../components/CustomButton/CustomButton';
