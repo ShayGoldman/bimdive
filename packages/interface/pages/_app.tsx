@@ -3,6 +3,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import Head from 'next/head';
 import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import '../styles/globals.scss';
+import { useRouter } from 'next/router';
 
 const client = new ApolloClient({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
@@ -10,6 +11,19 @@ const client = new ApolloClient({
 });
 
 function MyApp({ Component, pageProps }) {
+    const router = useRouter();
+
+    useEffect(() => {
+        function trackPage(url: URL) {
+            if (process.env.NEXT_PUBLIC_ENABLE_TRACKING) {
+                window.gtag('config', process.env.NEXT_PUBLIC_GA_TRACKING_ID, { page_path: url });
+            }
+        }
+
+        router.events.on('routeChangeComplete', trackPage);
+        return () => router.events.off('routeChangeComplete', trackPage);
+    }, [router.events]);
+
     useEffect(() => {
         // Remove the server-side injected CSS.
         const jssStyles = document.querySelector('#jss-server-side');
