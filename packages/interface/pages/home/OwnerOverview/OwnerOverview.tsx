@@ -41,7 +41,7 @@ const OwnerOverview: FunctionComponent<Props> = props => {
                 </Grid>
             )}
             <Grid container item xs={12} className="chart-row">
-                {projectId && owner && <MetbaseChart dashboardId={15} params={{ project_provider_id: projectId, issue_owner: owner }} />}
+                {projectId && <MetbaseChart dashboardId={15} params={{ project_provider_id: projectId, issue_owner: owner || 'empty' }} />}
             </Grid>
         </Grid>
     );

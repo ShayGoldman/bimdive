@@ -1,6 +1,6 @@
 import { Grid } from '@material-ui/core';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { IssuesAssigneesQuery, useIssuesAssigneesQuery } from 'schema/generated/graphql';
 import { naturalSortBy } from 'utils/sort-utils';
 import MetbaseChart from '../../../components/MetabaseChart/MetabaseChart';
@@ -41,7 +41,7 @@ const AssigneeOverview: FunctionComponent<Props> = props => {
                 </Grid>
             )}
             <Grid container item xs={12} className="chart-row">
-                {projectId && assignee && <MetbaseChart dashboardId={14} params={{ project_provider_id: projectId, issue_assignee: assignee }} />}
+                {projectId && <MetbaseChart dashboardId={14} params={{ project_provider_id: projectId, issue_assignee: assignee || 'empty' }} />}
             </Grid>
         </Grid>
     );

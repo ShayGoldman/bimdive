@@ -29,7 +29,7 @@ const MetabaseChart: FunctionComponent<Props & ({ dashboardId: number } | { ques
     if (loading) return <ProgressBar />;
     if (error) return <ErrorMessage error={error} />;
 
-    return <iframe src={value?.data?.url} frameBorder="0" width="100%" height="100%" allowTransparency />;
+    return <iframe src={value?.data?.url} frameBorder="0" width="100%" height="100%" allowTransparency data-hj-allow-iframe />;
 };
 
 export default MetabaseChart;
