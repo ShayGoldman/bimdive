@@ -15,8 +15,14 @@ export interface HomePageProps {
 const HomePage: FunctionComponent<HomePageProps> = ({ preSelectedTab }) => {
     const topPanelHeight = 100;
     const [projectId] = useQuery('ppid');
-    const [selectedTab = preSelectedTab] = useQuery('tab');
+    const [selectedTab = preSelectedTab, setSelectedTab] = useQuery('tab');
     const [_, replaceQuery] = useReplaceQuery();
+
+    useEffect(() => {
+        if (!selectedTab) {
+            setSelectedTab('1', true);
+        }
+    }, [projectId]);
 
     return (
         <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
