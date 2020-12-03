@@ -12,15 +12,15 @@ interface TabDetails {
 
 interface Props {
     tabs: TabDetails[];
+    selectedTab: string;
+    onTabSelected: (string) => any;
 }
 
-const CustomTabs: FunctionComponent<Props> = ({ tabs }) => {
-    const [selectedTab, setSelectedTab] = useQuery('tab');
-
+const CustomTabs: FunctionComponent<Props> = ({ tabs, selectedTab, onTabSelected }) => {
     return (
-        <TabContext value={selectedTab || '1'}>
+        <TabContext value={selectedTab}>
             <AppBar position="static">
-                <TabList onChange={(event, newValue) => setSelectedTab(newValue)} variant="fullWidth">
+                <TabList onChange={(event, newValue) => onTabSelected(newValue)} variant="fullWidth">
                     {tabs.map(({ title }, index) => (
                         <Tab key={title} label={title} value={(index + 1).toString()} />
                     ))}

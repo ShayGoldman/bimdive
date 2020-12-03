@@ -29,7 +29,7 @@ const OwnerOverview: FunctionComponent<Props> = props => {
     useEffect(() => {
         const candidate = ownerOptions[0]?.key;
         if (process.browser && !owner && candidate) {
-            setOwner(candidate);
+            setOwner(candidate, true);
         }
     }, [ownerOptions, owner]);
 

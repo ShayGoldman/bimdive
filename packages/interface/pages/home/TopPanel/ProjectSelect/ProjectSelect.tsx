@@ -19,8 +19,9 @@ function getProjectsOptions(data: UserProjectScansQuery) {
 
 const ProjectSelect: FunctionComponent<Props> = props => {
     const [projectId] = useQuery('ppid');
-    const replaceQuery = useReplaceQuery();
-    const setProjectId = useCallback(ppid => replaceQuery('ppid', ppid), []);
+    const [tab] = useQuery('tab');
+    const [_, replaceQuery] = useReplaceQuery();
+    const setProjectId = useCallback(ppid => replaceQuery({ ppid, tab: tab || '1' }), [tab]);
 
     const [{ id: userId }] = useUser();
     const { error, loading, data } = useUserProjectScansQuery({ variables: { initiatingUserId: userId } });
