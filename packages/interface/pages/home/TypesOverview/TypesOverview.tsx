@@ -29,7 +29,7 @@ const TypesOverview: FunctionComponent<Props> = props => {
     useEffect(() => {
         const candidate = typesOptions[0]?.key;
         if (process.browser && !type && candidate) {
-            setType(candidate);
+            setType(candidate, true);
         }
     }, [typesOptions, type]);
 

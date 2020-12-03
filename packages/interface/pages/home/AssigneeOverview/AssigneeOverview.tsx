@@ -29,7 +29,7 @@ const AssigneeOverview: FunctionComponent<Props> = props => {
     useEffect(() => {
         const candidate = assigneeOptions[0]?.key;
         if (process.browser && !assignee && candidate) {
-            setAssignee(candidate);
+            setAssignee(candidate, true);
         }
     }, [assigneeOptions, assignee]);
 

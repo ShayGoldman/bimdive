@@ -1,7 +1,7 @@
 import { useCallback, useEffect, EffectCallback } from 'react';
 import { useCookie } from 'react-use';
 import { NextRouter, useRouter } from 'next/router';
-import querystring from 'querystring';
+import querystring, { ParsedUrlQueryInput } from 'querystring';
 import last from 'lodash/last';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
@@ -17,16 +17,21 @@ export const useQuery = (key: string) => {
     const { [key]: value = '' } = getQueryParams(router);
 
     const setValue = useCallback(
-        value => {
+        (value: string | string[] | number | number[], replaceHistory: boolean = false) => {
             const { [key]: _, ...queryParams } = getQueryParams(router);
-            const query = {
-                ...queryParams,
-                [key]: value,
-            };
-            router.push({
+            const payload = {
                 pathname: router.pathname,
-                query,
-            });
+                query: {
+                    ...queryParams,
+                    [key]: value,
+                },
+            };
+
+            if (replaceHistory) {
+                router.replace(payload);
+            } else {
+                router.push(payload);
+            }
         },
         // asPath takes care of pathname & queryParams
         [value, key, router.asPath]
@@ -36,15 +41,21 @@ export const useQuery = (key: string) => {
 
 export const useReplaceQuery = () => {
     const router = useRouter();
-    return useCallback(
-        (key: string, value: string) => {
-            router.push({
+    const replaceQuery = useCallback(
+        (query: ParsedUrlQueryInput, replaceHistory: boolean = false) => {
+            const payload = {
                 pathname: router.pathname,
-                query: { [key]: value },
-            });
+                query,
+            };
+            if (replaceHistory) {
+                router.replace(payload);
+            } else {
+                router.push(payload);
+            }
         },
         [router.asPath]
     );
+    return [router.query, replaceQuery] as const;
 };
 
 export const useCleanup = (fn: ReturnType<EffectCallback>) => {

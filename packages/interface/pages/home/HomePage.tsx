@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CustomTabs from '../../components/CustomTabs/CustomTabs';
 import TopPanel from './TopPanel/TopPanel';
@@ -6,11 +6,17 @@ import OpenIssuesOverview from './OpenIssuesOverview/OpenIssuesOverview';
 import TypesOverview from './TypesOverview/TypesOverview';
 import AssigneeOverview from './AssigneeOverview/AssigneeOverview';
 import OwnerOverview from './OwnerOverview/OwnerOverview';
-import { useQuery } from '../../hooks/hooks';
+import { useQuery, useReplaceQuery } from '../../hooks/hooks';
 
-const HomePage: FunctionComponent = () => {
+export interface HomePageProps {
+    preSelectedTab?: string;
+}
+
+const HomePage: FunctionComponent<HomePageProps> = ({ preSelectedTab }) => {
     const topPanelHeight = 100;
     const [projectId] = useQuery('ppid');
+    const [selectedTab = preSelectedTab] = useQuery('tab');
+    const [_, replaceQuery] = useReplaceQuery();
 
     return (
         <Grid container style={{ height: '100%', alignContent: 'flex-start' }}>
@@ -20,6 +26,8 @@ const HomePage: FunctionComponent = () => {
             <Grid container item style={{ height: `calc(100% - ${topPanelHeight}px)` }}>
                 <Grid item xs={12}>
                     <CustomTabs
+                        selectedTab={selectedTab}
+                        onTabSelected={tab => replaceQuery({ ppid: projectId, tab })}
                         tabs={[
                             { key: `open-issues-${projectId}`, title: 'Open Issues', content: <OpenIssuesOverview /> },
                             { key: `types-${projectId}`, title: 'Type', content: <TypesOverview /> },
